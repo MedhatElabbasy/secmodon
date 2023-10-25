@@ -1,0 +1,474 @@
+<div class="container mt-5 ">
+  <div class="d-flex justify-content-between">
+    <div>
+      <h3 translate="coveragesManagement.coveragesManagement" class="fw-bold"></h3>
+    </div>
+    <div>
+      <button (click)="add()" type="button" class="btn d-flex
+                align-items-center gap-2
+                btn-primary py-2 px-4 rounded-8">
+        <ion-icon name="add" class="add"></ion-icon>
+        <span translate="coveragesManagement.addNewCoverages"></span>
+      </button>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-5" *ngIf="!totalCount">
+    <div class="col-md-4 mt-5">
+      <div class="m-3 mt-5 p-4 text-align-center addDiv" (click)="add()">
+        <div class="px-5 mx-4 ">
+          <span class="">{{'coveragesManagement.notExist'|translate}}
+            <br>
+            {{'coveragesManagement.untillNow'|translate}}</span>
+        </div>
+        <hr class="w-50 m-auto my-3">
+        <div class="px-4 mx-4 ">
+          <span class=""><img src="assets/plus-circle.svg" alt="add"
+              class="px-1">{{'coveragesManagement.clickHere'|translate}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card h-100 rounded-12 border-0 mb-3 mt-5" *ngIf="totalCount">
+    <div class="card-body d-flex flex-column">
+      <header class="d-flex gap-3 flex-wrap justify-content-between
+                align-items-center">
+        <div class="col-12 col-sm-4">
+          <div class="input-group">
+            <span class="input-group-text border-0 bg-transparent" id="search">
+              <ion-icon name="search"></ion-icon>
+            </span>
+            <input type="text" class="form-control" [placeholder]="'search'
+                            | translate" aria-label="search" aria-describedby="search" [(ngModel)]="searchKey"
+              (keyup)="search()" />
+          </div>
+        </div>
+        <!-- <div class="d-flex col-12 col-sm
+                    justify-content-between
+                    justify-content-sm-end gap-3">
+                    <button type="button" class="btn d-flex text-info gap-2
+                        align-items-center rounded-m rounded-8 bg-info-o">
+                        {{ "order_by" | translate }}
+                        <ion-icon name="caret-down-outline"></ion-icon>
+                    </button>
+                    <button type="button" class="btn d-flex text-info gap-2
+                        align-items-center rounded-m rounded-8 bg-info-o">
+                        <i class="fa-solid fa-sliders"></i>
+                        {{ "filtration" | translate }}
+                    </button>
+                </div> -->
+      </header>
+      <hr />
+      <section class="flex-fill d-flex flex-column">
+        <div class="table-responsive flex-fill text-primary">
+          <table class="table table-striped table-borderless">
+            <thead>
+              <tr>
+                <th translate="coveragesManagement.companyName"></th>
+                <th translate="coveragesManagement.CoveringPlace"></th>
+                <th translate="coveragesManagement.CoverDate"></th>
+                <th translate="coveragesManagement.coverageDate"></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of allCoverages | paginate
+                                : {
+                                itemsPerPage: pageSize,
+                                currentPage: pageNumber,
+                                totalItems: totalCount,
+                                id: 'list'
+                                }">
+                <td>{{item.securityCompany.name}}</td>
+                <td>{{item.locationName}}</td>
+                <td>{{item.coveringDate.split(" ")[0]}}</td>
+                <td>{{item.coveringStartTime.split(":")[0]+':'
+                  +item.coveringStartTime.split(":")[1]}}</td>
+                <td>
+                  <div class="d-flex gap-2
+                                        justify-content-end">
+                    <button (click)="getDetails(item.id)" type="button" class="btn rounded-8 bg-info-o
+                                            text-info edit">
+                      <i class="fa-solid fa-info"></i>
+                    </button>
+                    <button (click)="update(item.id)" type="button" class="btn
+                                            rounded-8
+                                            bg-primary-o text-primary edit">
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button (click)="Delete(item.id)" type="button" class="btn
+                                            rounded-8
+                                            bg-danger-o text-danger delete">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+        </div>
+
+        <hr />
+
+        <div class="d-flex flex-wrap align-items-center
+                    justify-content-between gap-3">
+          <div class="text-info d-flex gap-3 align-items-center">
+            <label class="fw-500" translate="for_page"></label>
+            <div>
+              <select class="form-select" (change)="onPageSizeChange($event)">
+                <option *ngFor="let size of sizes" [selected]="size == pageSize">
+                  {{ size }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <pagination-controls id="list" (pageChange)="onPageNumberChange($event)"
+            (pageBoundsCorrection)="onPageNumberChange($event)" [maxSize]="5" [responsive]="true" [previousLabel]="''"
+            [nextLabel]="''" screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+            screenReaderCurrentLabel="You're on page">
+          </pagination-controls>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+<public-api-canvas [id]="addData">
+  <h4 translate="coveragesManagement.addNewCoverage" class="text-align-center
+        mt-3"></h4>
+
+  <form class="mt-4" [formGroup]="coveragesForm" (ngSubmit)="onSubmit()" #form="ngForm">
+    <div class="form-floating mb-3" *ngIf="hide">
+      <p-dropdown styleClass="w-100" [options]="allBranches" optionValue="id" formControlName="securityCompanyBranchId"
+        [filterBy]="(isAr | async) ? 'name' : 'nameEn'" [filter]="true"
+        placeholder="{{ 'clients.chooseBranch' | translate }}" [optionLabel]="(isAr | async) ? 'name' : 'nameEn'">
+      </p-dropdown>
+
+      <div class="mt-1 text-danger" *ngIf="form.submitted &&
+                controls['securityCompanyBranchId'].invalid">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{'validation.field_required' | translate}}
+        <!-- <div
+                    *ngIf="controls['commercialRegisterStartDate'].errors.required"
+                    class="error-message">
+                    <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+                    {{
+                    'completeCompanyProfile.commercialRegisterStartDate_required'
+                    |
+                    translate }}
+                </div> -->
+      </div>
+    </div>
+
+    <!-- --------------------------------- map --------------------------------- -->
+    <div class="mb-3">
+      <div style="height: 200px">
+        <public-api-map-search [addressControl]="controls['locationName']" [latControl]="controls['locationLat']"
+          [lngControl]="controls['locationLng']"></public-api-map-search>
+      </div>
+      <div class="error-message" *ngIf="
+                controls['locationName'].invalid && form.submitted
+                ">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ "validation.field_required" | translate }}
+      </div>
+    </div>
+
+    <div class="row g-4 row-cols-2 mb-3">
+      <div>
+        <div class="form-floating">
+          <input type="time" class="form-control" id="timeFrom" placeholder="data"
+            formControlName="coveringStartTime" />
+          <label for="timeFrom" translate="coveragesManagement.timeFrom"></label>
+        </div>
+        <div class="error-message" *ngIf="controls['coveringStartTime'].invalid &&
+                    form.submitted">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.field_required" | translate }}
+        </div>
+      </div>
+      <div>
+        <div class="form-floating">
+          <input type="time" class="form-control" id="timeTo" placeholder="data" formControlName="coveringEndTime" />
+          <label for="timeTo" translate="coveragesManagement.timeTo"></label>
+        </div>
+
+        <div class="error-message" *ngIf="controls['coveringEndTime'].invalid &&
+                    form.submitted">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.field_required" | translate }}
+        </div>
+      </div>
+      <div class="form-floating">
+        <input type="email" class="form-control bg-info-o" id="date1" placeholder="date" bsDatepicker [minDate]="now"
+          [maxDate]="controls['coveringEndDate'].value" [bsConfig]="{
+                    containerClass: 'theme-red',
+                    isAnimated: true,
+                    showWeekNumbers: false,
+                    adaptivePosition: true
+                    }" formControlName="coveringDate" />
+        <label for="date1" translate="coveragesManagement.dateFrom"></label>
+        <div class="error-message" *ngIf="controls['coveringDate'].invalid &&
+                    form.submitted">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.field_required" | translate }}
+        </div>
+      </div>
+      <div class="form-floating">
+        <input type="email" class="form-control bg-info-o" id="date2" placeholder="date" bsDatepicker
+          [minDate]="controls['coveringDate'].value||now" [bsConfig]="{
+                    containerClass: 'theme-red',
+                    isAnimated: true,
+                    showWeekNumbers: false,
+                    adaptivePosition: true
+                    }" formControlName="coveringEndDate" />
+        <label for="date2" translate="coveragesManagement.dateTo"></label>
+        <div class="error-message" *ngIf="controls['coveringEndDate'].invalid &&
+                    form.submitted">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.field_required" | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="number" class="form-control" id="value" placeholder="value*" min="1"
+        formControlName="coveringAmount" />
+      <label for="value">
+        {{ "coveragesManagement.value" | translate }}
+      </label>
+
+      <div class="error-message" *ngIf="controls['coveringAmount'].invalid &&
+                form.submitted">
+        <div *ngIf="controls['coveringAmount'].hasError('required')">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.field_required" | translate }}
+        </div>
+        <div *ngIf="controls['coveringAmount'].hasError('min')">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.plz_enter_a_valid_number" | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <p-dropdown styleClass="w-100" [options]="cities" optionValue="id" formControlName="cityId" filterBy="name"
+        [filter]="true" placeholder="{{ 'coveragesManagement.city' | translate
+                }}" optionLabel="name">
+      </p-dropdown>
+      <div class="error-message" *ngIf="controls['cityId'].invalid &&
+                form.submitted">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ "validation.field_required" | translate }}
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <p-dropdown styleClass="w-100" [options]="allShiftTypes" optionValue="shiftType.id" formControlName="jobTypeId"
+        [filterBy]="(isAr | async) ? 'shiftType.name' :
+                'shiftType.nameEn'" [filter]="true" placeholder="{{ 'coveragesManagement.shiftType' | translate
+                }}" [optionLabel]="(isAr | async) ? 'shiftType.name' :
+                'shiftType.nameEn'">
+      </p-dropdown>
+      <div class="error-message" *ngIf="controls['jobTypeId'].invalid &&
+                form.submitted">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ "validation.field_required" | translate }}
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <p-dropdown styleClass="w-100" [options]="alljobTypes" optionValue="id" formControlName="shiftTypeId" [filterBy]="(isAr | async) ? 'name' :
+                'nameEN'" [filter]="true" placeholder="{{ 'coveragesManagement.jobType' | translate
+                }}" [optionLabel]="(isAr | async) ? 'name' :
+                'nameEN'">
+      </p-dropdown>
+      <div class="error-message" *ngIf="controls['shiftTypeId'].invalid &&
+                form.submitted">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ "validation.field_required" | translate }}
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="number" min="1" class="form-control" id="companyName" placeholder="companyName*"
+        formControlName="openJobNumber" />
+      <label for="companyName">
+        {{ "coveragesManagement.guardsNumber" | translate }}
+      </label>
+      <div class="error-message" *ngIf="controls['openJobNumber'].invalid &&
+                form.submitted">
+        <div *ngIf="controls['openJobNumber'].hasError('required')">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.field_required" | translate }}
+        </div>
+        <div *ngIf="controls['openJobNumber'].hasError('min')">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.plz_enter_a_valid_number" | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <div class="form-floating">
+        <textarea class="form-control" placeholder="description" id="description" style="height: 100px"
+          formControlName="coveringUniform"></textarea>
+        <label for="description" translate="coveragesManagement.uniform"></label>
+        <div class="error-message" *ngIf="controls['coveringUniform'].invalid &&
+                    form.submitted">
+          <div *ngIf="controls['coveringUniform'].hasError('required')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.field_required" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="number" class="form-control" id="companyName" placeholder="companyName*" min="18"
+        formControlName="coveringMinAge" />
+      <label for="companyName">
+        {{ "coveragesManagement.minAge" | translate }}
+      </label>
+      <div class="error-message" *ngIf="controls['coveringMinAge'].invalid &&
+                form.submitted">
+        <div *ngIf="controls['coveringMinAge'].hasError('required')">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.field_required" | translate }}
+        </div>
+        <div *ngIf="controls['coveringMinAge'].hasError('min')">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.plz_enter_a_valid_number" | translate }}
+        </div>
+      </div>
+
+    </div>
+    <div class="form-floating mb-3">
+      <p-dropdown styleClass="w-100" [options]="genders" optionValue="id" formControlName="genderId" [filterBy]="(isAr | async) ? 'name' :
+                'nameEN'" [filter]="true" placeholder="{{ 'coveragesManagement.gender' | translate
+                }}" [optionLabel]="(isAr | async) ? 'name' :
+                'nameEN'">
+      </p-dropdown>
+      <div class="error-message" *ngIf="controls['genderId'].invalid &&
+                form.submitted">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ "validation.field_required" | translate }}
+      </div>
+    </div>
+
+
+    <div class="form-floating mb-3">
+      <div class="form-floating">
+        <textarea class="form-control" placeholder="description" id="description" style="height: 100px"
+          formControlName="jobDescription"></textarea>
+        <label for="description" translate="coveragesManagement.DescAr"></label>
+
+        <div class="error-message" *ngIf="controls['jobDescription'].invalid &&
+                    form.submitted">
+          <div *ngIf="controls['jobDescription'].hasError('required')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.field_required" | translate }}
+          </div>
+          <div *ngIf="controls['jobDescription'].hasError('pattern')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.job_description" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-floating mb-3">
+      <div class="form-floating">
+        <textarea class="form-control" placeholder="description" id="description" style="height: 100px"
+          formControlName="jobDescriptionEN"></textarea>
+        <label for="description" translate="coveragesManagement.DescEn"></label>
+        <div class="error-message" *ngIf="controls['jobDescriptionEN'].invalid &&
+                    form.submitted">
+          <div *ngIf="controls['jobDescriptionEN'].hasError('required')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.field_required" | translate }}
+          </div>
+          <div *ngIf="controls['jobDescriptionEN'].hasError('pattern')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.job_descriptionEn" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <div class="form-floating">
+        <input type="number" class="form-control" placeholder="description" id="description" min="0"
+          formControlName="experinceReqiured">
+        <label for="description" translate="coveragesManagement.experience"></label>
+        <div class="error-message" *ngIf="controls['experinceReqiured'].invalid &&
+                    form.submitted">
+          <div *ngIf="controls['experinceReqiured'].hasError('required')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.field_required" | translate }}
+          </div>
+          <div *ngIf="controls['experinceReqiured'].hasError('min')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.plz_enter_a_valid_number" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <div class="form-floating">
+        <textarea class="form-control" placeholder="description" id="description" style="height: 100px"
+          formControlName="jobReqiurement"></textarea>
+        <label for="description" translate="coveragesManagement.requirementsAr"></label>
+        <div class="error-message" *ngIf="controls['jobReqiurement'].invalid &&
+                    form.submitted">
+          <div *ngIf="controls['jobReqiurement'].hasError('required')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.field_required" | translate }}
+          </div>
+          <div *ngIf="controls['jobReqiurement'].hasError('pattern')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.jobReqiurement" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <div class="form-floating">
+        <textarea class="form-control" placeholder="description" id="description" style="height: 100px"
+          formControlName="jobReqiurementEN"></textarea>
+        <label for="description" translate="coveragesManagement.requirementsEn"></label>
+        <div class="error-message" *ngIf="controls['jobReqiurementEN'].invalid &&
+                    form.submitted">
+          <div *ngIf="controls['jobReqiurementEN'].hasError('required')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.field_required" | translate }}
+          </div>
+          <div *ngIf="controls['jobReqiurementEN'].hasError('pattern')">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.jobReqiurementEN" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-grow-1 d-flex justify-content-end align-items-end gap-2
+            pb-3">
+      <button type="button" class="btn px-4 rounded-8 btn-light" translate="cancel"
+        data-bs-dismiss="offcanvas"></button>
+      <button *ngIf="!isEdit" type="submit" translate="add" class="btn
+                px-4 rounded-8
+                btn-primary"></button>
+      <button *ngIf="isEdit" type="submit" translate="update" class="btn
+                px-4 rounded-8
+                btn-primary"></button>
+    </div>
+  </form>
+</public-api-canvas>
+
+
+<!-- ------------------------------- delete -------------------------------- -->
+<public-api-modal classList="modal-dialog-centered" id="deleteCoverage">
+  <img src="assets/images/svg/delete.svg" alt="" class="mb-3" srcset="" />
+  <h4 class="fw-700" translate="coveragesManagement.confirmation"></h4>
+  <p class="mt-2 text-info" translate="coveragesManagement.delete"></p>
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" data-bs-dismiss="modal" class="btn rounded-8 px-4
+            py-2 btn-light" translate="cancel"></button>
+    <button translate="yes_delete" type="button" data-bs-dismiss="modal" class="btn rounded-8 px-4 py-2 btn-danger"
+      (click)="confirm()"></button>
+  </div>
+</public-api-modal>

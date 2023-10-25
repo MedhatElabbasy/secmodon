@@ -1,0 +1,57 @@
+<div class="firstDriver">
+    <div class="row">
+
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p> نوع الحادث</p>
+                <h6>{{incidentDetails?.typeOfDamage}}</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>موقع الحادث بالمركبة الأولى</p>
+                <img id="myImg1" class=" rounded-2 img-thumbnail" [src]="incidentDetails?.firstIncidentLocationImage?.fullLink" alt="">
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>موقع الحادث بالمركبةالثانية</p>
+                <img id="myImg2" class=" rounded-2 img-thumbnail" [src]="incidentDetails?.secondIncidentLocationImage?.fullLink" alt="">
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>نوع التصادم</p>
+                <h6>{{incidentDetails?.collisionType}}</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>نوع التلفيات</p>
+                <h6>{{incidentDetails?.typeOfDamage}}</h6>
+                <h6>{{incidentDetails?.typeOfDamageOther}}</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>حالة الطريق</p>
+                <h6>{{incidentDetails?.roadCondition}}</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>حالة الإضائة في الطريق</p>
+                <h6>{{incidentDetails?.lightingConditionOnRoad}}</h6>
+            </div>
+        </div>
+
+    </div>
+    <hr class="shadow-sm">
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="img01">
+  <div id="caption"></div>
+</div>

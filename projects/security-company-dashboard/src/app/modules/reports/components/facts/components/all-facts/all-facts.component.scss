@@ -1,0 +1,101 @@
+img.scale {
+  transition: all 0.3s;
+}
+
+img.scale:hover {
+  transform: scale(1.3);
+}
+
+h6 {
+  color: #12123c !important;
+  font-size: 18px !important;
+  font-weight: bold;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  padding: 50px;
+  overflow: auto;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  // height: 200vh;
+}
+
+.fa-circle-xmark {
+  font-size: 25px;
+  color: #12123c;
+  width: fit-content;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.modon-model {
+  margin-top: -40px;
+}
+
+.category {
+  position: relative;
+}
+
+.category-content {
+  width: 100%;
+  // margin-right: 20px;
+  border: 1px solid #707070;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.category-title {
+  background-color: #e7e7e7;
+  border-radius: 26px;
+  font-size: 22px;
+  width: 50px;
+  height: 250px;
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  p {
+    margin: 0;
+    text-wrap: nowrap;
+    transform: rotate(-90deg);
+  }
+}
+
+.detail {
+  h5 {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+
+button.download {
+  background-color: #84bc26;
+  padding: 10px 15px;
+}
+
+.file {
+  .col-lg-2,
+  .col-lg {
+    border-left: 1px solid #8a8aa5;
+  }
+}
+
+
+.attach{
+  padding: 0px 5px;
+}

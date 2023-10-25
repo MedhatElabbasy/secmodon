@@ -1,0 +1,63 @@
+<div *ngIf="guard">
+    <div class="row row-cols-md-3 g-3 row-cols-1">
+        <div>
+            <h6 class="text-info fs-14" translate="clients.branch"></h6>
+            <p *ngIf="guard.securityCompanyBranch && userInfo?.role != 'user'" class="text-primary fw-700">
+                <span>
+                    {{(lang.isAr | async)?
+                    guard.securityCompanyBranch.name:
+                    guard.securityCompanyBranch.nameEn}}
+                </span>
+                <a type="button" (click)="changeBranch()" class="btn btn-outline-warning mx-3"
+                    translate="clients.changeBranch">
+                </a>
+            </p>
+            <p *ngIf="!guard.securityCompanyBranch && userInfo?.role != 'user'" class="text-warning fw-700">
+                <span>{{("clients.noBranch" | translate)}}</span>
+                <a type="button" (click)="addBranch()" class="btn btn-outline-secondary mx-3"
+                    translate="clients.addBranch">
+                </a>
+            </p>
+            <p *ngIf="userInfo?.role == 'user'" class="text-black fw-700">
+                <span>
+                    {{(lang.isAr | async)?
+                    guard.securityCompanyBranch?.name:
+                    guard.securityCompanyBranch?.nameEn}}
+                </span>
+                <a type="button" (click)="deleteBranch()" class="btn btn-outline-secondary mx-3"
+                    translate="clients.deleteBranch">
+                </a>
+            </p>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<public-api-canvas [id]="canvasID">
+    <form [formGroup]="addBranchForm" #form="ngForm" (ngSubmit)="onSubmit()"
+        class="d-flex flex-column gap-3 h-100 p-1 overflow-visible pt-5">
+        <div class="row mb-3 px-3">
+            <div>
+                <div class="form-floating">
+                    <p-dropdown [filter]="true" filterBy="name" styleClass="w-100"
+                        [optionLabel]="lang.isAr ? 'name' : 'nameEN'" optionValue="id"
+                        [options]="securityCompanyBranchesDropDown" [placeholder]="'contracts.branches' | translate"
+                        formControlName="branchId"></p-dropdown>
+                </div>
+                <!-- <div class="error-message" *ngIf="controls['jobTypeId'].invalid && form.submitted"
+                  [innerHtml]="'validation.job_type_required' | translate"></div> -->
+            </div>
+        </div>
+        <div class="flex-grow-1 d-flex justify-content-end align-items-end gap-2 pb-3">
+            <button type="button" class="btn px-4 rounded-8 btn-light" translate="cancel" data-bs-dismiss="offcanvas"
+                (click)="form.resetForm()"></button>
+            <button *ngIf="guard?.securityCompanyBranch" type="submit" translate="edit"
+                class="btn px-4 rounded-8 btn-primary"></button>
+            <button *ngIf="!guard?.securityCompanyBranch" type="submit" translate="add"
+                class="btn px-4 rounded-8 btn-primary"></button>
+        </div>
+    </form>
+</public-api-canvas>

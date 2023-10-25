@@ -1,0 +1,102 @@
+<div class="container mt-5">
+  <div class="text-align-center">
+    <h2 class="fw-bold" translate="packages.subscriptionPlan"></h2>
+    <p translate="packages.selectPlan" class="fw-400 fontColor mt-2 fs-6"></p>
+    <!--
+     <div class="width m-auto p-2 border border-4 rounded-4">
+      <button class="btn bgColor1 ms-1 px-4"
+        translate="packages.monthlyPlans" id="monthly"
+        (click)="changeColor($event)"></button>
+      <button class="btn bgColor2 px-4" translate="packages.yearlyPlans"
+        id="yearly" (click)="changeColor($event)"></button>
+    </div>
+   -->
+  </div>
+  <div class="container mt-4 scroll">
+    <div class="row flex-nowrap mb-5">
+      <div class="col-lg-3 col-md-6" *ngFor="let package of packages">
+        <div
+          class="px-2 bg-white py-4 border border-3 rounded-3 border-primary ">
+        <div class="packageScroll" style="height: 400px; overflow: scroll;" >
+          <div class="container border-bottom border-bottom-2">
+            <div class="text-align-center mt-2">
+              <h5 class="fw-bold mt-2">
+                {{ isAr ? package.packageName : package.packageNameEn }}
+              </h5>
+              <p class="fw-400 fontColor mt-2">
+                {{
+                  isAr
+                    ? package.packageDescription
+                    : package.packageDescriptionEn
+                }}
+              </p>
+              <h4 class="fw-bold">
+                {{ package.packageTotalCost }}
+                <span
+                  class="fw-400 fontColor mt-2"
+                  translate="packages.month"
+                ></span>
+              </h4>
+            </div>
+          </div>
+          <div class="container my-3">
+            <li *ngFor="let item of package.packageDetails">
+              {{
+                isAr ? item.packageItems.itemName : item.packageItems.itemNameEn
+              }}
+            </li>
+          </div>
+        </div>
+          <div>
+            <button
+              type="button"
+              class="btn btn-primary rounded-8 px-4 d-block mt-1 m-auto"
+              (click)="addPackage(package)"
+              translate="packages.select"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ------------------------------- success ------------------------------- -->
+<public-api-modal [id]="successAlert" classList="modal-dialog-centered">
+  <img width="50" src="assets/images/icons/checked.png" alt="" class="mb-3" />
+  <h5 class="fw-600" translate="packages.subscribeDone"></h5>
+  <div class="d-flex justify-content-end gap-2">
+    <button
+      translate="continue"
+      type="button"
+      class="btn rounded-8 px-4 py-2 btn-primary text-white"
+      (click)="closeModel()"
+    ></button>
+  </div>
+</public-api-modal>
+
+<public-api-modal [id]="display" classList="modal-dialog-centered">
+  <img width="50" src="assets/images/icons/cancel.png" alt="" class="mb-3" />
+  <h5 class="fw-600" translate="packages.changePackage"></h5>
+  <div class="d-flex justify-content-end gap-2">
+    <button
+      translate="continue"
+      type="button"
+      class="btn rounded-8 px-4 py-2 btn-primary text-white"
+      data-bs-dismiss="modal"
+    ></button>
+  </div>
+</public-api-modal>
+
+<public-api-modal [id]="display2" classList="modal-dialog-centered">
+  <img width="50" src="assets/images/icons/cancel.png" alt="" class="mb-3" />
+  <h5 class="fw-600" translate="packages.dowenGrade"></h5>
+  <div class="d-flex justify-content-end gap-2">
+    <button
+      translate="continue"
+      type="button"
+      class="btn rounded-8 px-4 py-2 btn-primary text-white"
+      data-bs-dismiss="modal"
+    ></button>
+  </div>
+</public-api-modal>

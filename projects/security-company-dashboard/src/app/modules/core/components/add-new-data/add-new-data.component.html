@@ -1,0 +1,181 @@
+<div class="vh-100 p-4 bg-white container">
+    <div class="d-flex gap-3 align-items-center mb-4">
+        <button
+            (click)="lang.toggleLanguage()"
+            type="button"
+            class="btn lang-btn bg-info-o rounded-8">
+            <i class="fa-solid fa-globe"></i>
+        </button>
+    </div>
+    <img src="assets/images/logo3.png" height="70" alt="" srcset="" />
+
+    <h3 class="mt-5 fw-600" translate="welcome_in_takid"></h3>
+    <p class="text-info fs-5" translate="addNewData"></p>
+    <form [formGroup]="addNewData" (ngSubmit)="onSubmit(addNewData)"
+        #form="ngForm"
+        class="mt-4">
+        <div>
+            <div class="row g-4">
+                <div class="col-md d-none d-md-block"></div>
+                <!--commercial Register Number input start -->
+                <div class="form-floating ">
+                    <input type="number" class="form-control "
+                        placeholder="data"
+                        id="commercialRegisterNumber"
+                        formControlName="commercialRegisterNumber" />
+                    <label for="commercialRegisterNumber">
+                        {{ "completeCompanyProfile.commercialRegisterNumber" |
+                        translate }}
+                    </label>
+                    <!--commercial Register Number input start validation-->
+                    <div class="mt-1" *ngIf="form.submitted &&
+                        controls['commercialRegisterNumber'].invalid">
+                        <div
+                            *ngIf="controls['commercialRegisterNumber'].errors.required"
+                            class="error-message">
+                            <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+                            {{
+                            'completeCompanyProfile.commercialRegisterNumber_required'
+                            |
+                            translate }}
+                        </div>
+                        <div
+                            *ngIf="controls['commercialRegisterNumber'].errors.pattern"
+                            class="error-message">
+                            <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+                            {{
+                            'completeCompanyProfile.commercialRegisterNumber_valid'
+                            |
+                            translate
+                            }}
+                        </div>
+                    </div>
+                </div>
+                <!--commercial Register Number input end -->
+                <!--start security License Number-->
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control"
+                        placeholder="data"
+                        id="securityLicenseNumber"
+                        formControlName="licenseNumber" />
+                    <label for="securityLicenseNumber">
+                        {{ "completeCompanyProfile.securityLicenseNumber" |
+                        translate }}
+                    </label>
+
+                    <!--start security License Number validation-->
+                    <div class="mt-1" *ngIf="form.submitted &&
+                        controls['licenseNumber'].invalid">
+                        <div *ngIf="controls['licenseNumber'].errors.required"
+                            class="error-message">
+                            <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+                            {{
+                            'completeCompanyProfile.securityLicenseNumber_required'
+                            |
+                            translate
+                            }}
+                        </div>
+                        <div *ngIf="controls['licenseNumber'].errors.pattern"
+                            class="error-message">
+                            <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+                            {{
+                            'completeCompanyProfile.securityLicenseNumber_valid'
+                            |
+                            translate }}
+                        </div>
+                    </div>
+                </div>
+                <!--end security License Number-->
+            </div>
+
+
+            <!--commercial Register Number input end -->
+
+            <div class="col-md mb-3">
+                <!--licenseEndDate-->
+                <div class="form-floating">
+
+                    <input type="email" id="licenseEndDate"
+                        class="form-control
+                        bg-info-o"
+                        placeholder="date" bsDatepicker
+                        formControlName="licenseEndDate" [minDate]="date"
+                        [bsConfig]="{
+                        containerClass: 'theme-red',
+                        dateInputFormat: 'DD-MM-YYYY',
+                        isAnimated: true,
+                        showWeekNumbers: false,
+                        adaptivePosition: true
+                        }"/>
+                    <label for="licenseEndDate">
+                        {{ "licenseEndDate" |
+                        translate
+                        }}
+                    </label>
+
+                    <!--licenseEndDate validation-->
+                    <div class="mt-1" *ngIf="form.submitted &&
+                        controls['licenseEndDate'].invalid">
+                        <div
+                            *ngIf="controls['licenseEndDate'].errors.required"
+                            class="error-message">
+                            <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+                            {{
+                            'licenseEndDate_required'
+                            |
+                            translate }}
+                        </div>
+                    </div>
+                </div>
+                <!--licenseEndDate-->
+
+                <div class="col-12 mt-2">
+                    <div class="file bg-info-o col-12 rounded-8 text-info"
+                        [style.backgroundImage]="'url(' + image + ')'"
+                        (click)="licenseImage.click()">
+                        <input type="file" #licenseImage hidden
+                            accept="image/x-png,image/gif,image/jpeg"
+                            (change)="onImageUpload($event)"/>
+                        <div class="container" *ngIf="!image">
+                            <img
+                                src="assets/images/icons/upload2.png"
+                                class="d-block obj mx-auto"
+                                alt="file-upload"
+                                width="45"
+                                height="45"
+                                />
+                            <div class="fs-14 mt-3">
+                                {{ "uploadLicense" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="error-message"
+                        *ngIf="controls['licenseImageId'].invalid
+                        && form.submitted"
+                        [innerHtml]="'LicenseImage_required' | translate"></div>
+                    <div class="error-message"
+                        *ngIf="controls['licenseImageId'].errors?.notValid"
+                        [innerHtml]="'validation.image_invalid' | translate"></div>
+                </div>
+            </div>
+
+        </div>
+        <button class="btn btn-primary float-end px-5" type="submit"
+            translate="add"></button>
+    </form>
+</div>
+
+
+
+<!-- ------------------------------- success ------------------------------- -->
+<public-api-modal [id]="successAlert" classList="modal-dialog-centered">
+    <img width="50" src="assets/images/icons/checked.png" alt="" class="mb-3" />
+    <h5 class="fw-600" translate="DoneAddData"></h5>
+
+    <div class="d-flex justify-content-end gap-2">
+        <button translate="continue" type="button"
+            class="btn rounded-8 px-4 py-2 btn-primary text-white"
+            (click)="continue()"></button>
+    </div>
+</public-api-modal>

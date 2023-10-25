@@ -1,0 +1,6 @@
+#chart {
+  margin: 35px auto;
+}
+.apexcharts-toolbar {
+display: none !important;
+}

@@ -1,0 +1,34 @@
+@import "libs/assets/styles/variables.scss";
+.client {
+  background-color: rgba($color: $warning-color, $alpha: 0.08);
+}
+
+.cube {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+}
+
+::ng-deep {
+  .modal-content {
+    overflow: visible;
+  }
+}
+.containerOfCanvas{
+  height: 90% !important;
+ 
+  .canvas{
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
+th {
+
+  text-align: center;
+}
+
+td {
+  min-width: 200px;
+  text-align: center;
+}

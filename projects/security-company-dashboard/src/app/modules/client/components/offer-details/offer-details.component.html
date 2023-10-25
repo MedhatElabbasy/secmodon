@@ -1,0 +1,334 @@
+<div class="container">
+    <div class="py-5" *ngIf="data?.length">
+        <div class="d-flex justify-content-between">
+            <h2 class="pb-3 fw-bold" translate="DetailsOffer"></h2>
+            <public-api-status-badge [status]="data[0]?.offerStatus"
+                *ngIf="data[0]?.offerStatus"></public-api-status-badge>
+        </div>
+        <div class="card p-3 my-2 bg-light" *ngFor="let item of
+            data[0].offerPriceGuardsShifts">
+            <h2 class="text-align-center">
+                {{(lang.isAr | async)?
+                item?.clientOrderGuardsShifts?.shiftType?.name:item?.clientOrderGuardsShifts?.shiftType?.nameEN}}
+            </h2>
+            <div class="mt-2">
+                <div class="d-flex">
+                    <h5 class="px-2" translate="jobType"></h5>
+                    <p class="text-info fw-bold"> {{(lang.isAr | async)?
+                        item?.clientOrderGuardsShifts?.jobType?.name:item?.clientOrderGuardsShifts?.jobType?.nameEN}}</p>
+                </div>
+                <div class="d-flex">
+                    <h5 class="px-2" translate="number_required"></h5>
+                    <p class="text-info fw-bold">
+                        {{item?.clientOrderGuardsShifts?.number}}</p>
+                </div>
+                <div class="d-flex">
+                    <h5 class="px-2" translate="amount_for_each_person"></h5>
+                    <p class="text-info fw-bold">{{item?.price}}</p>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <h5 class="px-2" translate="total_amount_for_each_section"></h5>
+                    <p class="text-info fw-bold">{{item?.total}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="mt-2 p-3">
+            <div class="d-flex">
+                <h3 class="text-align-center" translate="total_price"></h3>
+                <p class="fs-4 fw-bold px-2 text-danger">{{data[0].totalOffer}}
+                    {{'riyal'|translate}}</p>
+            </div>
+
+
+
+            <div>
+                <div class="mx-2 my-4" *ngIf="messageLength
+                    ||messages==null">
+                    <h3 translate="DetailsNegotiation"></h3>
+                    <div class="p-3 my-3 bg-light">
+                        <p class="m-0 text-align-center" *ngIf="messageLength">{{messages[messageLength-1]?.message}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="d-flex justify-content-end py-3 gap-2">
+
+            <button
+                type="button"
+                class="btn rounded-10"
+                translate="clients.reject_request"
+                (click)="onReject()"></button>
+            <button *ngIf="data[0]?.offerStatus?.value==5"
+                type="button"
+                class="btn btn-light rounded-10"
+                translate="EndNegotiation"
+                (click)="EndNegotiation()"></button>
+            <button *ngIf="data[0]?.offerStatus?.value==5"
+                type="button"
+                class="btn btn-primary rounded-10"
+                translate="negotiation"
+                (click)="negotiation()"></button>
+            <button
+                *ngIf="data.length &&
+                data[0]?.offerStatus?.value==2"
+                (click)="onApprove()"
+                type="button"
+                class="btn btn-primary rounded-10"
+                translate="clients.accept_request"></button>
+        </div>
+    </div>
+    <div class="py-5 my-5 " *ngIf="!data?.length">
+        <div class="container bg-info-o py-3">
+            <h2 translate="notExistOffer" class="text-align-center my-5"></h2>
+        </div>
+    </div>
+</div>
+
+
+<public-api-modal [id]="approveModal"
+    classList="modal-dialog-centered overflow-visible">
+    <img src="assets/images/icons/list2.png" height="50" class="mb-3" srcset=""
+        />
+    <p
+        class="mt-2 mb-3 fs-5 text-primary"
+        translate="branches.to_accept_order_plz_select_branch"></p>
+
+    <p-dropdown
+        styleClass="w-100 mb-3"
+        [(ngModel)]="selectedBranch"
+        [options]="branches"
+        placeholder="{{ 'choose' | translate }}"
+        [optionLabel]="(lang.isAr | async) ? 'name' : 'nameEn'"
+        [filter]="true">
+    </p-dropdown>
+
+    <div class="d-flex justify-content-end gap-2">
+
+        <button
+            (click)="selectedBranch= null"
+            translate="cancel"
+            type="button"
+            class="btn rounded-8 px-4 py-2"
+            data-bs-dismiss="modal"></button>
+        <button
+            [disabled]="!selectedBranch"
+            translate="submit"
+            type="button"
+            (click)="approve()"
+            class="btn rounded-8 px-4 py-2 btn-primary"></button>
+    </div>
+</public-api-modal>
+
+
+<public-api-modal classList="modal-dialog-centered" [id]="errorOperation">
+    <img width="50" src="assets/images/icons/cancel.png" alt="" class="mb-3" />
+    <h4 class="fw-700" translate="errorOperation"></h4>
+
+    <p class="mt-2 text-info" translate="cancel_this_operation"></p>
+
+    <div class="d-flex justify-content-end gap-2">
+        <button type="button" data-bs-dismiss="modal" class="btn rounded-8 px-4
+            py-2
+            btn-light" translate="cancel"></button>
+    </div>
+</public-api-modal>
+
+
+<public-api-modal classList="modal-dialog-centered" [id]="rejectModal">
+    <img src="assets/images/svg/delete.svg" alt="" class="mb-3" srcset="" />
+    <h4 class="fw-700" translate="clients.reject_client_request"></h4>
+    <form class="mt-3" [formGroup]="Reason" (ngSubmit)="reject(Reason)">
+        <label translate="clients.reason_of_reject"></label>
+        <textarea
+            class="form-control mt-2"
+            rows="5"
+            formControlName="reason"></textarea>
+        <div class="mt-1 text-danger" *ngIf="Reason.controls['reason'].touched">
+            <p
+                translate="clients.reason_of_reject_invalid"
+                *ngIf="Reason.controls['reason'].errors?.['minlength']"></p>
+            <p
+                translate="clients.reason_of_reject_required"
+                *ngIf="Reason.controls['reason'].hasError('required')"></p>
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <button
+                type="button"
+                data-bs-dismiss="modal"
+                class="btn rounded-8 px-4 py-2 btn-light"
+                translate="cancel"></button>
+            <button
+                translate="ok"
+                type="submit"
+                data-bs-dismiss="modal"
+                class="btn rounded-8 px-4 py-2 btn-danger"></button>
+        </div>
+    </form>
+</public-api-modal>
+
+
+
+<public-api-canvas [id]="negotiationCanvas">
+    <ng-container *ngIf="data?.length">
+        <h3 class="text-align-center mt-4" translate="negotiate"></h3>
+        <div translate="reject_reason" class="my-3"></div>
+        <div class="container border border-4 ">
+            <p class="pt-3 px-2 text-align-center">{{data[0]?.rejectReson}}</p>
+        </div>
+        <div *ngFor="let item of messages">
+            <div class="bg-light p-3 mt-2 rounded-3 w-75 me-auto"
+                *ngIf="item.messageFrom==1">
+                <p class="mb-0">{{item.message}}</p>
+            </div>
+            <div class="bg-light p-3 mt-2 rounded-3 w-75 ms-auto"
+                *ngIf="item.messageFrom==0">
+                <p class="mb-0">{{item.message}}</p>
+            </div>
+        </div>
+        <form class="my-3" [formGroup]="messageForm"
+            (ngSubmit)="sendMessage(messageForm)">
+            <div class="form-floating ">
+                <textarea class="form-control" id="exampleFormControlTextarea1"
+                    placeholder="aaaaaaaaa" style="height: 100px"
+                    formControlName="message"></textarea>
+                <label for="floatingInput" translate="sendMessage"></label>
+                <div
+                    *ngIf="messageForm.controls['message'].hasError('required')&&messageForm.controls['message'].touched">
+                    <p class="text-danger"
+                        translate="message_required"></p>
+                </div>
+            </div>
+            <button
+                translate="send"
+                type="submit"
+                class="btn rounded-8 px-4 py-2 mt-2 float-end btn-primary"></button>
+        </form>
+    </ng-container>
+</public-api-canvas>
+
+
+
+
+
+
+
+<public-api-canvas [id]="canvasOffer">
+
+    <div class="mt-3 px-2">
+        <h3 class="text-align-center" translate="EndNegotiation"></h3>
+        <form [formGroup]="offerRequest" class="mt-3" #form="ngForm">
+
+
+            <div>
+
+                <div class="my-3" formArrayName="offerPriceGuardsShifts"
+                    *ngFor="
+                    let item2 of $any(offerPriceGuardsShifts?.controls);
+                    let i= index;
+                    ">
+                    <div [formGroup]="item2" class="d-flex
+                        flex-column
+                        gap-3">
+                        <div
+                            *ngIf="selectedRequest?.clientOrderGuardsShifts?.length">
+                            <h3 class="text-muted mt-3">{{lang.isAr?selectedRequest.clientOrderGuardsShifts[i].shiftType?.name:selectedRequest.clientOrderGuardsShifts[i].shiftType?.nameEN}}</h3>
+                            <div class="mt-3">
+                                <div class="text-muted">{{lang.isAr?selectedRequest.clientOrderGuardsShifts[i].jobType?.name:selectedRequest.clientOrderGuardsShifts[i].jobType?.nameEN}}</div>
+                                <div class="d-flex mt-2"
+                                    *ngIf="selectedRequest.clientOrderGuardsShifts[i]?.jobTypeId==3">
+                                    <p class="fw-"
+                                        translate="clients.guardNumber"></p>
+                                    <p class="text-danger px-2">{{selectedRequest.clientOrderGuardsShifts[i]?.number}}</p>
+                                </div>
+                                <div class="d-flex mt-2"
+                                    *ngIf="selectedRequest.clientOrderGuardsShifts[i]?.jobTypeId==1">
+                                    <p class="fw-"
+                                        translate="clients.supervisorNumber"></p>
+                                    <p class="text-danger px-2">{{selectedRequest.clientOrderGuardsShifts[i]?.number}}</p>
+                                </div>
+                                <div class="d-flex justify-content-around mt-1
+                                    ">
+                                    <div>
+                                        <div class="fs-14 text-info lh-lg
+                                            text-align-center"
+                                            translate="from"></div>
+                                        <div class="fs-6 fw-600 mt-1">
+                                            {{ selectedRequest.startDate.split("
+                                            ")[0] }}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="fs-14 text-info lh-lg
+                                            text-align-center"
+                                            translate="to"></div>
+                                        <div class="fs-6 fw-600 mt-1">
+                                            {{ selectedRequest.endDate.split("
+                                            ")[0] }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <p translate="clients.priceSupervisor"
+                                    *ngIf="selectedRequest.clientOrderGuardsShifts[i]?.jobTypeId==1"></p>
+                                <p translate="clients.priceGuard"
+                                    *ngIf="selectedRequest.clientOrderGuardsShifts[i]?.jobTypeId==3"></p>
+                                <input
+                                    class="form-control py-2" type="number"
+                                    formControlName="price" min=1
+                                    (change)="totalForm($event,i)">
+                                <div class="error-message"
+                                    *ngIf="offerPriceGuardsShifts.at(i).get('price')?.hasError('required')
+                                    &&
+                                    form.submitted"
+                                    [innerHtml]="'validation.price_required' |
+                                    translate"></div>
+                                <div class="error-message"
+                                    *ngIf="offerPriceGuardsShifts.at(i).get('price')?.hasError('min')
+                                    &&
+                                    form.submitted"
+                                    [innerHtml]="'validation.price_invalid' |
+                                    translate"></div>
+                                <div
+                                    *ngIf="offerPriceGuardsShifts.at(i).get('total')?.value">
+                                    <p class="mt-2"
+                                        translate="clients.totalInShift"></p>
+                                    <h3 class="form-control py-2 mt-2">{{offerRequest.controls['offerPriceGuardsShifts']?.value[i]?.total}}
+                                        {{'riyal'|translate}}</h3>
+                                </div>
+
+                                <hr/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex" *ngIf="totalPrice">
+                    <p class="fs-5" translate="clients.totalPrice"></p>
+                    <p class="px-3 fs-5 text-danger " *ngIf="totalPrice">{{totalPrice}}
+                        {{'riyal'|translate}}</p>
+                </div>
+                <div class="pb-5">
+                    <button type="submit" class="btn btn-primary
+                        rounded-10
+                        float-end "
+                        (click)="updateRequest()" translate="update"></button>
+                </div>
+            </form>
+        </div>
+    </public-api-canvas>
+
+
+
+    <public-api-modal classList="modal-dialog-centered"
+        [id]="updateNegotiation">
+        <img width="50" src="assets/images/icons/checked.png" alt=""
+            class="mb-3"
+            />
+        <div class="fw-600" translate="updateOffer"></div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button translate="continue" (click)="closeUpdate()" type="button"
+                class="btn rounded-8 px-4 py-2 btn-primary text-white"></button>
+        </div>
+    </public-api-modal>

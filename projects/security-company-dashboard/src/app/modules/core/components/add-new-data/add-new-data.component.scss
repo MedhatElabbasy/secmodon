@@ -1,0 +1,21 @@
+@import "libs/assets/styles/variables.scss";
+
+
+
+@media (min-width: 500px) {
+
+    .file,
+    p-image {
+        background-color: $bg-light;
+        height: 200px;
+        width: 100%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        background-size: cover;
+        background-position: center;
+    }
+}
+

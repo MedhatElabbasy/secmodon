@@ -1,0 +1,23 @@
+<div class="container my-3 ">
+    <h4 class="">
+        <svg (click)="back()" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+            <path id="Path_350" data-name="Path 350"
+                d="M56.667,71.667a15,15,0,1,0-15-15A15.017,15.017,0,0,0,56.667,71.667Zm0-28.058A13.058,13.058,0,1,1,43.609,56.667,13.072,13.072,0,0,1,56.667,43.609ZM49.383,58.53H59.24L55.371,62.4a1.619,1.619,0,0,0,0,2.289l.314.314a1.618,1.618,0,0,0,2.289,0L65.1,57.881a1.618,1.618,0,0,0,.474-1.144V56.6a1.619,1.619,0,0,0-.474-1.144l-7.122-7.122a1.619,1.619,0,0,0-2.289,0l-.314.314a1.619,1.619,0,0,0,0,2.289l3.87,3.87H49.383a1.619,1.619,0,0,0-1.619,1.619v.489A1.619,1.619,0,0,0,49.383,58.53Z"
+                transform="translate(-41.667 -41.667)" fill="#12123c" fill-rule="evenodd" />
+        </svg>
+        عرض تفاصيل التقرير لرصد حادث مروري
+    </h4>
+
+    <div class="content shadow-sm rounded-3  mt-3 py-4">
+        <div class="d-flex justify-content-around px-lg-5 border-bottom border-2 border-dark">
+            <h6 class="pb-2" routerLink="general" routerLinkActive="activeLink">المعلومات العامة</h6>
+            <h6 class="pb-2" routerLink="drivers" routerLinkActive="activeLink">بيانات عن السائق</h6>
+            <h6 class="pb-2" routerLink="passengers" routerLinkActive="activeLink">معلومات عن الركاب</h6>
+            <h6 class="pb-2" routerLink="accedent" routerLinkActive="activeLink">بيانات عن الحادث</h6>
+            <h6 class="pb-2" routerLink="notes" routerLinkActive="activeLink">ملاحظات عامة</h6>
+        </div>
+        <div class="p-4">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

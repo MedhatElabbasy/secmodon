@@ -1,0 +1,723 @@
+<div class="container py-4">
+  <div class="flex-grow-0">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="m-0 fw-600" translate="security_dashboard.dash.account_management"></h4>
+      <!-- <button type="button"
+        class="btn bg-info-o text-info border-0 d-flex align-items-center gap-3 btn-primary py-2 rounded-8">
+        <i class="fa-solid fa-pen"></i>
+        {{ "edit" | translate }}
+      </button>-->
+    </div>
+  </div>
+
+  <div class="card mt-3 border-0 rounded-12">
+    <div class="card-body">
+      <button (click)="editPersonProfile()" type="button" class="btn
+        bg-primary-o text-primary float-end edit"><i class="fas fa-pen"></i></button>
+      <div>
+        <div class="row row-cols-1 row-cols-lg-2">
+          <div>
+            <div class="d-flex align-items-center gap-3">
+              <div class="flex-grow-0" style="position: relative;">
+                <img [src]="company.companyLogo?.fullLink" class="avatar
+                  rounded-10 " alt="profile image" />
+                <div><button (click)="updatePhoto()" type="button" class="btn
+                    editImage
+                    text-primary float-end edit"><i class="fas fa-camera"></i></button></div>
+              </div>
+              <div>
+                <h5 class="text-primary mb-1 fw-600">
+                  {{ (company.firstName || "") + " "+(company?.middleName || "") + " " +
+                  (company.lastName || "") }}
+                </h5>
+                <p class="text-info mb-1">{{ company.email }}</p>
+                <p class="text-info mb-1">{{ company.companyContactNumber }}</p>
+                <p class="mb-1">
+                  <span class="text-info" translate="bushiness_type"></span>:
+                  {{
+                  (isAr | async)
+                  ? company?.businessType?.name
+                  : company?.businessType?.nameEN
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="d-flex gap-3 align-items-start">
+              <div class="d-inline-block text-info">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div class="d-inline-block">
+                <div translate="location" class="text-info"></div>
+                <div>{{ company.address }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card overflow-hidden mt-4 border-0 rounded-12">
+    <ul class="nav sub-nav rounded-0 nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button translate="security_dashboard.bushiness_details" class="nav-link
+          active" id="Business-tab" data-bs-toggle="tab" data-bs-target="#Business" type="button" role="tab"
+          aria-controls="Business" aria-selected="true"></button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button translate="steps.bank_details" class="nav-link" id="profile-tab" data-bs-toggle="tab"
+          data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"></button>
+      </li>
+      <!-- <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="contact-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#contact"
+          type="button"
+          role="tab"
+          aria-controls="contact"
+          aria-selected="false"
+        >
+          Contact
+        </button>
+      </li> -->
+    </ul>
+    <div class="card-body">
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="Business" role="tabpanel" aria-labelledby="Business-tab">
+          <div class="card border-0 rounded-12">
+            <div class="card-body">
+              <div class="row row-cols-1 row-cols-lg-2">
+                <div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="flex-grow-0">
+                      <img [src]="company.companyLogo?.fullLink" class="avatar
+                        rounded-10" alt="profile image" />
+                    </div>
+                    <div>
+                      <h5 class="text-primary mb-1 fw-600">
+                        {{ company.name }}
+                      </h5>
+                      <p class="text-info mb-1">{{ company.email }}</p>
+                      <p class="text-info mb-1">
+                        {{ company.companyContactNumber }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="d-flex gap-3 align-items-start">
+                    <div class="d-inline-block text-info">
+                      <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div class="d-inline-block">
+                      <div translate="location" class="text-info"></div>
+                      <div>{{ company.address }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <button (click)="editDescriptionAndLinksProfile()" type="button" class="btn
+            bg-primary-o text-primary float-end edit"><i class="fas fa-pen"></i></button>
+          <h6 translate="about_company" class="text-info"></h6>
+
+          <pre *ngIf="!company.overview" class="text-info">
+            {{ company.businessDescription }}
+          </pre>
+          <pre *ngIf="company.overview" class="text-info">
+            {{  (isAr | async)
+              ? company.overview
+              : company.overviewEn }}
+          </pre>
+          <div class="row" *ngIf="company.commercialRegisterNumber">
+            <div class="col-md text-align-center">
+              <h6 translate="completeCompanyProfile.commercialRegisterNumber" class="text-info"></h6>
+              <p>{{company.commercialRegisterNumber}}</p>
+            </div>
+            <div class="col-md">
+              <h6 translate="completeCompanyProfile.securityLicenseNumber" class="text-info"></h6>
+              <p>{{company.licenseNumber}}</p>
+            </div>
+            <div class="col-md">
+              <h6 translate="licenseEndDate" class="text-info"></h6>
+              <p>{{company.licenseEndDate.split('T')[0]}}</p>
+            </div>
+            <div class="col-md">
+              <h6 translate="completeCompanyProfile.licenseImage" class="text-info"></h6>
+              <a [href]="company.profileImage.fullLink" target="_blank" class="btn btn-primary"
+                translate="completeCompanyProfile.licenseImage"></a>
+            </div>
+          </div>
+          <hr />
+          <button (click)="editAvaliableServicesProfile()" type="button" class="btn
+            bg-primary-o text-primary float-end edit"><i class="fas fa-pen"></i></button>
+          <h6 class="text-info" translate="services_available"></h6>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <span *ngFor="let service of
+              company.securitCompanyAvailableServices" class="badge fw-normal
+              fs-6 bg-warning bg-primary p-2">
+              <i type="button" (click)="deleteAvaliableServices(service)" class="px-2 fa-solid fa-xmark"></i>
+              {{
+              (isAr | async)
+              ? service.availableServices.name
+              : service.availableServices.nameEN
+              }}
+            </span>
+          </div>
+
+          <hr />
+
+          <div class="mb-3">
+            <div class="text-info mb-2" translate="company_website"></div>
+            <div>{{ company.website }}</div>
+          </div>
+
+          <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div>
+              <div class="text-info mb-2" translate="social_media_link1"></div>
+              <div>{{ company.socialMediaLink }}</div>
+            </div>
+            <div>
+              <div class="text-info mb-2" translate="social_media_link2"></div>
+              <div>{{ company.socialMediaLink2 }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <div class="row g-4">
+            <!--new -->
+            <div class="d-flex justify-content-end">
+              <button (click)="editBankDetails()" type="button" class="btn
+                bg-primary-o text-primary edit"><i class="fas fa-pen"></i></button>
+            </div>
+
+            <!--new end-->
+            <div class="col-lg-8 col-md-12">
+              <div class="row row-cols-1 row-cols-md-2 g-4">
+                <div>
+                  <div translate="bank_name" class="text-info mb-2"></div>
+                  <div>{{ company.bankName }}</div>
+                </div>
+                <div>
+                  <div translate="account_holder_name" class="text-info mb-2"></div>
+                  <div>{{ company.accountHolderName }}</div>
+                </div>
+                <div>
+                  <div translate="account_name" class="text-info mb-2"></div>
+                  <div>{{ company.accountName }}</div>
+                </div>
+                <div>
+                  <div translate="IBAN_number" class="text-info mb-2"></div>
+                  <div>{{ company.iban }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+              <div class="d-flex rounded-8 justify-content-between gap-2
+                align-items-center p-2 bg-info-o">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="bg-primary-o icon flex-shrink-0">
+                    <img [src]="company.idProof?.fullLink" class="id
+                      obj-contain" alt="id proof" onerror="this.src=
+                      'assets/images/icons/file.png'" />
+                  </div>
+
+                  <div>
+                    <div class="text-info mb-1 fs-14" translate="id_proof"></div>
+                    <div class="text-primary fs-18 fw-700">
+                      {{ company.idProof?.name }}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <a [href]="company.idProof?.fullLink" type="button" target="_blank"
+                    class="btn btn-info rounded-8 text-white" translate="show">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div
+          class="tab-pane fade"
+          id="contact"
+          role="tabpanel"
+          aria-labelledby="contact-tab"
+        >
+          ...
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<public-api-canvas [id]="editPersonCanvas">
+  <form [formGroup]="personForm" (ngSubmit)="updatePersonalInfo()" #pForm="ngForm">
+    <div>
+      <h5 class="fw-600 text-align-center text-primary mb-4" translate="edit_profile">
+      </h5>
+
+      <!-- -------------------------------- photo -------------------------------- -->
+      <!-- <div class="mb-4">
+        <div style="height: 160px; width: 180px;" class="mx-auto">
+          <public-api-file-upload [Control]="personControls['profileImageId']"
+            [acceptedExtension]="acceptedFiles"
+            [link]="imagePath">
+            <div class="text-info fs-14 text-align-center"
+              translate="click_to_upload_profile_image">
+            </div>
+          </public-api-file-upload> -->
+      <!--! -------------------------- image validation --------------------------- -->
+      <!-- <div class="error-message"
+            *ngIf="personControls['profileImageId'].invalid && pForm.submitted">
+            <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+            {{"validation.photo_is_required" | translate}}
+          </div>
+        </div>
+      </div> -->
+      <!-- ----------------------------- first name ------------------------------ -->
+      <div class="mb-3">
+        <div class="form-floating">
+          <input type="text" formControlName="firstName" class="form-control" id="firstName" placeholder="data" />
+          <label for="firstName" translate="firstName"></label>
+        </div>
+
+        <!--! ----------------------------- validation ------------------------------ -->
+        <div class="error-message" *ngIf="personControls['firstName'].hasError('required') &&
+          pForm.submitted" [innerHtml]="'validation.first_name_required' |
+          translate">
+        </div>
+
+      </div>
+
+      <!-- ------------------------------ last name ------------------------------ -->
+      <div class="mb-3">
+        <div class="form-floating">
+          <input type="text" formControlName="lastName" class="form-control" id="lastName" placeholder="data" />
+          <label for="lastName" translate="lastName"></label>
+        </div>
+
+        <!--! ----------------------------- validation ------------------------------ -->
+        <div [innerHtml]="'validation.last_name_required' | translate" class="error-message" *ngIf="personControls['lastName'].hasError('required') &&
+          pForm.submitted">
+
+        </div>
+
+      </div>
+
+      <!-- -------------------------------- email -------------------------------- -->
+      <div class="mb-3">
+        <div class="form-floating">
+          <input type="email" class="form-control" formControlName="email" id="email" placeholder="data" />
+          <label for="email" translate="email"></label>
+        </div>
+
+        <!--! ----------------------------- validation ------------------------------ -->
+        <div class="error-message" *ngIf="personControls['email'].hasError('required') &&
+          pForm.submitted">
+          <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+          <div translate="validation.email_required"></div>
+        </div>
+
+        <div class="error-message" *ngIf="personControls['email'].hasError('email') && pForm.submitted">
+          <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+          <div translate="validation.email_invalid"></div>
+        </div>
+      </div>
+      <!--------------------------------MobileNumber------------------------------------------>
+      <div class="mb-3">
+        <div class="form-floating">
+          <input type="number" formControlName="companyContactNumber" class="form-control" id="companyContactNumber"
+            placeholder="data" />
+          <label for="companyContactNumber" translate="companyContactNumber"></label>
+        </div>
+
+        <!--! ----------------------------- validation ------------------------------ -->
+        <div class="error-message" *ngIf="personControls['companyContactNumber'].hasError('required') &&
+          pForm.submitted" [innerHtml]="'validation.companyContactNumber_required' | translate">
+        </div>
+
+      </div>
+
+      <!-- --------------------------- business types ---------------------------- -->
+      <div class="mb-3">
+        <p-dropdown styleClass="w-100" [options]="businessTypes" formControlName="businessTypeId"
+          placeholder="{{ 'bushiness_type' | translate }}" optionLabel="{{(lang.isAr| async) ? 'name': 'nameEN'}}"
+          [filter]="true" optionValue="id"></p-dropdown>
+
+        <!--! ----------------------------- validation ------------------------------ -->
+        <div class="error-message" *ngIf="personControls['businessTypeId'].invalid && pForm.submitted">
+          <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+          <div translate="validation.field_required"></div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <div style="height: 200px">
+          <public-api-map-search [latControl]="personControls['locationLat']"
+            [lngControl]="personControls['locationLng']"
+            [addressControl]="personControls['address']"></public-api-map-search>
+        </div>
+        <div class="error-message" *ngIf="personControls['address'].invalid
+          &&
+          pForm.submitted">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          {{ "validation.field_required" | translate }}
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end mt-4">
+      <button type="reset" data-bs-dismiss="offcanvas" class="btn bg-info-o
+        text-primary rounded-10" translate="cancel"></button>
+      <button type="submit" class="btn btn-primary rounded-10" translate="edit"></button>
+    </div>
+  </form>
+</public-api-canvas>
+<!--------------------------------------------------------------->
+<public-api-canvas [id]="avalibleServicesCanvas">
+  <form [formGroup]="avaliableServicesForm" (ngSubmit)="editAvaliableServices()" #Sform="ngForm">
+
+    <div class="mt-4 flex-grow-1">
+      <div class="mb-3">
+        <p-dropdown [options]="jobs" [placeholder]="'validation.avaliable_services' | translate"
+          [optionLabel]="(isAr|async)? 'name' : 'nameEN'" optionValue="id" styleClass=" w-100" [filter]="true"
+          [filterBy]="isAr?
+          'name' : 'nameEN'" formControlName="job"></p-dropdown>
+        <div class="error-message" *ngIf="avaliableServicesForm.controls['job']?.errors?.['required']&&
+          Sform.submitted">
+          <ion-icon name="close-circle-outline" class="fs-5"></ion-icon>
+          {{ "validation.job_is_required" | translate }}
+        </div>
+
+      </div>
+
+      <div class="d-flex flex-wrap align-items-end justify-content-end gap-2">
+        <button type="button" class="btn px-4 rounded-8 btn-light" translate="cancel" data-bs-dismiss="offcanvas"
+          (click)="Sform.resetForm()"></button>
+        <button type="submit" translate="add" class="btn px-4 rounded-8
+          btn-primary"></button>
+      </div>
+    </div>
+  </form>
+</public-api-canvas>
+<!-------------------------------------------------------------------->
+<public-api-canvas [id]="descriptionCanvas">
+  <form [formGroup]="DescriptionForm" (ngSubmit)="editDescritionAndLinks()" #form="ngForm">
+    <h5 class="fw-600 text-align-center text-primary mb-4" translate="businessDescription">
+    </h5>
+
+    <!------------------Description-------------------------->
+    <div class="mb-3">
+      <div class="form-floating">
+        <textarea formControlName="businessDescription" class="form-control" placeholder="businessDescription"
+          id="businessDescription" style=" height: 120px"></textarea>
+        <label for="businessDescription" translate="businessDescription"></label>
+      </div>
+
+      <!--! ----------------------------- validation ------------------------------ -->
+      <div class="error-message" *ngIf="descriptionControls['businessDescription'].hasError('required')
+        &&
+        form.submitted" [innerHtml]="'validation.businessDescription_required' |
+        translate">
+      </div>
+    </div>
+    <!------------------DescriptionEn-------------------------->
+    <div class="mb-3">
+      <div class="form-floating">
+        <textarea formControlName="businessDescriptionEn" class="form-control" placeholder="businessDescriptionEn"
+          id="businessDescription" style=" height: 120px"></textarea>
+        <label for="businessDescription" translate="businessDescriptionEn"></label>
+      </div>
+
+      <!--! ----------------------------- validation ------------------------------ -->
+      <div class="error-message" *ngIf="descriptionControls['businessDescriptionEn'].hasError('required')
+        &&
+        form.submitted" [innerHtml]="'businessDescriptionEn_required' |
+        translate">
+      </div>
+    </div>
+    <!------------------------------------------website------------------->
+    <div class="mb-3">
+      <div class="form-floating">
+        <input type="text" formControlName="website" class="form-control" id="website" placeholder="data" />
+        <label for="website" translate="website"></label>
+      </div>
+
+      <!--! ----------------------------- validation ------------------------------ -->
+      <div class="error-message" *ngIf="descriptionControls['website'].hasError('required') &&
+        form.submitted" [innerHtml]="'validation.website_required' | translate">
+      </div>
+    </div>
+
+    <!-----------------------socialLink1--------------------------->
+    <div class="mb-3">
+      <div class="form-floating">
+        <input type="text" formControlName="socialMediaLink" class="form-control" id="socialMediaLink"
+          placeholder="data" />
+        <label for="socialMediaLink" translate="social_media_link1"></label>
+      </div>
+
+      <!--! ----------------------------- validation ------------------------------ -->
+      <div class="error-message" *ngIf="descriptionControls['socialMediaLink'].hasError('required') &&
+        form.submitted" [innerHtml]="'validation.socialMediaLink_required' |
+        translate">
+      </div>
+    </div>
+    <!--------------------------socialLink2------------------------------>
+    <div class="mb-3">
+      <div class="form-floating">
+        <input type="text" formControlName="socialMediaLink2" class="form-control" id="socialMediaLink2"
+          placeholder="data" />
+        <label for="socialMediaLink2" translate="social_media_link2"></label>
+      </div>
+
+      <!--! ----------------------------- validation ------------------------------ -->
+      <div class="error-message" *ngIf="descriptionControls['socialMediaLink2'].hasError('required') &&
+        form.submitted" [innerHtml]="'validation.socialMediaLink2_required' |
+        translate">
+      </div>
+    </div>
+    <!-- <div>
+      <div class="row g-4">
+        <div class="col-md d-none d-md-block"></div>
+      
+        <div class="form-floating ">
+          <input type="number" class="form-control "
+            placeholder="data"
+            id="commercialRegisterNumber"
+            formControlName="commercialRegisterNumber" />
+          <label for="commercialRegisterNumber">
+            {{ "completeCompanyProfile.commercialRegisterNumber" |
+            translate }}
+          </label>
+      
+          <div class="mt-1" *ngIf="form.submitted &&
+            controls['commercialRegisterNumber'].invalid">
+            <div
+              *ngIf="controls['commercialRegisterNumber'].errors.required"
+              class="error-message">
+              <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+              {{
+              'completeCompanyProfile.commercialRegisterNumber_required'
+              |
+              translate }}
+            </div>
+            <div
+              *ngIf="controls['commercialRegisterNumber'].errors.pattern"
+              class="error-message">
+              <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+              {{
+              'completeCompanyProfile.commercialRegisterNumber_valid'
+              |
+              translate
+              }}
+            </div>
+          </div>
+        </div>
+     
+     
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control"
+            placeholder="data"
+            id="securityLicenseNumber"
+            formControlName="licenseNumber" />
+          <label for="securityLicenseNumber">
+            {{ "completeCompanyProfile.securityLicenseNumber" |
+            translate }}
+          </label>
+
+       
+          <div class="mt-1" *ngIf="form.submitted &&
+            controls['licenseNumber'].invalid">
+            <div *ngIf="controls['licenseNumber'].errors.required"
+              class="error-message">
+              <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+              {{
+              'completeCompanyProfile.securityLicenseNumber_required'
+              |
+              translate
+              }}
+            </div>
+            <div *ngIf="controls['licenseNumber'].errors.pattern"
+              class="error-message">
+              <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+              {{
+              'completeCompanyProfile.securityLicenseNumber_valid'
+              |
+              translate }}
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-floating">
+
+          <input type="email" id="licenseEndDate"
+            class="form-control
+            bg-info-o"
+            placeholder="date" bsDatepicker
+            formControlName="licenseEndDate" [minDate]="date"
+            [bsConfig]="{
+            containerClass: 'theme-red',
+            dateInputFormat: 'DD-MM-YYYY',
+            isAnimated: true,
+            showWeekNumbers: false,
+            adaptivePosition: true
+            }"/>
+          <label for="licenseEndDate">
+            {{ "licenseEndDate" |
+            translate
+            }}
+          </label>
+
+   
+          <div class="mt-1" *ngIf="form.submitted &&
+            controls['licenseEndDate'].invalid">
+            <div
+              *ngIf="controls['licenseEndDate'].errors.required"
+              class="error-message">
+              <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
+              {{
+              'licenseEndDate_required'
+              |
+              translate }}
+            </div>
+          </div>
+        </div>
+     
+      </div>
+    </div> -->
+
+    <div class="d-flex gap-2 justify-content-end mt-4">
+      <button type="reset" data-bs-dismiss="offcanvas" class="btn bg-info-o
+        text-primary rounded-10" translate="cancel"></button>
+      <button type="submit" class="btn btn-primary rounded-10" translate="edit"></button>
+    </div>
+  </form>
+</public-api-canvas>
+<!------------------------------------------------------------>
+
+<!--new-->
+<public-api-canvas [id]="editBankData">
+  <form class="mt-4" [formGroup]="bankForm" (ngSubmit)="updateBankInfo()" #BForm="ngForm">
+    <div>
+      <h5 class="fw-600 text-align-center text-primary mb-4" translate="edit_bankData">
+      </h5>
+
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="form-floating">
+            <input type="text" class="form-control" formControlName="accountHolderName" placeholder="data" />
+            <label>
+              {{ "account_holder_name" | translate }}
+            </label>
+          </div>
+          <div class="error-message" *ngIf="bankControls['accountHolderName'].invalid && BForm.submitted"
+            [innerHtml]="'validation.account_holder_name_required' | translate"></div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input formControlName="bankName" type="text" class="form-control" placeholder="data" />
+            <label>
+              {{ "bank_name" | translate }}
+            </label>
+          </div>
+          <div class="error-message" *ngIf="bankControls['bankName'].invalid && BForm.submitted"
+            [innerHtml]="'validation.bank_name_required' | translate"></div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input formControlName="accountName" type="text" class="form-control" placeholder="data" />
+            <label>
+              {{ "account_name" | translate }}
+            </label>
+          </div>
+          <div class="error-message" *ngIf="bankControls['accountName'].invalid && BForm.submitted"
+            [innerHtml]="'validation.account_name_required' | translate"></div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input formControlName="iban" type="text" class="form-control" placeholder="data" />
+            <label>
+              {{ "IBAN_number" | translate }}
+            </label>
+          </div>
+
+          <div class="error-message" *ngIf="bankControls['iban']?.errors?.required && BForm.submitted">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.not_valid_to_use" | translate }}
+          </div>
+          <div class="error-message" *ngIf="bankControls['iban']?.errors?.pattern && BForm.submitted">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ "validation.not_valid_to_use" | translate }}
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="file2 bg-info-o rounded-10" [style.backgroundImage]="'url(' + idProofUrl + ')'"
+            (click)="idProofId.click()">
+            <input type="file" hidden #idProofId (change)="onUpload($event)" />
+            <div *ngIf="!idProofUrl && !docLink">
+              <img src="assets/images/icons/upload2.png" class="d-block obj mx-auto" alt="file-upload" width="45"
+                height="45" />
+              <div class="mt-3 text-info text-align-center">
+                {{ "upload_id_proof" | translate }}
+              </div>
+            </div>
+            <div *ngIf="docLink" class="h-100 w-100 d-flex align-items-center
+              justify-content-center">
+              <img src="assets/images/icons/file.png" width="60" height="60" class="obj-contain" />
+            </div>
+          </div>
+          <div class="error-message" *ngIf="bankControls['idProofId'].invalid && BForm.submitted"
+            [innerHtml]="'validation.id_proof_required' | translate"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end mt-4">
+      <button type="reset" data-bs-dismiss="offcanvas" class="btn bg-info-o
+        text-primary rounded-10" translate="cancel"></button>
+      <button type="submit" class="btn btn-primary rounded-10" translate="edit"></button>
+    </div>
+  </form>
+</public-api-canvas>
+<!--new end -->
+
+<!---------------------------photoUpdate----------------------->
+<public-api-canvas [id]="photoCanvas">
+  <div class="py-4">
+    <form [formGroup]="photoForm" #form="ngForm" (ngSubmit)="photo(photoForm)">
+      <h3 class="text-align-center fw-600" translate="global.update_photo"></h3>
+      <div class="mb-3">
+        <div class="file bg-info-o rounded-8 text-info py-3" [style.backgroundImage]="'url(' + profileImage + ')'"
+          (change)="onImageUpload($event)" (click)="personImage.click()">
+          <input type="file" #personImage hidden accept="image/x-png,image/gif,image/jpeg" />
+          <div class="container row" *ngIf="!profileImage">
+            <img src="../../../../../assets/images/Group577.png" class="col-6" style="width:120px; height:100px;" />
+            <div class="fs-14 mt-3 col-6">
+              {{ "global.click_to_upload_profile_image" | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="controls['photoId']?.errors?.required
+          && form.submitted" [innerHtml]="'global.image_required' | translate"></div>
+
+      </div>
+      <div class="d-flex gap-2 justify-content-end mt-4">
+        <button type="reset" data-bs-dismiss="offcanvas" class="btn bg-info-o
+          text-primary rounded-10" translate="cancel"></button>
+        <button type="submit" class="btn btn-primary rounded-10" translate="edit"></button>
+      </div>
+    </form>
+  </div>
+
+</public-api-canvas>

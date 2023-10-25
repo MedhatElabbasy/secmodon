@@ -1,0 +1,19 @@
+.status {
+  height: 80vh;
+  padding: 5%;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  .message {
+    background-color: #e9e5e5 !important;
+
+    border: 2px solid #12123c !important;
+  }
+}
+
+.success {
+  background-image: url(/assets/images/svg/paymentSuccess.svg);
+}
+.fail {
+  background-image: url(/assets/images/svg/paymentfailuer.svg);
+}

@@ -1,0 +1,195 @@
+<div class="container py-4 h-100 d-flex flex-column">
+    <div class="flex-grow-0">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="m-0 fw-600" style="font-size: 22px;" translate="timetrack.timetrack"></h4>
+        </div>
+    </div>
+
+    <div class="card mt-3 border-0 rounded-12 d-flex justify-content-center">
+        <div class="card-body">
+            <h4 class="m-0 fw-600 text-align-center" translate="timetrack.numbersOfHours" style="font-size: 18px;"></h4>
+        </div>
+    </div>
+
+    <div class="card mt-3 border-0 rounded-12 d-flex justify-content-center">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-1 p-0 d-flex justify-content-center">
+                    <div>
+                        <img src="assets/images/svg/Group 632.svg">
+                    </div>
+                </div>
+                <div class="col-9 p-0 d-flex align-items-center">
+                    <div>
+                        <h4 class="m-0 fw-600 " translate="timetrack.editTimeSchedule" style="font-size: 18px;"></h4>
+                        <p class="text-muted m-0" style="font-size: 12px; color:#8A8AA5"
+                            translate="timetrack.allowTime"></p>
+                    </div>
+                </div>
+                <div class="col-2 d-flex align-items-center justify-content-end">
+                    <div>
+                       <button class="btn rounded-8 bg-primary-o text-primary " (click)="saveChanges()" translate="timetrack.save"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+       
+        
+    </div>
+    <form [formGroup]="attendanceForm"  #pForm="ngForm">
+    <div class="row">
+        <div class="col-lg-6 col-12">
+            <div class="col-12">
+                <div class="card mt-3 border-0 rounded-12 d-flex justify-content-center">
+                    <div class="card-body">
+                        <button type="button" class="btn
+                                bg-primary-o text-primary float-end edit" style="cursor: auto;"><i
+                                class="fas fa-pen"></i></button>
+                        <h4 class="m-0 fw-600 text-align-center p-0" style="font-size: 18px;"
+                            translate="timetrack.editWebSchedule"></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-3">
+                
+                <div class="col-6">
+                    <div class="card mt-3 border-0 rounded-12 d-flex justify-content-center">
+                        <div class="card-body text-align-center">
+                            <div class="my-2">
+                                <img src="assets/images/svg/Login.svg">
+                            </div>
+                            <p translate="timetrack.earlyLoginAttendance"></p>
+                            <p *ngIf="!earlyLoginchecked" translate="timetrack.disallowance"></p>
+                            <p *ngIf="earlyLoginchecked" translate="timetrack.allowance"></p>
+                            <div class="mb-1">
+                                <p-inputSwitch class="edit" [(ngModel)]="earlyLoginchecked" [ngModelOptions]="{standalone: true}" (onChange)="toggleState($event)"></p-inputSwitch>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div *ngIf="earlyBreak==0 && earlyLoginchecked==false" class="rounded bg-primary-o text-primary p-2 mt-2">0</div>
+                            <p-dropdown *ngIf="earlyBreak!=0 || earlyLoginchecked==true" styleClass=" w-100 p-0 mt-2" [options]="minutes"
+                            placeholder="0"
+                            formControlName="earlyBreak"></p-dropdown>
+                                </div>
+                                <div class="col-6 d-flex align-items-center justify-content-center ">
+                                    <div>
+                                        <p class="m-0">دقايق</p>
+                                    </div>
+                                </div>
+            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card mt-3 border-0 rounded-12 d-flex justify-content-center">
+                        <div class="card-body text-align-center">
+                            <div class="my-2">
+                                <img src="assets/images/svg/Login.svg">
+                            </div>
+                            <p translate="timetrack.lateLoginAttendance"></p>
+                            <p *ngIf="!lateLoginchecked" translate="timetrack.disallowance"></p>
+                            <p *ngIf="lateLoginchecked" translate="timetrack.allowance"></p>
+                            <div class="mb-1">
+                                <p-inputSwitch class="edit" [(ngModel)]="lateLoginchecked" [ngModelOptions]="{standalone: true}" (onChange)="latetoggle($event)"></p-inputSwitch>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                            <div  *ngIf="latLogOut==0 && lateLoginchecked==false" class="rounded bg-primary-o text-primary p-2 mt-2">0</div>
+                            <p-dropdown *ngIf="latLogOut!=0 || lateLoginchecked==true" styleClass=" w-100 p-0 mt-2" [options]="minutes"
+                            placeholder="0"
+                            formControlName="latLogOut"></p-dropdown>
+                        </div>
+                            <div class="col-6 d-flex align-items-center justify-content-center">
+                                <div>
+                                    <p class="m-0">دقايق</p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+        <div class="col-lg-6 col-12">
+            <div class="col-12">
+                <div class="card mt-3 border-0 rounded-12 d-flex justify-content-center">
+                    <div class="card-body">
+                        <button type="button" class="btn
+                                bg-primary-o text-primary float-end edit" style="cursor: auto;"><i
+                                class="fas fa-pen"></i></button>
+                        <h4 class="m-0 fw-600 text-align-center p-0" style="font-size: 18px;"
+                            translate="timetrack.remender"></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-6">
+                    <div class="card mt-3 border-0 rounded-12 d-flex justify-content-center">
+                        <div class="card-body text-align-center">
+                            <div class="my-2">
+                                <img src="assets/images/svg/Group 655.svg">
+                            </div>
+                            <p translate="timetrack.remenderToLogout"></p>
+                            <p *ngIf="breakchecked" translate="timetrack.enable"></p>
+                            <p *ngIf="!breakchecked" translate="timetrack.disable"></p>
+                            <div class="mb-1">
+                                <p-inputSwitch class="edit" [(ngModel)]="breakchecked" [ngModelOptions]="{standalone: true}" (onChange)="breaktoggle($event)"></p-inputSwitch>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                            <div  *ngIf="brack==0 && breakchecked==false" class="rounded bg-primary-o text-primary p-2 mt-2">0</div>
+                            <p-dropdown *ngIf="brack!=0 || breakchecked==true" styleClass=" w-100 p-0 mt-2" [options]="minutes"
+                            placeholder="0"
+                            formControlName="brack"></p-dropdown>
+                        </div>
+                            <div class="col-6 d-flex align-items-center justify-content-center">
+                                <div>
+                                    <p class="m-0">دقايق</p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card mt-3 border-0 rounded-12 d-flex justify-content-center">
+                        <div class="card-body text-align-center">
+                            <div class="my-2">
+                                <img src="assets/images/svg/Group 655.svg">
+                            </div>
+                            <p translate="timetrack.remenderToLogin"></p>
+                            <p *ngIf="attendchecked" translate="timetrack.enable"></p>
+                            <p *ngIf="!attendchecked" translate="timetrack.disable"></p>
+                            <div class="mb-1">
+                                <p-inputSwitch class="edit" [(ngModel)]="attendchecked" [ngModelOptions]="{standalone: true}" (onChange)="attendtoggle($event)"></p-inputSwitch>
+                            </div>
+                            <div class="row">
+                            <div class="col-6">
+                            <div *ngIf="attend==0 && attendchecked==false" class="rounded bg-primary-o text-primary p-2 mt-2">0</div>
+                            <p-dropdown *ngIf="attend!=0 || attendchecked==true" styleClass=" w-100 p-0 mt-2" [options]="minutes"
+                            placeholder="0"
+                            formControlName="attend"></p-dropdown>
+                            </div>
+                            <div class="col-6 d-flex align-items-center justify-content-center">
+                                <div>
+                                    <p class="m-0">دقايق</p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>
+</div>

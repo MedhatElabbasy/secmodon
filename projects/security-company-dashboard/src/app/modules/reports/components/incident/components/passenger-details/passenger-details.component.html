@@ -1,0 +1,66 @@
+<div class="firstDriver">
+    <h5 class="text-primary">الطرف الأول</h5>
+    <div *ngFor="let passenger of incidentDetails?.firstPassenger; let i = index" class="row">
+
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>الاسم</p>
+                <h6>{{passenger.passengersName}}</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>الجنسية</p>
+                <h6>{{passenger.passengersNationality}}</h6>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>الحالة الصحية</p>
+                <h6>{{passenger.passengersHealthStatus}}</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>مكان الإصابة</p>
+                <h6>{{passenger.passengersLocationOfInjury}}</h6>
+            </div>
+        </div>
+        <hr *ngIf=" i != incidentDetails?.firstPassenger.length - 1" class="shadow-sm">
+    </div>
+
+    <hr class="shadow-sm my-4">
+
+
+    <h5 class="text-primary">الطرف الثاني</h5>
+    <div *ngFor="let passenger of incidentDetails?.secondPassenger; let i = index" class="row">
+
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>الاسم</p>
+                <h6>{{passenger.passengersName}}</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>الجنسية</p>
+                <h6>{{passenger.passengersNationality}}</h6>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>الحالة الصحية</p>
+                <h6>{{passenger.passengersHealthStatus}}</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 p-3 mb-3">
+            <div class="detail">
+                <p>مكان الإصابة</p>
+                <h6>{{passenger.passengersLocationOfInjury}}</h6>
+            </div>
+        </div>
+        <hr *ngIf=" i != incidentDetails?.firstPassenger.length - 1" class="shadow-sm">
+    </div>
+</div>

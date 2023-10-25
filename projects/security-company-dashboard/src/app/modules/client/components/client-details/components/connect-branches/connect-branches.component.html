@@ -1,0 +1,100 @@
+<div>
+  <div class="input-group">
+    <span class="input-group-text border-0 bg-transparent" id="search">
+      <ion-icon name="search"></ion-icon>
+    </span>
+    <input type="text" class="form-control" placeholder="{{ 'search' | translate }}" aria-label="search"
+      aria-describedby="search" [(ngModel)]="searchKey" />
+  </div>
+</div>
+<hr>
+<div class="table-responsive">
+  <table class="table">
+    <tbody *ngIf="branches.length">
+      <tr *ngFor="
+        let branch of branches
+        |filter: searchKey
+        ">
+        <td>
+          <div class="d-flex align-items-start text-nowrap">
+            <div class="flex-shrink-0">
+              <img [src]="branch.clientCompanyBranch.photo?.fullLink" class="obj-cover rounded-8" alt width="40" height="40">
+            </div>
+            <div class="flex-grow-1 mis-3">
+              <h5 class="m-0">{{ (lang.isAr | async)? branch.clientCompanyBranch.name
+                : branch.clientCompanyBranch.nameEn}}</h5>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex align-items-center gap-2  text-nowrap">
+            {{branch.address}}
+          </div>
+        </td>
+        <td>
+          <div class="d-flex align-items-center gap-2 justify-content-center text-nowrap"
+            *ngIf="branch.securityCompanyBranch">
+            {{ (lang.isAr | async)?
+            branch.securityCompanyBranch.name
+            : branch.securityCompanyBranch.nameEn}}
+          </div>
+          <div class="d-flex align-items-center gap-2 justify-content-center text-nowrap"
+            *ngIf="!branch.securityCompanyBranch" translate="branches.notExist">
+
+          </div>
+        </td>
+        <td *ngIf="!branch.securityCompanyBranch">
+          <button class="btn btn-success" translate="branches.addConnection" (click)="action(branch,'add')"></button>
+        </td>
+        <td *ngIf="branch.securityCompanyBranch">
+          <button class="btn btn-primary" translate="branches.updateConnection"
+            (click)="action(branch,'update')"></button>
+        </td>
+
+      </tr>
+    </tbody>
+    <tbody *ngIf="!branches.length">
+      <tr>
+        <td colspan="3">
+          <h6 class="text-danger text-align-center" translate="branches.no_branches_created"></h6>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<public-api-canvas [id]="canvasId">
+  <form class="py-2" (ngSubmit)="onSubmit()" [formGroup]="form">
+    <h5 class="fw-600 text-align-center mb-4" translate="branches.addConnection" *ngIf="type=='add'"></h5>
+    <h5 class="fw-600 text-align-center mb-4" translate="branches.updateConnection" *ngIf="type=='update'"></h5>
+    <div class="mb-3">
+      <div class="form-floating">
+        <p-dropdown [filter]="true" filterBy="name" styleClass="w-100"
+          [optionLabel]=" (lang.isAr | async) ? 'name' : 'nameEn'" optionValue="id" [options]="allBranches"
+          [placeholder]="'security_dashboard.dash.branches' | translate"
+          formControlName="securityCompanyBranchId"></p-dropdown>
+      </div>
+      <div class="error-message" *ngIf="form.controls['securityCompanyBranchId'].invalid&&submitted"
+        [innerHtml]="'validation.branch_required' | translate"></div>
+
+    </div>
+    <div class="d-flex gap-2 justify-content-end">
+      <button data-bs-dismiss="offcanvas" translate="cancel" type="reset" class="btn px-4 rounded-10"></button>
+      <button type="submit" class="btn btn-primary px-4 rounded-10" translate="update" *ngIf="type=='update'"></button>
+      <button type="submit" class="btn btn-primary px-4 rounded-10" translate="add" *ngIf="type=='add'"></button>
+    </div>
+  </form>
+</public-api-canvas>
+
+<!-- ------------------------------- success ------------------------------- -->
+<public-api-modal [id]="model" classList="modal-dialog-centered">
+  <img width="50" src="assets/images/icons/checked.png" alt class="mb-3" />
+  <h5 class="fw-600" translate="branches.successUpdate" *ngIf="type=='update'"></h5>
+  <h5 class="fw-600" translate="branches.successAdd" *ngIf="type=='add'"></h5>
+
+
+  <div class="d-flex justify-content-end gap-2">
+    <button translate="continue" data-bs-dismiss="modal" type="button"
+      class="btn rounded-8 px-4 py-2 btn-primary text-white"></button>
+  </div>
+</public-api-modal>

@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-lg-4 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>رقم الحادث</p>
+            <h6>{{incidentDetails?.incidentNumber}}</h6>
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>تاريخ الحادث</p>
+            <h6>{{incidentDetails?.accidentDate}}</h6>
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>وقت الحادث</p>
+            <h6>{{incidentDetails?.accidentTime}}</h6>
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>المدينة الصناعية</p>
+            <h6>{{incidentDetails?.accidentCity}}</h6>
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>رقم الطريق</p>
+            <h6>{{incidentDetails?.roadNumber}}</h6>
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>رقم التقاطع</p>
+            <h6>{{incidentDetails?.intersectionNumber}}</h6>
+        </div>
+    </div>
+    <!-- <div class="col-lg-4 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>معلم بارز</p>
+            <h6>{{incidentDetails?.}}</h6>
+        </div>
+    </div> -->
+    <div class="col-lg-4 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>إسم مراقب الأمن مباشر الحادث</p>
+            <h6>{{incidentDetails?.companySecurityGuard?.name || "لا يوجد"}}</h6>
+        </div>
+    </div>
+</div>

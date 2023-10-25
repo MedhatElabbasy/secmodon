@@ -1,0 +1,52 @@
+import {
+    JobType,
+    SecurityCompany,
+    ShiftType,
+  } from 'projects/tools/src/public-api';
+import { Gender } from '../../jobs/models/job-details.enum';
+export interface coverage{
+ShiftType:ShiftType,
+gender:Gender,
+jobType:JobType,
+securityCompany:SecurityCompany
+allJobApplications:number,
+cityId:number,
+coveringAmount:number,
+coveringDate:string,
+coveringDateDateTime:string,
+coveringDateSinceTime:string,
+coveringDayes:number,
+coveringEndDate:string,
+coveringEndDateDateTime:string
+coveringEndDateSinceTime:string,
+coveringEndTime:string,
+coveringMinAge:number
+coveringStartTime:string
+coveringUniform:string,
+created:string,
+createdDateTime:string,
+experinceReqiured:number,
+genderId:number,
+id:number
+isApplayedJop:boolean,
+isComplete:boolean,
+isCovering:boolean,
+isCoveringComplete:boolean,
+isDeleted:boolean,
+isSavedJop:boolean,
+jobDescription:string,
+jobDescriptionEN:string,
+jobReqiurement:string,
+jobReqiurementEN:string,
+jobTypeId:number,
+locationLat:string,
+locationLng:string,
+locationName:string,
+openJobNumber:number,
+securityCompanyBranchId:string,
+securityCompanyId:number,
+shiftTypeId:number,
+sinceTime:string
+totalApplay:number,
+totalCoveringTime:string
+}

@@ -1,0 +1,133 @@
+<div class="card rounded-10 h-100" *ngIf="guard">
+  <div class="card-body">
+    <span class="badge bg-primary-o text-primary fs-14 p-2 fw-600 position-absolute id-card">
+      ID: {{ guard.companySecurityGuard.securityGuard.id }}
+    </span>
+    <div class="h-100 d-flex flex-column">
+      <div class="flex-fill d-flex flex-column">
+        <img [src]="guard.companySecurityGuard.securityGuard.photo?.fullLink"
+          class="obj-cover obj-position-c mb-3 rounded-8" width="60" height="60"
+          onerror="this.src = 'assets/images/icons/earth.png'" />
+        <h5 class="card-title mb-2">
+          {{
+          guard.companySecurityGuard.securityGuard.firstName +
+          " " +
+          guard.companySecurityGuard.securityGuard.middleName +
+          " " +
+          guard.companySecurityGuard.securityGuard.lastName
+          }}
+        </h5>
+        <div class="card-subtitle mb-2 text-info">
+          {{ guard.companySecurityGuard.securityGuard.email }}
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <button (click)="allShiftsCanvas(guard)" type="button"
+          class="btn rounded-8 float-end bg-primary mx-1 text-white " translate="clients.addToTable">
+        </button>
+        <button (click)="modal.open(deleteCanvas)" type="button"
+          class="btn rounded-8 float-end bg-danger-o mx-1 text-danger delete">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+
+      </div>
+      <!-- <div
+        class="bg-info-o rounded-10 p-2 d-flex justify-content-between align-items-center"
+      >
+        <span translate="active"></span>
+        <p-inputSwitch></p-inputSwitch>
+      </div> -->
+      <!-- test -->
+    </div>
+  </div>
+</div>
+
+<public-api-modal [id]="deleteCanvas" classList="modal-dialog-centered">
+  <img src="assets/images/svg/delete.svg" alt class="mb-3" srcset />
+  <h5 class="fw-700" translate="clients.delete_guard_confirm" [translateParams]="{
+      guard:
+        guard.companySecurityGuard.securityGuard.firstName +
+        ' ' +
+        guard.companySecurityGuard.securityGuard.lastName
+    }"></h5>
+  <p class="mt-2 text-info" translate="cancel_this_operation"></p>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" data-bs-dismiss="modal" class="btn rounded-8 px-4 py-2 btn-light" translate="cancel"></button>
+    <button translate="yes_delete" type="button" class="btn rounded-8 px-4 py-2 btn-danger" (click)="delete()"></button>
+  </div>
+</public-api-modal>
+
+<public-api-canvas [id]="allShifts">
+  <h2 class="text-align-center my-2 pb-3" translate="clients.allShifts"></h2>
+  <p-dropdown #myDropdown [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]=" 'name'"
+    [(ngModel)]="selectedItem" [options]="allSuperVisors" (onChange)="selectSuperVisor()"
+    [placeholder]="'clients.superVisor' | translate"></p-dropdown>
+  <div *ngIf="selectedItem">
+    <div class="border position-relative border-secondary border-3 mt-4 rounded-3 cursor-pointer"
+      *ngFor="let item of uniqueArray" (click)="selectShift(item)">
+      <div class="px-2">
+        <div class="m-2">
+          <p class="fs-3 fw-bold "><span class="start"></span>{{isAr?item.name:item.nameEN
+            }}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+
+          <div>
+            <p class="fw-bold mb-0" style="color: #55C154;">{{siteName}}</p>
+            <p class style="color: #55C154;">{{locationName}}</p>
+          </div>
+
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+
+          <div class="d-flex align-items-center">
+            <p class=" text-secondary">{{item.shiftStartTime}}
+            </p>
+            <p class="px-2">{{isAr?'إلى':'to'}}</p>
+            <p class=" text-secondary">{{item.shiftEndTime}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</public-api-canvas>
+
+<public-api-canvas [id]="allSchedules">
+  <h2 class="text-align-center my-2 pb-3" translate="clients.allShifts"></h2>
+  <div *ngFor="let item of schedules">
+
+    <div class="border border-secondary border-3 mt-4 p-3 rounded-3 cursor-pointer" (click)="addToSchedule(item)">
+      <h5 class="card-title m-0 mb-3">
+        {{ isAr? item.name :
+        item.nameEn }}
+      </h5>
+
+      <div class="d-flex flex-wrap gap-3">
+        <span class="rounded-3 fw-600 py-2 px-3 fs-14 rounded-3 bg-primary-o text-primary">
+          {{ item.numberOfWorkDayes}}
+          <!-- {{ getScheduleDay(item.clientShiftSchedule.schedulings) }} -->
+          {{ "shifts.working_days" | translate }}
+        </span>
+        <span class="rounded-3 fw-600 py-2 px-3 fs-14 rounded-3 bg-danger-o text-primary">
+          {{ 7 - item.numberOfWorkDayes }}
+          <!-- {{ item.breakScheduling.length }} -->
+          {{ "shifts.break" | translate }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+</public-api-canvas>
+
+<!-- ------------------------------- success ------------------------------- -->
+<public-api-modal [id]="successAlert" classList="modal-dialog-centered">
+  <img width="50" src="assets/images/icons/checked.png" alt class="mb-3" />
+  <h5 class="fw-600" translate="clients.done"></h5>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button translate="continue" data-bs-dismiss="modal" type="button"
+      class="btn rounded-8 px-4 py-2 btn-primary text-white"></button>
+  </div>
+</public-api-modal>

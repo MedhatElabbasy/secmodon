@@ -1,0 +1,39 @@
+.fontColor {
+  color: #8A8AA5;
+}
+
+.width {
+  width: fit-content;
+}
+
+.bgColor2 {
+  background-color: #dededf;
+  color: black
+}
+
+.bgColor1 {
+  background-color: #F36E32;
+  color: white;
+}
+
+.scroll {
+  overflow-x: scroll;
+}
+
+.packageScroll::-webkit-scrollbar {
+  display: none; 
+}
+
+.packageScroll{
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  //height: 500px;
+}
+// .packageButton{
+//   position: absolute;
+//   bottom: 10px;
+// }
+// .packagePosition{
+//   position: relative;
+//   height: 600px;
+// }

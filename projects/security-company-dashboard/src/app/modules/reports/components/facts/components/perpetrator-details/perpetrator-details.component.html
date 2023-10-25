@@ -1,0 +1,54 @@
+<div *ngFor="let culprit of dailyFactsDetails?.culpritLists; let i = index" class="row">
+
+    <div class="col-lg-3 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>الاسم</p>
+            <h5>{{culprit.culpritName}}</h5>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>الجنسية</p>
+            <h5>{{culprit.culpritNationality}}</h5>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>جهة العمل</p>
+            <h5>{{culprit.culpritEmployer}}</h5>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>رقم الهاتف</p>
+            <h5>{{culprit.culpritPhone}}</h5>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>رقم الهوية</p>
+            <h5>{{culprit.culpritIDNumber}}</h5>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 p-3 mb-3">
+        <div class="detail">
+            <p>نوعها</p>
+            <h5>{{culprit.culpritIDNumberType}}</h5>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 p-3 mb-3 border-0">
+        <div class="detail">
+            <p>العنوان</p>
+            <h5>{{culprit.culpritAddress}}</h5>
+        </div>
+    </div>
+    <hr *ngIf=" i != dailyFactsDetails?.culpritLists.length - 1" class="shadow-sm">
+</div>
+
+<div class="text-center">
+    <p *ngIf="!dailyFactsDetails?.culpritLists.length" class="text-danger">
+        لا يوجد بيانات
+    </p>
+</div>
+
