@@ -383,4 +383,4 @@ export class SuperVisorComponent implements OnInit {
     //Add 'implements OnDestroy' to the class.
     this._hubConnection.stop();
   }
-}
+ }

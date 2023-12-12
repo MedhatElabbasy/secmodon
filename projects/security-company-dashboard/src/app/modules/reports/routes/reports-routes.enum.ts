@@ -8,7 +8,15 @@ export enum ReportsRoutes {
   guardAttendance = 'guard-attendance',
   superVisorAttendance = 'superVisor-attendance',
   incident = 'incident',
-  facts = 'facts'
+  facts = 'facts',
+  formExclude='form-exclude',
+  securityAuditModel='Security_audit_model',
+  excludeNewRequest='exclude-new-request',
+  employeeGeneralInfo='employee-general-info',
+  transferReason='transfer-reason',
+  response='response',
+  accreditation='accreditation',
+  viewExcludeRequest='view-exclude-request'
 }
 // export enum Types {
 //   guardAttendance = 'guard-attendance',

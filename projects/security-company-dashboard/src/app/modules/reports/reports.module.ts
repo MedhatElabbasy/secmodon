@@ -24,6 +24,14 @@ import { FactsReportDetailsComponent } from './components/facts/components/facts
 import { PerpetratorDetailsComponent } from './components/facts/components/perpetrator-details/perpetrator-details.component';
 import { FactAttachmentComponent } from './components/facts/components/fact-attachment/fact-attachment.component';
 import { GeneralFactsComponent } from './components/facts/components/general-facts/general-facts.component';
+import { FormExcludeComponent } from './components/form-exclude/form-exclude.component';
+import { SecurityAuditModelComponent } from './components/security-audit-model/security-audit-model.component';
+import { ExcludeNewRequestComponent } from './components/form-exclude/components/exclude-new-request/exclude-new-request.component';
+import { EmployeeGeneralInfoComponent } from './components/form-exclude/components/components/employee-general-info/employee-general-info.component';
+import { TransferReasonComponent } from './components/form-exclude/components/components/transfer-reason/transfer-reason.component';
+import { ResponseComponent } from './components/form-exclude/components/components/response/response.component';
+import { AccreditationComponent } from './components/form-exclude/components/components/accreditation/accreditation.component';
+import { ViewExcludeRequestComponent } from './components/form-exclude/components/components/view-exclude-request/view-exclude-request.component';
 
 
 @NgModule({
@@ -50,6 +58,14 @@ import { GeneralFactsComponent } from './components/facts/components/general-fac
     PerpetratorDetailsComponent,
     FactAttachmentComponent,
     GeneralFactsComponent,
+    FormExcludeComponent,
+    SecurityAuditModelComponent,
+    ExcludeNewRequestComponent,
+    EmployeeGeneralInfoComponent,
+    TransferReasonComponent,
+    ResponseComponent,
+    AccreditationComponent,
+    ViewExcludeRequestComponent,
   ],
 
   imports: [CoreModule, ReportsRoutingModule],

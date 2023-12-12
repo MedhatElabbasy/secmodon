@@ -10,6 +10,7 @@ import {
   SiteDetails,
   SiteLocation,
 } from '../models/site-details';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -102,6 +103,12 @@ export class ClientSiteService {
     let id = this.auth.snapshot.userInfo?.id;
     return this.http.get(
       this.url + `api/SecurityCompanyBranch/GetAllByCompanyId?id=${id}`
+    );
+  }
+
+  getAllBySecurityCompanyClientId(id: string): Observable<any> {
+    return this.http.get<ClientSite[]>(
+      this.url + `api/ClientSite/GetAllSiteLocationBySecurityCompanyClientId?id=${id}`, {}
     );
   }
 

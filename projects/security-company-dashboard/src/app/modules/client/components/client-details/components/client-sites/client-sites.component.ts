@@ -47,6 +47,8 @@ export class ClientSitesComponent implements OnInit {
   editSiteCanvas = 'edit-site-canvas';
   selectedSite!: any;
   id!: string;
+  searchKey = '';
+  allData!:any[];
   constructor(
     private fb: FormBuilder,
     private canvas: CanvasService,
@@ -87,6 +89,7 @@ export class ClientSitesComponent implements OnInit {
         return e;
       });
       this.sites = res['initData'].sites;
+      this.allData = res['initData'].sites;
     });
   }
 
@@ -226,6 +229,7 @@ export class ClientSitesComponent implements OnInit {
       .getAllByClientId(this.securityCompanyClientId)
       .subscribe((res) => {
         this.sites = [...res];
+        this.allData = [...res];
       });
   }
 
@@ -260,5 +264,25 @@ export class ClientSitesComponent implements OnInit {
       this.editForm.resetForm();
       this.getClientSites();
     });
+  }
+
+  search() {
+    // console.log(this.allData);
+    this.sites = this.allData
+    let myData: any[] = [];
+    if (this.searchKey != '') {
+      this.sites.filter((ele: any) => {
+        let name = ele.siteName 
+        let number = ele.siteNumber
+        if (
+          name.includes(this.searchKey.replace(/\s/g, '')) || number?.includes(this.searchKey.replace(/\s/g, ''))
+        ) {
+          myData.push(ele);
+        }
+      });
+      this.sites = myData;
+    } else {
+      this.sites = this.allData;
+    }
   }
 }

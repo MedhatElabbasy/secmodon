@@ -102,6 +102,20 @@ export class ReportsComponent implements OnInit {
             image: 'assets/images/svg/facts.svg',
             roles: [Roles.VirtualAdmin],
           }
+          , {
+            name: 'reports.Request_form_to_exclude',
+            link: `/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.formExclude}`,
+            description: 'reports.Request_form_to_exclude_description',
+            image: 'assets/images/svgs/exclude.svg',
+            roles: [Roles.VirtualAdmin],
+          }
+          // , {
+          //   name: 'reports.Security_audit_model',
+          //   link: `/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.securityAuditModel}`,
+          //   description: 'reports.Security_audit_model_description',
+          //   image: 'assets/images/svgs/guard.svg',
+          //   roles: [Roles.VirtualAdmin],
+          // }
           );
 
           console.log(this.ReportsList);

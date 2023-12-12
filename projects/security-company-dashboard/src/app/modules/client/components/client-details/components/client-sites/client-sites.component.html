@@ -1,13 +1,13 @@
 <div class="h-100">
-  <div
+  <!-- <div
     *ngIf="!sites?.length"
     class="h-100 d-flex align-items-center justify-content-center">
     <app-add-button (click)="onAddSite()">
       <div class="text-align-center" translate="clients.no_sites_exist"></div>
     </app-add-button>
-  </div>
+  </div> -->
 
-  <div class="h-100" *ngIf="sites?.length">
+  <div class="h-100" >
     <div class="d-flex justify-content-between">
       <h5 class="fw-500 text-primary" translate="clients.sites"></h5>
       <button
@@ -15,6 +15,17 @@
         translate="add"
         type="button"
         class="btn btn-warning text-white rounded-10"></button>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="input-group">
+          <span class="input-group-text border-0 bg-transparent" id="search">
+            <ion-icon name="search"></ion-icon>
+          </span>
+          <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
+            aria-describedby="search" [(ngModel)]="searchKey" (keyup)="search()" />
+        </div>
+      </div>
     </div>
     <hr />
     <div>
@@ -27,6 +38,9 @@
           </div>
         </ng-container>
       </div>
+      <div *ngIf="!sites?.length" class="h-100 d-flex align-items-center justify-content-center">
+        <div class="text-align-center" translate="clients.no_sites_exist"></div>
+    </div>
     </div>
   </div>
 </div>

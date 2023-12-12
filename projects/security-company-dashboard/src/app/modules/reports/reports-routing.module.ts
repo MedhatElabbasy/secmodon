@@ -27,6 +27,14 @@ import { PerpetratorDetailsComponent } from './components/facts/components/perpe
 import { FactAttachmentComponent } from './components/facts/components/fact-attachment/fact-attachment.component';
 import { AllFactsResolver } from './components/facts/components/all-facts/all-facts.resolver';
 import { GeneralFactsComponent } from './components/facts/components/general-facts/general-facts.component';
+import { FormExcludeComponent } from './components/form-exclude/form-exclude.component';
+import { SecurityAuditModelComponent } from './components/security-audit-model/security-audit-model.component';
+import { ExcludeNewRequestComponent } from './components/form-exclude/components/exclude-new-request/exclude-new-request.component';
+import { EmployeeGeneralInfoComponent } from './components/form-exclude/components/components/employee-general-info/employee-general-info.component';
+import { TransferReasonComponent } from './components/form-exclude/components/components/transfer-reason/transfer-reason.component';
+import { ResponseComponent } from './components/form-exclude/components/components/response/response.component';
+import { AccreditationComponent } from './components/form-exclude/components/components/accreditation/accreditation.component';
+import { ViewExcludeRequestComponent } from './components/form-exclude/components/components/view-exclude-request/view-exclude-request.component';
 
 const routes: Routes = [
   { path: '', redirectTo: ReportsRoutes.allReports, pathMatch: 'full' },
@@ -70,6 +78,51 @@ const routes: Routes = [
     resolve: {
       report: VisitorsReportsResolver,
     },
+  },
+  {
+    path: ReportsRoutes.formExclude,
+    //component: FormExcludeComponent,
+    children: [
+      {
+        path:'',
+        component: FormExcludeComponent
+      },
+      {
+        path: ReportsRoutes.excludeNewRequest,
+        component: ExcludeNewRequestComponent,
+        children:[
+          {
+            path: '',
+            redirectTo: ReportsRoutes.employeeGeneralInfo,
+            pathMatch: 'full',
+          },
+          {
+            path: ReportsRoutes.employeeGeneralInfo,
+            component: EmployeeGeneralInfoComponent,
+          },
+          {
+            path: ReportsRoutes.transferReason,
+            component: TransferReasonComponent,
+          },
+          {
+            path: ReportsRoutes.response,
+            component: ResponseComponent,
+          },
+          {
+            path: ReportsRoutes.accreditation,
+            component: AccreditationComponent,
+          }
+        ]
+      },
+      {
+        path:ReportsRoutes.viewExcludeRequest,
+        component:ViewExcludeRequestComponent,
+      }
+    ]
+  },
+  {
+    path: ReportsRoutes.securityAuditModel,
+    component: SecurityAuditModelComponent,
   },
   {
     path: ReportsRoutes.incident,

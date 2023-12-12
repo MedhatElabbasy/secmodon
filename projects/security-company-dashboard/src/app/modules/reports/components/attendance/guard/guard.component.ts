@@ -22,6 +22,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { PackagesService } from '../../../../packages/services/packages.service';
 import { ClientsService } from '../../../../client/services/clients.service';
 import { Loader } from '../../../../core/enums/loader.enum';
+import { ClientSiteService } from '../../../../client/services/client-site.service';
 @Component({
   selector: 'app-guard',
   templateUrl: './guard.component.html',
@@ -46,6 +47,11 @@ export class GuardComponent implements OnInit {
   yesterday!: Date;
   searchKey = '';
   dowenload: any[] = [];
+  private arrShowedInTableValue: any = [];
+  totalWorkTime: any;
+  clientSites: any = []
+  securityCompanyClientId: string = ""
+
   constructor(
     private reports: ReportsService,
     private auth: AuthService,
@@ -53,7 +59,8 @@ export class GuardComponent implements OnInit {
     private route: ActivatedRoute,
     private localeService: BsLocaleService,
     private PackagesService: PackagesService,
-    private client: ClientsService
+    private client: ClientsService,
+    private _ClientSiteService: ClientSiteService
   ) {
     this.yesterday = new Date();
     this.yesterday.setDate(this.yesterday.getDate() - 1);
@@ -73,8 +80,11 @@ export class GuardComponent implements OnInit {
           element.companySecurityGuard.securityGuard.lastName
       })
       this.allData = this.report
+      this.updatearrShowedInTable(this.allData)
     });
   }
+
+
 
   onPageSizeChange(number: any) {
     this.pageSize = +number.target.value;
@@ -82,6 +92,9 @@ export class GuardComponent implements OnInit {
 
   onPageNumberChange(event: number) {
     this.pageNumber = event;
+
+
+
   }
 
   initDatePiker() {
@@ -115,6 +128,7 @@ export class GuardComponent implements OnInit {
         console.log('error while establishing signalr connection')
       );
   }
+
   getReports() {
     let date: any;
     let start;
@@ -153,6 +167,8 @@ export class GuardComponent implements OnInit {
               " " +
               element.companySecurityGuard.securityGuard.lastName
           })
+
+          this.updatearrShowedInTable(this.report)
         });
     } else {
       this.reports
@@ -166,8 +182,12 @@ export class GuardComponent implements OnInit {
               " " +
               element.companySecurityGuard.securityGuard.lastName
           })
+
+          this.updatearrShowedInTable(this.report)
         });
     }
+
+
   }
 
   getAttendanceByClient(startDate: string, endDate: string, loader: Loader) {
@@ -182,6 +202,9 @@ export class GuardComponent implements OnInit {
             " " +
             element.companySecurityGuard.securityGuard.lastName
         })
+
+        this.updatearrShowedInTable(this.report)
+
       });
   }
 
@@ -227,15 +250,38 @@ export class GuardComponent implements OnInit {
       this.clientFilter = true;
     }
   }
-  display(event: any) {
-    this.id = event.value;
+  display({ value }: any) {
+    console.log(value);
+    this.securityCompanyClientId = value.id
+    this._ClientSiteService.getAllBySecurityCompanyClientId(value.id).subscribe((res) => {
+      console.log(res);
+      this.clientSites = res
+    })
+
+    this.id = value.clientCompany.id;
+    console.log(this.id);
     this.delete = false;
     this.getReports();
+
   }
+
+  getAttendanceBySiteId({ value }: any) {
+    console.log(value);
+    console.log(this.date);
+    let date: any;
+    let start;
+    let end;
+    date = this.date.value;
+    start = convertDateToString(date[0]);
+    end = convertDateToString(date[1]);
+    this.getAllAttandanceByLocationId(start, end, value.id, this.securityCompanyClientId)
+  }
+
   deleteFilter() {
     this.filter = false;
     this.clientFilter = false;
     this.data = null;
+    this.clientSites = []
     this.delete = true;
     this.getReports();
   }
@@ -251,7 +297,7 @@ export class GuardComponent implements OnInit {
     noDownload: false,
     headers: [
       ' كود الحارس',
-      'الاسم',  
+      'الاسم',
       '	رقم الجوال',
       'التاريخ',
       'تم التسجيل بواسطة',
@@ -304,11 +350,11 @@ export class GuardComponent implements OnInit {
       } else {
         totalWorkTime = 'لا يوجد';
       }
-      if (this.report[i].totalExtraTime) {
-        totalExtraTime = this.report[i].totalExtraTime;
-      } else {
-        totalExtraTime = 'لم يتم العمل لوقت إضافي';
-      }
+      // if (this.report[i].totalExtraTime) {
+      totalExtraTime = this.report[i].totalExtraTime;
+      // } else {
+      //   totalExtraTime = 'لم يتم العمل لوقت إضافي';
+      // }
       if (this.report[i].toTalMustBreakTime) {
         toTalMustBreakTime = this.report[i].toTalMustBreakTime;
       } else {
@@ -348,9 +394,11 @@ export class GuardComponent implements OnInit {
 
       this.dowenload.push(field);
     }
-    console.log(this.dowenload);
+    // console.log(this.dowenload);
 
     this.downloadData(this.dowenload)
+
+
   }
   exportCSV() {
     this.getData();
@@ -374,7 +422,7 @@ export class GuardComponent implements OnInit {
   //   XLSX.writeFile(wb, fileName);
   // }
   downloadData(data: any[]) {
-    console.log(data);
+    // console.log(data);
 
     // Create a workbook and worksheet
     const workbook = XLSX.utils.book_new();
@@ -394,7 +442,7 @@ export class GuardComponent implements OnInit {
   }
 
   search() {
-    console.log(this.allData);
+    // console.log(this.allData);
     this.report = this.allData
     let myData: AttendanceReport[] = [];
     if (this.searchKey != '') {
@@ -417,5 +465,100 @@ export class GuardComponent implements OnInit {
 
       this.report = this.allData;
     }
+
+    this.updatearrShowedInTable(this.report)
+
+    // console.log(this.report);
   }
+
+
+
+  private _arrShowedInTable: any = [];
+
+  set arrShowedInTable(value: any) {
+    if (this._arrShowedInTable !== value) {
+      // Prop value has changed, perform actions here
+    }
+    this._arrShowedInTable = value;
+    console.log(this._arrShowedInTable);
+    console.log(this.calcTotalWorkTime(this._arrShowedInTable));
+
+
+  }
+
+  get arrShowedInTable(): any {
+    return this._arrShowedInTable;
+  }
+
+  // You can also change the value of arrShowedInTable through a method, which will trigger the setter.
+  updatearrShowedInTable(newValue: any) {
+    this.arrShowedInTable = newValue;
+  }
+
+  calcTotalWorkTime(arrShowedInTable: any) {
+    let totalMilliseconds = 0;
+
+    for (const timeString of arrShowedInTable) {
+      if (timeString.totalWorkTime) {
+        const parts = timeString.totalWorkTime.split(':');
+        const hours = parseInt(parts[0], 10);
+        const minutes = parseInt(parts[1], 10);
+        // const timeSeconds = parts[2].split('.');
+        // const seconds = parseInt(timeSeconds[0], 10);
+        // const fractions = parseInt(timeSeconds[1], 10);
+
+        totalMilliseconds += (hours * 3600000) + (minutes * 60000);
+      }
+
+    }
+
+    const hours = Math.floor(totalMilliseconds / 3600000);
+    const minutes = Math.floor((totalMilliseconds % 3600000) / 60000);
+    // const seconds = Math.floor((totalMilliseconds % 60000) / 1000);
+
+    this.totalWorkTime = this.convertToArabicNumbers(`${hours} ساعة, ${minutes} دقيقة`)
+    return `${hours} ساعة, ${minutes} دقيقة`;
+  }
+
+
+  convertToArabicNumbers(text: any) {
+    const englishNumbers = '0123456789';
+    const arabicNumbers = '٠١٢٣٤٥٦٧٨٩';
+
+    // Create a mapping for English to Arabic numerals
+    const numeralMap: any = {};
+    for (let i = 0; i < englishNumbers.length; i++) {
+      numeralMap[englishNumbers[i]] = arabicNumbers[i];
+    }
+
+    // Replace English numerals with Arabic numerals
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (numeralMap[char] !== undefined) {
+        result += numeralMap[char];
+      } else {
+        result += char;
+      }
+    }
+
+    return result;
+  }
+
+  getAllAttandanceByLocationId(startDate: string, endDate: string, locationId: string, securityCompanyClientId: string) {
+    this.reports.getAllAttandanceByLocationId(startDate, endDate, locationId, securityCompanyClientId).subscribe((res) => {
+      console.log(res);
+      this.report = res
+      this.report.forEach((element) => {
+        element.name = element.companySecurityGuard.securityGuard.firstName +
+          " " +
+          element.companySecurityGuard.securityGuard.middleName +
+          " " +
+          element.companySecurityGuard.securityGuard.lastName
+      })
+
+      this.updatearrShowedInTable(this.report)
+    })
+  }
+
 }

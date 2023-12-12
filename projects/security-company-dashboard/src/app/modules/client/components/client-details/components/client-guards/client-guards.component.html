@@ -1,6 +1,6 @@
 <div class="h-100">
   <div class="container-fluid h-100">
-    <div *ngIf="sites.length" class="row h-100">
+    <div  class="row h-100">
       <div class="col-xl-3 col-md-4 col-12 px-0 border-inline-end">
         <ng-container *ngTemplateOutlet="sitesTemplate"></ng-container>
       </div>
@@ -9,15 +9,22 @@
       </div>
     </div>
 
-    <div class="h-100 d-flex align-items-center justify-content-center">
+    <!-- <div class="h-100 d-flex align-items-center justify-content-center">
       <app-border-title>
         <span translate="clients.no_sites_to_manage_guards"></span>
       </app-border-title>
-    </div>
+    </div> -->
   </div>
 </div>
 
 <ng-template #sitesTemplate>
+  <div class="input-group">
+    <span class="input-group-text border-0 bg-transparent" id="search">
+      <ion-icon name="search"></ion-icon>
+    </span>
+    <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
+      aria-describedby="search" [(ngModel)]="searchKey" (keyup)="search()" />
+  </div>
   <div class="accordion" id="site">
     <div *ngFor="let site of sites" class="accordion-item">
       <h2 class="accordion-header" [id]="'#site' + site.id">

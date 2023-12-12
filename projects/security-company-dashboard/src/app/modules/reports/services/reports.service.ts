@@ -7,6 +7,7 @@ import { Loader } from '../../core/enums/loader.enum';
 import { AttendanceReport } from '../models/attendance-report';
 import { Incident } from '../models/incident';
 import { VisitorsReport } from '../models/visitors-report';
+import { ClientSite } from '../../client/models/client-site';
 
 @Injectable({
   providedIn: 'root',
@@ -378,4 +379,10 @@ export class ReportsService {
   convertImgToBase64(imgs: number[]): Observable<any> {
     return this.http.post(environment.api + 'api/Attachment/GetImageBase64', imgs)
   }
+
+  getAllAttandanceByLocationId(startDate: string, endDate: string, locationId: string, securityCompanyClientId: string): Observable<any> {
+    let securityCompanyId = this.auth.snapshot.userInfo?.id;
+    return this.http.get(environment.api + `api/Attendance/GetBySecurityCompanyIdDateLocationSecurityCompanyClientId?StartDate=${startDate}&EndDate=${endDate}&SecurityCompanyId=${securityCompanyId}&LocationId=${locationId}&SecurityCompanyClientId=${securityCompanyClientId}`)
+  }
+
 }

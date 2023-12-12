@@ -89,7 +89,7 @@ export class TimetrackComponent implements OnInit {
   }
 
   patchValues() {
-    this.attendanceForm.controls['earlyBreak'].setValue(this.earlyBreak)
+    this.attendanceForm.controls['earlyBreak'].setValue(this.earlyBreak*-1)
     this.attendanceForm.controls['latLogOut'].setValue(this.latLogOut)
     this.attendanceForm.controls['brack'].setValue(this.brack)
     this.attendanceForm.controls['attend'].setValue(this.attend)
@@ -131,7 +131,11 @@ export class TimetrackComponent implements OnInit {
 
   saveChanges() {
 
-    this.shift.timetrack(this.company?.id, this.attendanceForm.controls['attend'].value, this.attendanceForm.controls['brack'].value, this.attendanceForm.controls['latLogOut'].value, this.attendanceForm.controls['earlyBreak'].value).subscribe((res: any) => {
+    const latLogOutValue = this.attendanceForm.controls['latLogOut'].value;
+    const negativeLatLogOutValue = -1 * latLogOutValue;
+    const earlyLogValue= this.attendanceForm.controls['earlyBreak'].value;
+    const negativeEarlyLogValue = -1 * earlyLogValue;
+    this.shift.timetrack(this.company?.id, this.attendanceForm.controls['attend'].value, this.attendanceForm.controls['brack'].value, negativeLatLogOutValue, negativeEarlyLogValue).subscribe((res: any) => {
 
       this.auth.userInfo.next(res);
       this.auth.userInfo.subscribe((res) => {
