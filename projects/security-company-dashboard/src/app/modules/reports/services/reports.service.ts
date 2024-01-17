@@ -20,19 +20,19 @@ export class ReportsService {
   dailyFactsDetails: BehaviorSubject<any> = new BehaviorSubject({});
   private formDataSubject = new BehaviorSubject<any[]>([]);
   formData$ = this.formDataSubject.asObservable();
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(private http: HttpClient, private auth: AuthService) { }
 
   setFormData(data: any) {
     const currentData = this.formDataSubject.value;
     this.formDataSubject.next([...currentData, data]);
     console.log(this.formDataSubject.value);
   }
-  submitAllForms(model:object) {
+  submitAllForms(model: object) {
     return this.http.post(
       this.url + `api/TransferDetails/Add`,
-    model
+      model
     );
-  
+
   }
 
   attendanceReportForCompany(date: string, loader: Loader) {
@@ -64,7 +64,7 @@ export class ReportsService {
     return this.http
       .get<Incident[]>(
         this.url +
-          `api/Incident/GetAllByCompanyIdAndDate?CompanyId=${companyId}&SatrtDate=${startDate}&EndDate=${endDate}`,
+        `api/Incident/GetAllByCompanyIdAndDate?CompanyId=${companyId}&SatrtDate=${startDate}&EndDate=${endDate}`,
         {
           headers: {
             loader: loader,
@@ -90,7 +90,7 @@ export class ReportsService {
     return this.http
       .get<any>(
         this.url +
-          `api/IncidentReport/GetAllByCompanyId?CompanyId=${companyId}&page=${page}&pageSize=${pageSize}`,
+        `api/IncidentReport/GetAllByCompanyId?CompanyId=${companyId}&page=${page}&pageSize=${pageSize}`,
         {
           headers: {
             loader: loader,
@@ -121,7 +121,7 @@ export class ReportsService {
     return this.http
       .get<any>(
         this.url +
-          `api/DailyFactReport/GetAllByCompanyId?CompanyId=${companyId}&page=${page}&pageSize=${pageSize}`,
+        `api/DailyFactReport/GetAllByCompanyId?CompanyId=${companyId}&page=${page}&pageSize=${pageSize}`,
         {
           headers: {
             loader: loader,
@@ -151,7 +151,7 @@ export class ReportsService {
     return this.http
       .get<Incident[]>(
         this.url +
-          `api/Incident/GetAllByCompanyIdAndBranchAndDate?CompanyId=${companyId}&branchId=${branchId}&SatrtDate=${startDate}&EndDate=${endDate}`,
+        `api/Incident/GetAllByCompanyIdAndBranchAndDate?CompanyId=${companyId}&branchId=${branchId}&SatrtDate=${startDate}&EndDate=${endDate}`,
         {
           headers: {
             loader: loader,
@@ -173,7 +173,7 @@ export class ReportsService {
     let companyId = this.auth.snapshot.userInfo?.id;
     return this.http.get<AttendanceReport[]>(
       this.url +
-        `api/Attendance/GetAllByCompanyAndDate?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}`,
+      `api/Attendance/GetAllByCompanyAndDate?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}`,
       {
         headers: {
           loader: loader,
@@ -190,7 +190,7 @@ export class ReportsService {
     let companyId = this.auth.snapshot.userInfo?.id;
     return this.http.get<AttendanceReport[]>(
       this.url +
-        `api/Attendance/GetAllBySecurityCompanyIdAndDateAndBranchId?barachId=${branchId}&SecurityCompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}`,
+      `api/Attendance/GetAllBySecurityCompanyIdAndDateAndBranchId?barachId=${branchId}&SecurityCompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}`,
       {
         headers: {
           loader: loader,
@@ -206,7 +206,7 @@ export class ReportsService {
     let companyId = this.auth.snapshot.userInfo?.id;
     return this.http.get<any[]>(
       this.url +
-        `api/SupervisorAttendance/GetAllBetweenTwoDates?id=${companyId}&StartDate=${startDate}&EndDate=${endDate}`,
+      `api/SupervisorAttendance/GetAllBetweenTwoDates?id=${companyId}&StartDate=${startDate}&EndDate=${endDate}`,
       {
         headers: {
           loader: loader,
@@ -224,7 +224,7 @@ export class ReportsService {
     let branchId = this.auth.snapshot.userInfo?.securityCompanyBranch.id;
     return this.http.get<any[]>(
       this.url +
-        `api/SupervisorAttendance/GetAllBetweenTwoDatesAndBranch?SecurityCompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}&BranchId=${branchId}`,
+      `api/SupervisorAttendance/GetAllBetweenTwoDatesAndBranch?SecurityCompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}&BranchId=${branchId}`,
       {
         headers: {
           loader: loader,
@@ -252,7 +252,7 @@ export class ReportsService {
     let companyId = this.auth.snapshot.userInfo?.id;
     return this.http.get<AttendanceReport[]>(
       this.url +
-        `api/Attendance/GetAllByCompanyAndClientIdAndDate?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}&ClientId=${ClientId}`,
+      `api/Attendance/GetAllByCompanyAndClientIdAndDate?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}&ClientId=${ClientId}`,
       {
         headers: {
           loader: loader,
@@ -269,7 +269,7 @@ export class ReportsService {
     let companyId = this.auth.snapshot.userInfo?.id;
     return this.http.get<AttendanceReport[]>(
       this.url +
-        `api/Attendance/GetAttendanceStatsticByClientandLocation?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}&ClientId=${ClientId}`,
+      `api/Attendance/GetAttendanceStatsticByClientandLocation?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}&ClientId=${ClientId}`,
       {
         headers: {
           loader: loader,
@@ -288,7 +288,7 @@ export class ReportsService {
     let branchId = this.auth.snapshot.userInfo?.securityCompanyBranch.id;
     return this.http.get<AttendanceReport[]>(
       this.url +
-        `api/Attendance/GetAttendanceStatsticByClientandLocationAndBranchId?CompanyId=${companyId}&BranchId=${branchId}&StartDate=${startDate}&EndDate=${endDate}&ClientId=${ClientId}`,
+      `api/Attendance/GetAttendanceStatsticByClientandLocationAndBranchId?CompanyId=${companyId}&BranchId=${branchId}&StartDate=${startDate}&EndDate=${endDate}&ClientId=${ClientId}`,
       {
         headers: {
           loader: loader,
@@ -304,7 +304,7 @@ export class ReportsService {
     let companyId = this.auth.snapshot.userInfo?.id;
     return this.http.get(
       this.url +
-        `api/Attendance/GetAttendanceStatsticByCompanyId?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}`,
+      `api/Attendance/GetAttendanceStatsticByCompanyId?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}`,
       {
         headers: {
           loader: loader,
@@ -321,7 +321,7 @@ export class ReportsService {
     let branchId = this.auth.snapshot.userInfo?.securityCompanyBranch.id;
     return this.http.get(
       this.url +
-        `api/Attendance/GetAttendanceStatsticByCompanyIdAndBranchId?CompanyId=${companyId}&branchId=${branchId}&StartDate=${startDate}&EndDate=${endDate}`,
+      `api/Attendance/GetAttendanceStatsticByCompanyIdAndBranchId?CompanyId=${companyId}&branchId=${branchId}&StartDate=${startDate}&EndDate=${endDate}`,
       {
         headers: {
           loader: loader,
@@ -338,7 +338,7 @@ export class ReportsService {
     let companyId = this.auth.snapshot.userInfo?.id;
     return this.http.get(
       this.url +
-        `api/Attendance/GetAttendanceStatsticByClientandLocationAndDay?CompanyId=${companyId}&StartDate=${firstDate}&EndDate=${lastDate}&clientId=${ClientId}`,
+      `api/Attendance/GetAttendanceStatsticByClientandLocationAndDay?CompanyId=${companyId}&StartDate=${firstDate}&EndDate=${lastDate}&clientId=${ClientId}`,
       {
         headers: {
           loader: loader,
@@ -357,7 +357,7 @@ export class ReportsService {
     let branchId = this.auth.snapshot.userInfo?.securityCompanyBranch.id;
     return this.http.get(
       this.url +
-        `api/Attendance/GetAttendanceStatsticByClientandLocationAndBranchId?CompanyId=${companyId}&BranchId=${branchId}&StartDate=${firstDate}&EndDate=${lastDate}&clientId=${ClientId}`,
+      `api/Attendance/GetAttendanceStatsticByClientandLocationAndBranchId?CompanyId=${companyId}&BranchId=${branchId}&StartDate=${firstDate}&EndDate=${lastDate}&clientId=${ClientId}`,
       {
         headers: {
           loader: loader,
@@ -369,7 +369,7 @@ export class ReportsService {
     let companyId = this.auth.snapshot.userInfo?.id;
     return this.http.get(
       this.url +
-        `api/Attendance/GetAttendanceStatsticLocationAndDay?CompanyId=${companyId}&StartDate=${firstDate}&EndDate=${lastDate}`,
+      `api/Attendance/GetAttendanceStatsticLocationAndDay?CompanyId=${companyId}&StartDate=${firstDate}&EndDate=${lastDate}`,
       {
         headers: {
           loader: loader,
@@ -383,7 +383,7 @@ export class ReportsService {
     let branchId = this.auth.snapshot.userInfo?.securityCompanyBranch.id;
     return this.http.get(
       this.url +
-        `api/Attendance/GetAttendanceStatsticLocationAndDayAndBranchId?CompanyId=${companyId}&BranchId=${branchId}&StartDate=${firstDate}&EndDate=${lastDate}`,
+      `api/Attendance/GetAttendanceStatsticLocationAndDayAndBranchId?CompanyId=${companyId}&BranchId=${branchId}&StartDate=${firstDate}&EndDate=${lastDate}`,
       {
         headers: {
           loader: loader,
@@ -419,43 +419,95 @@ export class ReportsService {
     let securityCompanyId = this.auth.snapshot.userInfo?.id;
     return this.http.get(
       environment.api +
-        `api/Attendance/GetBySecurityCompanyIdDateLocationSecurityCompanyClientId?StartDate=${startDate}&EndDate=${endDate}&SecurityCompanyId=${securityCompanyId}&LocationId=${locationId}&SecurityCompanyClientId=${securityCompanyClientId}`
+      `api/Attendance/GetBySecurityCompanyIdDateLocationSecurityCompanyClientId?StartDate=${startDate}&EndDate=${endDate}&SecurityCompanyId=${securityCompanyId}&LocationId=${locationId}&SecurityCompanyClientId=${securityCompanyClientId}`
     );
   }
 
-  
-GetAllCompanySecurityGuardWithJop(){
-  let securityCompanyId = this.auth.snapshot.userInfo?.id;
-  return this.http.get(environment.api +`api/CompanySecurityGuard/GetAllCompanySecurityGuardWithJop?comapnyId=${securityCompanyId}`)
-}
 
-AllTransferBySecurityCompanyId(){
-  let securityCompanyId = this.auth.snapshot.userInfo?.id;
-  return this.http.get(environment.api +`api/TransferDetails/GetAllBySecurtityCompanyId?SecurtityCompanyId=${securityCompanyId}`)
-}
+  GetAllCompanySecurityGuardWithJop() {
+    let securityCompanyId = this.auth.snapshot.userInfo?.id;
+    return this.http.get(environment.api + `api/CompanySecurityGuard/GetAllCompanySecurityGuardWithJop?comapnyId=${securityCompanyId}`)
+  }
 
-getAllReceivingDeliveringVehicles(){
-  let securityCompanyId = this.auth.snapshot.userInfo?.id;
-  return this.http.get(environment.api +`api/ReceivingDeliveringVehicles/GetAllBySecurtityCompanyId?SecurtityCompanyId=${securityCompanyId}`)
-}
+  AllTransferBySecurityCompanyId() {
+    let securityCompanyId = this.auth.snapshot.userInfo?.id;
+    return this.http.get(environment.api + `api/TransferDetails/GetAllBySecurtityCompanyId?SecurtityCompanyId=${securityCompanyId}`)
+  }
 
-updateTransferDetails(model:object){
-  return this.http.post(environment.api+`api/TransferDetails/Update`,model)
-}
+  getAllReceivingDeliveringVehicles() {
+    let securityCompanyId = this.auth.snapshot.userInfo?.id;
+    return this.http.get(environment.api + `api/ReceivingDeliveringVehicles/GetAllBySecurtityCompanyId?SecurtityCompanyId=${securityCompanyId}`)
+  }
 
-getAllMissionsBysecurityCompanyId(){
+  updateTransferDetails(model: object) {
+    return this.http.post(environment.api + `api/TransferDetails/Update`, model)
+  }
+
+  getAllMissionsBysecurityCompanyId() {
     let companyId = this.auth.snapshot.userInfo?.id;
-  return this.http.get<any[]>(
-    this.url + `api/GuardTask/GetAllSecurityCompanyId?SecurityCompanyId=${companyId}`)
-}
+    return this.http.get<any[]>(
+      this.url + `api/GuardTask/GetAllSecurityCompanyId?SecurityCompanyId=${companyId}`)
+  }
 
-getAllToursBysecurityCompanyId(){
-  let companyId = this.auth.snapshot.userInfo?.id;
-  return this.http.get<any[]>(
-    this.url + `api/GuardTour/GetBySecurityCompany?SecurityCompanyId=${companyId}`)
-}
+  getAllToursBysecurityCompanyId() {
+    let companyId = this.auth.snapshot.userInfo?.id;
+    return this.http.get<any[]>(
+      this.url + `api/GuardTour/GetBySecurityCompany?SecurityCompanyId=${companyId}`)
+  }
 
-getTransferDetailsByID(Id:string){
-return this.http.get(this.url +`api/TransferDetails/GetById?Id=${Id}`)
-}
+  getTransferDetailsByID(Id: string) {
+    return this.http.get(this.url + `api/TransferDetails/GetById?Id=${Id}`)
+  }
+
+  GetAllByCompanyAndClientIdAndDateAndBranchAndLocation(startDate: string, endDate: string, locationId: string, securityCompanyClientId: string): Observable<any> {
+    let BranchAppUserId = this.auth.snapshot.userInfo?.appUser?.id;
+    let CompanyId = this.auth.snapshot.userInfo?.id;
+    return this.http.get(environment.api + `api/Attendance/GetAllByCompanyAndClientIdAndDateAndBranchAndLocation?CompanyId=${CompanyId}&StartDate=${startDate}&EndDate=${endDate}&SecurityCompanyClientId=${securityCompanyClientId}&BranchAppUserId=${BranchAppUserId}&locationId=${locationId}`)
+  }
+
+
+
+  getAllToursBySecurityIdAndBranchId(companyId: number, branchId: string) {
+    return this.http.get<any[]>(
+      this.url + `api/GuardTour/GetBySecurityCompanyAndBranchId?SecurityCompanyId=${companyId}&BranchId=${branchId}`)
+  }
+
+  getAllMissionsBysecurityCompanyIdAndBranchId(companyId: number, branchId: string, page: number, pageSize: number) {
+    return this.http.get<any[]>(
+      this.url + `api/GuardTask/GetAllSecurityCompanyAndBranchId?SecurityCompanyId=${companyId}&BranchId=${branchId}&page=${page}&pageSize=${pageSize}`)
+  }
+
+  GlobalApiFilterGetAllSecurityCompanyClientForUserSecurity(AppUserId: any) {
+    return this.http.get(this.url + `api/GlobalApiFilter/GetAllSecurityCompanyClientForUserSecurity?AppUserId=${AppUserId}`)
+  }
+
+  GlobalApiFilterGetAllSiteLocationByUserAndSCForUserSecurity(SecurityCompanyClientId: string, AppUserId: any) {
+    return this.http.get(this.url + `api/GlobalApiFilter/GetAllSiteLocationByUserAndSCForUserSecurity?SecurityCompanyClientId=${SecurityCompanyClientId}&AppUserId=${AppUserId}`)
+  }
+
+  GuardTasksReportGetAllForSecurityCompanyFilter(model: object) {
+    return this.http.post(this.url + `api/GuardTasksReport/GetAllForSecurityCompanyFilter`, model)
+  }
+  GuardGuardsReportGetAllForSecurityCompanyFilter(model: object) {
+    return this.http.post(this.url + `api/AttendanceReport/GetAllForSecurityCompanyFilter`, model)
+  }
+
+  GuardTourReportGetAllForSecurityCompanyFilter(model: object) {
+    return this.http.post(this.url + `api/GuardTourReport/GetAllForSecurityCompanyFilter`, model)
+  }
+
+  VisitorReportGetAllForSecurityCompanyFilter(model: object) {
+    return this.http.post(this.url + `api/VisitorReport/GetAllForSecurityCompanyFilter`, model)
+  }
+
+  IncidentsReportGetAllForSecurityCompanyFilter(model: object) {
+    return this.http.post(this.url + `api/IncidentsReport/GetAllForSecurityCompanyFilter`, model)
+  }
+
+  SupervisorAttendanceReportGetAllForSecurityCompanyFilter(model: object) {
+    return this.http.post(this.url + `api/SupervisorAttendanceReport/GetAllForSecurityCompanyFilter`, model)
+  }
+  GlobalApiFilter_GetAllSecurityBranch(companyId: number) {
+    return this.http.get(this.url + `api/GlobalApiFilter/GetAllSecurityBranch?SecurityCompanyId=${companyId}`)
+  }
 }

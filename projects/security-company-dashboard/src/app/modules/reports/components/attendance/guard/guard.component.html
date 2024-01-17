@@ -1,7 +1,7 @@
 <div class="container h-100 d-flex flex-column py-4">
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between align-items-center">
     <h4 class="m-0 fw-600 my-3" translate="reports.attendance"></h4>
-    <div class="d-flex justify-content-end gap-3 mb-3">
+    <div class="d-flex flex-wrap-reverse justify-content-end gap-3 mb-3">
       <div class="form-floating" *ngIf="filter">
         <input type="email" class="form-control bg-info-o" id="input1" placeholder="date" bsDaterangepicker
           [maxDate]="maxDate" [formControl]="date" [bsConfig]="{
@@ -13,9 +13,20 @@
         <label for="input1" translate="date_range"></label>
       </div>
       <div class="form-floating " *ngIf="data">
-        <p-dropdown class="py-2" id="data" [filter]="true" filterBy="name" styleClass="w-100"
-          [optionLabel]="'clientCompany.name'" optionValue="clientCompany.id" [options]="data"
-          [placeholder]="'validation.select_client'|translate" (onChange)="display($event)"></p-dropdown>
+        <p-dropdown class="py-2" id="data" [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'"
+          [options]="data" [placeholder]="'validation.select_client'|translate"
+          (onChange)="selectClient($event)"></p-dropdown>
+      </div>
+      <div class="form-floating " *ngIf="clientSites.length">
+        <p-dropdown class="py-2" id="clientSites" [filter]="true" filterBy="name" styleClass="w-100"
+          [optionLabel]="'name'" [options]="clientSites" [placeholder]="'validation.select_site'|translate"
+          (onChange)="getAttendanceBySiteId($event)"></p-dropdown>
+      </div>
+      <div class="form-floating " *ngIf="branches.length">
+
+        <p-dropdown class="py-2" id="branches" [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'"
+          [options]="branches" [placeholder]="'validation.select_branch'|translate"
+          (onChange)="getByBranchId($event)"></p-dropdown>
       </div>
       <div class="dropdown menue2">
         <button class="btn myPadding rounded-m rounded-8 btn-primary  d-flex gap-2 align-items-center  dropdown-toggle "
@@ -28,6 +39,9 @@
             |translate}}</li>
           <li class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('client')">{{"client"
             |translate}}</li>
+          <li *ngIf="isMainBranch" class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('branch')">
+            {{"security_dashboard.dash.branches"
+            |translate}}</li>
         </ul>
       </div>
       <div>
@@ -36,6 +50,7 @@
           {{ "filtrationDelete" | translate }}
         </button>
       </div>
+
     </div>
   </div>
 
@@ -51,7 +66,7 @@
               <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
                 aria-describedby="search" [(ngModel)]="searchKey" (keyup)="search()" />
             </div>
-            
+
             <div class="bd-dark col d-flex justify-content-end align-items-center">
               <h6 class="fw-bold ms-3"><span class="fw-bolder">إجمالي وقت العمل الفعلي: </span> {{totalWorkTime}}</h6>
               <button class="btn btn-success text-white  mx-2 mb-3 float-end" (click)="getData()"
@@ -71,18 +86,15 @@
                 <th scope="col" class="text-nowrap" translate="phone"></th>
                 <th scope="col" class="text-nowrap" translate="reports.date"></th>
                 <th scope="col" class="text-nowrap" translate="reports.attendanceFrom"></th>
-
                 <th scope="col" class="text-nowrap" translate="reports.start_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.must_start"></th>
                 <th scope="col" class="text-nowrap" translate="reports.end_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.must_ent"></th>
                 <th scope="col" class="text-nowrap" translate="reports.is_on_break"></th>
-
                 <th scope="col" class="text-nowrap" translate="reports.is_complete"></th>
                 <th scope="col" class="text-nowrap" translate="reports.total_work_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.total_break_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.total_extra_time"></th>
-
                 <th scope="col" class="text-nowrap" translate="reports.total_must_work_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.total_must_break_time"></th>
               </tr>
