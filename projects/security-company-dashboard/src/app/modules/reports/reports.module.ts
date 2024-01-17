@@ -32,6 +32,9 @@ import { TransferReasonComponent } from './components/form-exclude/components/co
 import { ResponseComponent } from './components/form-exclude/components/components/response/response.component';
 import { AccreditationComponent } from './components/form-exclude/components/components/accreditation/accreditation.component';
 import { ViewExcludeRequestComponent } from './components/form-exclude/components/components/view-exclude-request/view-exclude-request.component';
+import { ReceivingDeliveringVehiclesComponent } from './components/receiving-delivering-vehicles/receiving-delivering-vehicles.component';
+import { MissionsComponent } from './components/missions/missions.component';
+import { ToursComponent } from './components/tours/tours.component';
 
 
 @NgModule({
@@ -66,6 +69,9 @@ import { ViewExcludeRequestComponent } from './components/form-exclude/component
     ResponseComponent,
     AccreditationComponent,
     ViewExcludeRequestComponent,
+    ReceivingDeliveringVehiclesComponent,
+    MissionsComponent,
+    ToursComponent
   ],
 
   imports: [CoreModule, ReportsRoutingModule],

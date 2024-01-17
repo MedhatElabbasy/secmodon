@@ -1,23 +1,87 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { ReportsService } from '../../../../../services/reports.service';
+import { Router } from '@angular/router';
+import { AcceptedFile, AttachmentService } from 'projects/tools/src/public-api';
+import { DomSanitizer } from '@angular/platform-browser';
+import { log } from 'console';
+import { LogLevel } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-transfer-reason',
   templateUrl: './transfer-reason.component.html',
-  styleUrls: ['./transfer-reason.component.scss']
+  styleUrls: ['./transfer-reason.component.scss'],
 })
 export class TransferReasonComponent implements OnInit {
-
   checkboxForm: FormGroup;
-  options = ['غياب', 'حالة مخلة بالأنظمة', 'عدم تنفيذ التعليمات' , 'أخرى' ];
+  options = [{name:'غياب',id:1},{name:'حالة مخلة بالأنظمة',id:2} ,{name:'عدم تنفيذ التعليمات',id:3} ,{name:'أخرى',id:4} ];
+  activeLink: string =
+    '/dashboard/reports/form-exclude/exclude-new-request/response';
 
-  constructor(private fb: FormBuilder) {
+  profileImage!: string | null ;
+
+  constructor(
+    private fb: FormBuilder,
+    private form2: ReportsService,
+    private router: Router,
+    private domSanitizer: DomSanitizer,
+    private attachment: AttachmentService
+  ) {
     this.checkboxForm = this.fb.group({
-      group: ['', Validators.required]
+      reasonStatusType: ['', Validators.required],
+      securityOfficial: [null, Validators.required],
+      securityOfficialSignature: [null, Validators.required],
+      contractorProjectManager: [null, Validators.required],
+      contractorProjectManagerSignature: [null, Validators.required],
+      reasonForTransfer: [null, Validators.required],
+       attachmentId: [null, Validators.required],
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+  get photosControls(): any {
+    return this.checkboxForm.controls;
+  }
+  onImageUpload(event: any) {
+    let arr = event?.target?.files[0]?.name.split('.');
+    const extension = arr[arr.length - 1].toLowerCase();
+
+    if (!AcceptedFile.includes(extension)) {
+      (this.photosControls['attachmentId'] as FormControl).setErrors({
+        notValid: true,
+      });
+      this.profileImage = null;
+      return;
+    } else {
+      let url = URL.createObjectURL(event.target.files[0]);
+
+      (this.photosControls['attachmentId'] as FormControl).setErrors({
+        notValid: null,
+      });
+
+      this.attachment
+        .uploadFile(event.target.files[0].name, event.target.files[0])
+        .subscribe((res) => {
+          this.profileImage = url;
+          this.photosControls['attachmentId'].setValue(res);
+        });
+    }
   }
 
+  sanitize(url: string) {
+    return this.domSanitizer.bypassSecurityTrustUrl(url);
+  }
+  onSubmit(): void {
+    if (this.checkboxForm.valid) {
+      const formData = this.checkboxForm.value;
+      this.form2.setFormData(formData);
+      console.log(formData);
+      this.router.navigate([this.activeLink]);
+    }
+  }
 }

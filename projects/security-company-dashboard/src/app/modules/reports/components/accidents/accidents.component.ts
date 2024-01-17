@@ -22,6 +22,7 @@ import { Incident } from '../../models/incident';
 import { ReportsService } from '../../services/reports.service';
 import { ClientsService } from '../../../client/services/clients.service';
 import { ngxCsv } from 'ngx-csv';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-accidents',
@@ -50,13 +51,16 @@ export class AccidentsComponent implements OnInit {
   selectedGallery!: any[];
   searchKey = '';
   clientData!: any[];
-
+  showModal = false;
+  dailyFactDetails: any;
+  singleClickTimer: any;
   constructor(
     private reports: ReportsService,
     private auth: AuthService,
     public lang: LangService,
     private route: ActivatedRoute,
     private localeService: BsLocaleService,
+    private toastr: ToastrService,
     private client: ClientsService
   ) {
     this.yesterday = new Date();
@@ -523,4 +527,84 @@ export class AccidentsComponent implements OnInit {
     //Add 'implements OnDestroy' to the class.
     this._hubConnection.stop();
   }
+
+  // checkClose(event: any) {
+  //   if (event.target.classList.contains('modal-overlay')) {
+  //     this.handleClick()
+  //   }
+  // }
+
+  // oneClick(event: any) {
+  //   if (event.target.classList.contains('modal-overlay')) {
+  //     this.handleClick()
+  //   }
+  // }
+
+  // handleClick() {
+  //   if (!this.singleClickTimer) {
+  //     // No single click event in progress
+  //     this.singleClickTimer = setTimeout(() => {
+  //       // This is a single click
+  //       this.toastr.info('dbl click to close', '', {
+  //         timeOut: 1000,
+  //         closeButton: false
+  //       });
+  //       clearTimeout(this.singleClickTimer);
+  //       this.singleClickTimer = null;
+  //     }, 400); // Adjust the time (in milliseconds) for your desired double-click threshold
+  //   } else {
+  //     // A single click was detected earlier, so this is a double click
+  //     clearTimeout(this.singleClickTimer);
+  //     this.singleClickTimer = null;
+  //     this.showModal = false;
+  //   }
+  // }
+
+  // generatePDF() {
+  //   console.log("Hi");
+  //   const pdfOptions = {
+  //     margin: 10,
+  //     filename: 'my-pdf-document.pdf',
+  //     image: { type: 'jpeg', quality: 0.98 },
+  //     html2canvas: { scale: 2 },
+  //     jsPDF: {
+  //       unit: 'mm',
+  //       format: 'a4', // You can specify the page size here (e.g., 'letter', 'a4', 'legal', etc.)
+  //       orientation: 'portrait', // 'portrait' for a vertical page or 'landscape' for a horizontal page
+  //     },
+  //   };
+  //   const element = document.getElementById('dynamic-model-content');
+  //   // html2pdf()
+  //   //   .from(element)
+  //   //   .save('dailyFacts-file.pdf');
+  // }
+
+  // openModal(incidentId: string) {
+
+  //   this.getIncidentById(incidentId)
+  // }
+
+  // download(dailyFactId: string) {
+  //   this.reports.getDailyFactById(dailyFactId).subscribe((res) => {
+  //     this.dailyFactDetails = res
+  //     this.showModal = true;
+  //     setTimeout(() => {
+  //       this.generatePDF()
+  //       this.showModal = false;
+  //     }, 0);
+  //   })
+  // }
+
+  // closeModal() {
+  //   this.showModal = false;
+  // }
+
+  // getIncidentById(dailyFactId: string) {
+  //   this.reports.getDailyFactById(dailyFactId).subscribe((res) => {
+  //     this.dailyFactDetails = res
+  //     console.log(res);
+
+  //     this.showModal = true;
+  //   })
+  // }
 }

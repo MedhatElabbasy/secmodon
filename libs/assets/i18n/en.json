@@ -739,6 +739,10 @@
     "visitors_report_description": "Report on visitors to areas supervised by guards",
     "incident_report_description": "Report on traffic accident",
     "facts_report_description": "Report on daily facts",
+    "missions":"Missions",
+    "missions_report_description":"Report on missions",
+    "tours_report_description":"Report on Tours",
+    "tours":"Tours",
     "date": "Date",
     "entry_time": "Entry Time",
     "leave_time": "Leaver Time",
@@ -802,6 +806,7 @@
     "institution":"Institution",
     "security_resposiable":"Security resposiable",
     "signature":"Signature",
+    "responser_name":"Responser Name",
     "contractor_project_manager":"Contractor project manager",
     "type_some_reasons":"Type some reasons",
     "Attachments":"Attachments",
@@ -810,6 +815,8 @@
     "create":"Create",
     "create_ask":"Create and view request",
     "justifications_for_the_transfer":"Justifications for the transfer",
+    "ReceivingDeliveringVehicles":"Receiving Delivering Vehicles",
+    "descriptionReceivingDeliveringVehicles":"Reports of Receiving Delivering Vehicles",
     "employee_info":"Employee info",
     "daildFact": {
       "factNumber": "Report number",
@@ -820,7 +827,10 @@
       "factSiteLocationName": "Site",
       "factReporter": "Reporter name",
       "dailyFacts" : "Daily Facts reports"
-    }
+    },
+    "update_transfer_details_form":"Edit Transfer Form",
+    "finish_form_exclude":"Your Application has been sent",
+    "click_to_upload_transfer_attachment":"click to upload transfer attachment"
   },
   "RasdComplaints": {
     "Monitoring_complaints": "Monitoring complaints",
@@ -1017,5 +1027,35 @@
     "confirmation": "delete confirmation",
     "coverageReceivOrders": "Coverage Received Orders",
     "coverageGuards": "Coverage Guards"
+  },
+  "vehicles":{
+    "receiver_name":"Receiver Name",
+    "vehicle_number":"Vehicle Number",
+    "reception_time":"Receive Time",
+    "reception_signature":"Reception Signature",
+    "delivery_time":"Delivery Time",
+    "delivery_signature":"Delivery Signature",
+    "reception_reason":"Reception Reason"
+  },
+  "missions":{
+    "mission_name":"Task Name",
+    "mission_description":"Task Description",
+    "mission_startDate":"Task start time",
+    "mission_endDate":"Task end time",
+    "mission_tourState":"Task state",
+    "mission_tourSecurityGuard":"Security Guard",
+    "mission_taskPriority":"Task Priority",
+    "missions_site":"Task Site",
+    "missions_site_address":"Task Site Address",
+    "missions_securityGuard":"Security Guard",
+    "missions_securitySuperVisor":"SuperVisor",
+    "mission_tourImages":"Task Images"
+  },
+  "tours":{
+    "tour_name":"Tour Name",
+    "tour_description":"Tour Description",
+    "tour_startDate":"Tour Start Date",
+    "tour_site_name":"Tour Site Name",
+    "tour_site_address":"Tour Site Address"
   }
 }

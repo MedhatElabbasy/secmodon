@@ -109,13 +109,27 @@ export class ReportsComponent implements OnInit {
             image: 'assets/images/svgs/exclude.svg',
             roles: [Roles.VirtualAdmin],
           }
-          // , {
-          //   name: 'reports.Security_audit_model',
-          //   link: `/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.securityAuditModel}`,
-          //   description: 'reports.Security_audit_model_description',
-          //   image: 'assets/images/svgs/guard.svg',
-          //   roles: [Roles.VirtualAdmin],
-          // }
+          , {
+            name: 'reports.ReceivingDeliveringVehicles',
+            link: `/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.ReceivingDeliveringVehicles}`,
+            description: 'reports.descriptionReceivingDeliveringVehicles',
+            image: 'assets/images/svgs/guard.svg',
+            roles: [Roles.VirtualAdmin],
+          },
+           {
+            name: 'reports.missions',
+            link: `/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.missions}`,
+            description: 'reports.missions_report_description',
+            image: 'assets/images/svg/visitors.svg',
+            roles: [Roles.SecurityCompanyUser, Roles.SecuritCompany],
+          },
+          {
+            name: 'reports.tours',
+            link: `/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.tours}`,
+            description: 'reports.tours_report_description',
+            image: 'assets/images/svg/visitors.svg',
+            roles: [Roles.SecurityCompanyUser, Roles.SecuritCompany],
+          }
           );
 
           console.log(this.ReportsList);

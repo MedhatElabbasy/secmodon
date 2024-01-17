@@ -16,7 +16,10 @@ export enum ReportsRoutes {
   transferReason='transfer-reason',
   response='response',
   accreditation='accreditation',
-  viewExcludeRequest='view-exclude-request'
+  viewExcludeRequest='view-exclude-request',
+  ReceivingDeliveringVehicles='Receiving-delivering-vehicles',
+  missions='missions',
+  tours='tours'
 }
 // export enum Types {
 //   guardAttendance = 'guard-attendance',

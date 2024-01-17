@@ -87,6 +87,9 @@ interface SecurityGuard {
   id: number;
   isDeleted: boolean;
   firstName: string;
+  lastNameEn:string;
+  middleNameEn:string;
+  firstNameEN:string;
   middleName: null | string;
   lastName: string;
   email: string;

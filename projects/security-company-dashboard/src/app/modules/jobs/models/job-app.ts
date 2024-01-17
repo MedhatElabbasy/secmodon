@@ -16,6 +16,10 @@ export interface JobApplication {
 
 export interface securityGuard {
   firstName: string;
+  lastNameEn:string;
+  middleNameEn:string;
+  middleName:string;
+  firstNameEN:string;
   lastName: string;
   email: string;
 }

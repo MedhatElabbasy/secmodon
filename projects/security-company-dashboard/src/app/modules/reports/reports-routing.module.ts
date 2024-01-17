@@ -35,6 +35,9 @@ import { TransferReasonComponent } from './components/form-exclude/components/co
 import { ResponseComponent } from './components/form-exclude/components/components/response/response.component';
 import { AccreditationComponent } from './components/form-exclude/components/components/accreditation/accreditation.component';
 import { ViewExcludeRequestComponent } from './components/form-exclude/components/components/view-exclude-request/view-exclude-request.component';
+import { ReceivingDeliveringVehiclesComponent } from './components/receiving-delivering-vehicles/receiving-delivering-vehicles.component';
+import { MissionsComponent } from './components/missions/missions.component';
+import { ToursComponent } from './components/tours/tours.component';
 
 const routes: Routes = [
   { path: '', redirectTo: ReportsRoutes.allReports, pathMatch: 'full' },
@@ -78,6 +81,9 @@ const routes: Routes = [
     resolve: {
       report: VisitorsReportsResolver,
     },
+  }, {
+    path: ReportsRoutes.ReceivingDeliveringVehicles,
+    component: ReceivingDeliveringVehiclesComponent,
   },
   {
     path: ReportsRoutes.formExclude,
@@ -115,7 +121,7 @@ const routes: Routes = [
         ]
       },
       {
-        path:ReportsRoutes.viewExcludeRequest,
+        path:ReportsRoutes.viewExcludeRequest+'/:id',
         component:ViewExcludeRequestComponent,
       }
     ]
@@ -123,6 +129,14 @@ const routes: Routes = [
   {
     path: ReportsRoutes.securityAuditModel,
     component: SecurityAuditModelComponent,
+  },
+  {
+    path: ReportsRoutes.missions,
+    component: MissionsComponent,
+  },
+  {
+    path: ReportsRoutes.tours,
+    component: ToursComponent,
   },
   {
     path: ReportsRoutes.incident,

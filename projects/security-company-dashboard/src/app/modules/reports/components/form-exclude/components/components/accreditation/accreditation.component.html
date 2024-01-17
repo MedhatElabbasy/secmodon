@@ -1,36 +1,80 @@
-<div class="row py-3">
+<form [formGroup]="checkboxForm">
+  <div class="row py-3">
     <div class="col-md-4">
-        <h6 class="excludeTitle">{{ "reports.accreditation" | translate }}</h6>
-        <form [formGroup]="checkboxForm">
-            <label class="checkInput" *ngFor="let option of options">
-              <input class="mx-2" type="radio" [value]="option" formControlName="group" /> {{ option }}
-            </label>
-          </form>
+      <h6 class="excludeTitle">{{ "reports.accreditation" | translate }}</h6>
+      
+      <label class="checkInput" *ngFor="let option of options">
+        <input
+          class="mx-2"
+          type="radio"
+          [value]="option"
+          formControlName="accreditationOK"
+        />
+        {{ option }}
+      
+      </label>
+    
     </div>
     <div class="col-md-4">
-        <h6 class="excludeTitle">{{ "reports.branch_manager" | translate }}</h6>
-        <p>محمد خالد أبو فياض</p>
-    </div>
-    <div class="col-md-4">
-        <h6 class="excludeTitle">{{ "reports.signature" | translate }}</h6>
-        <p>--------------------</p>
-    </div>
-</div>    
+      <h6 class="excludeTitle">{{ "reports.branch_manager" | translate }}</h6>
 
-<div class="reasons mt-4 p-2" >
+      <input
+        type="text"
+        class="form-control"
+        value="محمد خالد أبو فياض"
+        formControlName="branchManager"
+      />
+    </div>
+    <div class="col-md-3">
+      <h6 class="excludeTitle">{{ "reports.signature" | translate }}</h6>
+
+      <input
+        type="text"
+        class="form-control"
+        value="-------------"
+        formControlName="branchManagerSignature"
+      />
+    </div>
+  </div>
+
+  <div class="reasons mt-4 p-2">
     <h6 class="excludeTitle">{{ "reports.reason" | translate }}</h6>
-    <p>هذا النص هو مثال لنص يمكن ان يستبدل فيما بعد</p>
-</div>
 
-<div class="row d-flex justify-content-end my-3">
+    <input
+      type="text"
+      class="form-control"
+      value="هذا النص هو مثال لنص يمكن ان يستبدل فيما بعد"
+      formControlName="dependenceDisapprovalReason"
+    />
+  </div>
+
+  <div class="row d-flex justify-content-end my-3">
     <div class="col-md-4">
-      <button  class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1"
-      type="button">
-      {{ "reports.create_ask" | translate }}
+      <button
+      class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1"
+      type="button"
+      (click)="onSubmit()"
+      [disabled]="!checkboxForm.valid"
+    >
+      {{ "reports.create" | translate }}
     </button>
-    <button  class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1"
-    type="button">
-    {{ "reports.create" | translate }}
-  </button>
+      <button
+        class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1"
+        type="button" (click)="SubmitAndView()"
+      >
+        {{ "reports.create_ask" | translate }}
+      </button>
     </div>
-</div>
+  </div>
+</form>
+
+<public-api-modal [id]="finish" classList="modal-dialog-centered">
+  <img width="50" src="assets/images/icons/checked.png" alt="" class="mb-3" />
+  <h5 class="fw-600">{{'reports.finish_form_exclude'|translate}}</h5>
+
+  <div class="d-flex justify-content-end gap-2">
+      <button translate="continue" (click)="continue()"
+          type="button"
+          class="btn rounded-8 px-4 py-2 btn-primary text-white"></button>
+  </div>
+</public-api-modal>
