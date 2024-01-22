@@ -2,22 +2,32 @@
   <div class="d-flex justify-content-between">
     <h4 class="m-0 fw-600 my-3" translate="reports.visitors"></h4>
 
-    <div class="d-flex justify-content-end gap-3 mb-3">
-      <div class="form-floating mb-3 col-md-4" *ngIf="filter">
-        <input type="email" class="form-control bg-info-o" id="input1" placeholder="date" bsDatepicker
+    <div class="d-flex flex-wrap-reverse justify-content-end gap-3 mb-3">
+      <div class="form-floating" *ngIf="filter">
+        <input type="email" class="form-control bg-info-o" id="input1" placeholder="date" bsDaterangepicker
           [maxDate]="maxDate" [formControl]="date" [bsConfig]="{
-        containerClass: 'theme-red',
-        isAnimated: true,
-        showWeekNumbers: false,
-        adaptivePosition: true
-      }" />
+          containerClass: 'theme-red',
+          isAnimated: true,
+          showWeekNumbers: false,
+          adaptivePosition: true
+        }" />
         <label for="input1" translate="date_range"></label>
       </div>
-
       <div class="form-floating " *ngIf="data">
-        <p-dropdown class="py-2" id="data" [filter]="true" filterBy="name" styleClass="w-100"
-          [optionLabel]="'clientCompany.name'" optionValue="id" [options]="data"
-          [placeholder]="'validation.select_client'|translate" (onChange)="displayFilter($event)"></p-dropdown>
+        <p-dropdown class="py-2" id="data" [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'"
+          [options]="data" [placeholder]="'validation.select_client'|translate"
+          (onChange)="selectClient($event)"></p-dropdown>
+      </div>
+      <div class="form-floating " *ngIf="clientSites.length">
+        <p-dropdown class="py-2" id="clientSites" [filter]="true" filterBy="name" styleClass="w-100"
+          [optionLabel]="'name'" [options]="clientSites" [placeholder]="'validation.select_site'|translate"
+          (onChange)="getBySiteId($event)"></p-dropdown>
+      </div>
+      <div class="form-floating " *ngIf="branches.length">
+
+        <p-dropdown class="py-2" id="branches" [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'"
+          [options]="branches" [placeholder]="'validation.select_branch'|translate"
+          (onChange)="getByBranchId($event)"></p-dropdown>
       </div>
       <div class="dropdown menue2">
         <button class="btn myPadding rounded-m rounded-8 btn-primary  d-flex gap-2 align-items-center  dropdown-toggle "
@@ -30,6 +40,8 @@
             |translate}}</li>
           <li class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('client')">{{"client"
             |translate}}</li>
+            <li *ngIf="isMainBranch" class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('branch')">
+              {{"security_dashboard.dash.branches"|translate}}</li>
         </ul>
       </div>
       <div>
@@ -38,6 +50,7 @@
           {{ "filtrationDelete" | translate }}
         </button>
       </div>
+
     </div>
   </div>
   <div class="card border-0 flex-fill rounded-10">
@@ -50,7 +63,7 @@
                 <ion-icon name="search"></ion-icon>
               </span>
               <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
-                aria-describedby="search" [(ngModel)]="searchKey" (keyup)="search()"/>
+              aria-describedby="search" [(ngModel)]="searchKey" (blur)="search()" />
             </div>
             <div class="bd-dark col">
               <button class="btn btn-success text-white  mx-2 mb-3 float-end" (click)="getData()"
@@ -88,7 +101,7 @@
                         : {
                             itemsPerPage: pageSize,
                             currentPage: pageNumber,
-
+                            totalItems:total,
                             id: 'visitors'
                           }
                   ">
@@ -106,20 +119,28 @@
                     }}
                   </td>
                   <td>{{ visitor.vistorReason }}</td>
-                  <td>{{ visitor.createdSinceTime }}</td>
+                  <td>{{ visitor.created.split(" ")[0] }}</td>
                   <td>
                     <span *ngIf="visitor.companySecurityGuard">
                       {{
-                      visitor.name
+                      visitor.companySecurityGuard.securityGuard.firstName+' '+
+                      visitor.companySecurityGuard.securityGuard.middleName+' '+
+                      visitor.companySecurityGuard.securityGuard.lastName
                       }}
                     </span>
                   </td>
                   <td>
                     <span *ngIf="visitor.siteSupervisorShift.companySecurityGuard">
                       {{
-                      visitor.superVisor
-                      }}
+                        visitor.siteSupervisorShift.companySecurityGuard
+                        .securityGuard.firstName +
+                        " " +visitor.siteSupervisorShift.companySecurityGuard
+                        .securityGuard.middleName+" "+
+                        visitor.siteSupervisorShift.companySecurityGuard
+                        .securityGuard.lastName
+                        }}
                     </span>
+                    <span *ngIf="!visitor.siteSupervisorShift.companySecurityGuard.securityGuard" translate="no-data"></span>
                   </td>
                   <td>
                     {{ visitor.enterTime | time: (lang.isAr | async) }}

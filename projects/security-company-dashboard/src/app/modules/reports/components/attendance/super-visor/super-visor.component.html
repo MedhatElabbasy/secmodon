@@ -45,7 +45,6 @@
     </div>
   </div>
 
-
   <div class="card border-0 flex-fill rounded-10">
     <div class="card-body">
       <div class="h-100 d-flex flex-column">
@@ -53,12 +52,13 @@
           <div class="row">
             <div class="input-group col">
               <span class="input-group-text border-0 bg-transparent" id="search">
-                <ion-icon name="search"></ion-icon>
+                <ion-icon name="search" ></ion-icon>
               </span>
               <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
-                aria-describedby="search" [(ngModel)]="searchKey" (keyup)="search()" />
+              aria-describedby="search" [(ngModel)]="searchKey" (blur)="search()" />
             </div>
-            <div class="bd-dark col">
+            <div class="bd-dark col d-flex justify-content-end align-items-center">
+              <!-- <h6 class="fw-bold ms-3"><span class="fw-bolder">إجمالي وقت العمل الفعلي: </span> {{totalWorkTime}}</h6> -->
               <button class="btn btn-success text-white  mx-2 mb-3 float-end" (click)="getData()"
                 translate="dowenloadCvs">
 
@@ -81,15 +81,15 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngIf="report?.length">
+              <ng-container>
                 <tr class="c-pointer" *ngFor="
                     let attendance of report
                       | paginate
                         : {
                             itemsPerPage: pageSize,
                             currentPage: pageNumber,
-
-                            id: 'attendance'
+                            totalItems:totalCount,
+                            id: 'supervisor'
                           }
                   ">
                   <td class="text-nowrap">
@@ -99,7 +99,14 @@
                   </td>
                   <td class="text-nowrap">
                     {{
-                    attendance.name
+                     attendance.siteSupervisorShift.companySecurityGuard.securityGuard
+            .firstName +
+          ' ' +
+          attendance.siteSupervisorShift.companySecurityGuard.securityGuard
+            .middleName +
+          ' ' +
+          attendance.siteSupervisorShift.companySecurityGuard.securityGuard
+            .lastName
                     }}
                   </td>
                   <!-- <td class="text-nowrap">
@@ -158,7 +165,7 @@
             </div>
           </div>
 
-          <pagination-controls id="attendance" (pageChange)="onPageNumberChange($event)"
+          <pagination-controls id="supervisor" (pageChange)="onPageNumberChange($event)"
             (pageBoundsCorrection)="onPageNumberChange($event)" [responsive]="true" [previousLabel]="''"
             [nextLabel]="''" screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
             screenReaderCurrentLabel="You're on page">

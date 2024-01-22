@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  api: 'https://takidapp.net:8008/',
+  api: 'https://takidapp.net:8007/',
   securityCompanyLink: 'https://security-company.takid.sa',
   loginLink: 'https://security-company.takid.sa/#/auth/login',
   registerLink: 'https://security-company.takid.sa/#/auth/register-number',

@@ -22,7 +22,6 @@ import { Incident } from '../../models/incident';
 import { ReportsService } from '../../services/reports.service';
 import { ClientsService } from '../../../client/services/clients.service';
 import { ngxCsv } from 'ngx-csv';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-accidents',
@@ -38,9 +37,10 @@ export class AccidentsComponent implements OnInit {
   allData!: Incident[];
   filter: boolean = false;
   clientFilter: boolean = false;
+  branchFilter: boolean = false;
   myFile!: any;
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 5;
   total!: number;
   sizes = [...PAGINATION_SIZES];
   date = new FormControl({ 0: new Date(), 1: new Date() });
@@ -51,111 +51,55 @@ export class AccidentsComponent implements OnInit {
   selectedGallery!: any[];
   searchKey = '';
   clientData!: any[];
-  showModal = false;
-  dailyFactDetails: any;
-  singleClickTimer: any;
+  clientSites: any = []
+  branches: any = []
+  dateFilter: boolean = false;
+  companyId!: any;
+  securityCompanyClientId!: any;
+  locationId!: any;
+  start!: any;
+  end!: any;
+  branchId!: any;
+  isMainBranch:boolean=false;
   constructor(
     private reports: ReportsService,
     private auth: AuthService,
     public lang: LangService,
     private route: ActivatedRoute,
     private localeService: BsLocaleService,
-    private toastr: ToastrService,
     private client: ClientsService
   ) {
     this.yesterday = new Date();
     this.yesterday.setDate(this.yesterday.getDate() - 1);
+    let role = this.auth.snapshot.userIdentity?.role;
+    let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
+    if (role == Roles.SecuritCompany || isMainBranch) {
+      this.isMainBranch = true;
+      console.log(isMainBranch);
+    } else {
+      this.isMainBranch = false;
+      console.log(isMainBranch);
+    }
     this.initDatePiker();
     this.connectHub();
   }
 
   ngOnInit(): void {
+    this.companyId = this.auth.snapshot.userInfo?.id;
+    this.getAllReports()
     this.onDateChange();
-    this.route.data.subscribe((res) => {
-      this.report = res['report'];
-      this.report.forEach((element) => {
-        element.guard = element?.companySecurityGuard.securityGuard.firstName +
-          " " +
-          element?.companySecurityGuard?.securityGuard?.middleName +
-          " " +
-          element?.companySecurityGuard?.securityGuard?.lastName;
-
-        element.superVisor = element.siteSupervisorShift?.companySecurityGuard
-          ?.securityGuard?.firstName +
-          " " +
-          element.siteSupervisorShift?.companySecurityGuard
-            ?.securityGuard?.middleName +
-          " " +
-          element.siteSupervisorShift?.companySecurityGuard
-            ?.securityGuard?.lastName
-      })
-      this.allData = res['report']
-    });
   }
 
-  getIncident(startDate: string, endDate: string, loader: Loader) {
-    let role = this.auth.snapshot.userIdentity?.role;
-    let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
-    if (role == Roles.SecuritCompany || isMainBranch) {
-      this.reports
-        .getAllAccidentByCompany(startDate, endDate, Loader.yes)
-        .subscribe((res) => {
-          this.report = res;
-          this.report.forEach((element) => {
-            element.guard = element?.companySecurityGuard.securityGuard.firstName +
-              " " +
-              element?.companySecurityGuard?.securityGuard?.middleName +
-              " " +
-              element?.companySecurityGuard?.securityGuard?.lastName;
 
-            element.superVisor = element.siteSupervisorShift?.companySecurityGuard
-              ?.securityGuard?.firstName +
-              " " +
-              element.siteSupervisorShift?.companySecurityGuard
-                ?.securityGuard?.middleName +
-              " " +
-              element.siteSupervisorShift?.companySecurityGuard
-                ?.securityGuard?.lastName
-          })
-          this.allData = res
-          this.search()
-
-        });
-    }
-    else {
-      this.reports
-        .getAllAccidentByBranch(startDate, endDate, Loader.yes)
-        .subscribe((res) => {
-          this.report = res;
-          this.report.forEach((element) => {
-            element.guard = element?.companySecurityGuard.securityGuard.firstName +
-              " " +
-              element?.companySecurityGuard?.securityGuard?.middleName +
-              " " +
-              element?.companySecurityGuard?.securityGuard?.lastName;
-
-            element.superVisor = element.siteSupervisorShift?.companySecurityGuard
-              ?.securityGuard?.firstName +
-              " " +
-              element.siteSupervisorShift?.companySecurityGuard
-                ?.securityGuard?.middleName +
-              " " +
-              element.siteSupervisorShift?.companySecurityGuard
-                ?.securityGuard?.lastName
-          })
-          this.allData = res
-          this.search()
-
-        });
-    }
-  }
 
   onPageSizeChange(number: any) {
     this.pageSize = +number.target.value;
+    this.getAllReports();
   }
 
   onPageNumberChange(event: number) {
     this.pageNumber = event;
+    this.getAllReports();
   }
 
   initDatePiker() {
@@ -182,7 +126,7 @@ export class AccidentsComponent implements OnInit {
         );
 
         this._hubConnection.on('ReceiveMessage', (x, y) => {
-          this.getReports();
+          this.getAllReports();
         });
       })
       .catch((err) =>
@@ -190,24 +134,7 @@ export class AccidentsComponent implements OnInit {
       );
   }
 
-  getReports() {
-    let date: any;
-    let start;
-    let end;
-    date = this.date.value;
-    start = convertDateToString(date[0]);
-    end = convertDateToString(date[1]);
-    if (this.delete) {
-      date = convertDateToString(new Date());
-      start = date;
-      end = date;
-    }
-    if (!this.clientFilter) {
-      this.getIncident(start, end, Loader.no);
-    } else {
-      this.getByClient();
-    }
-  }
+
 
   onDateChange() {
     this.date.valueChanges
@@ -218,18 +145,24 @@ export class AccidentsComponent implements OnInit {
         }))
       )
       .subscribe((val) => {
-        this.getIncident(val.start, val.end, Loader.yes);
-        if (this.clientFilter) {
-          this.getClients();
-        }
+        this.pageNumber = 1
+        this.pageSize = 5
+        // if (this.clientFilter) {
+        //    this.getClients();
+        // }
+        this.getAllReports()
       });
   }
 
-  openGallery(gallery: any[]) {
-    this.selectedGallery = gallery;
-    console.log(gallery);
-    
+  openGallery(gallery: any) {
+    let allImages:any=[]
+    gallery.forEach((ele:any) => {
+      allImages.push(ele.attachment.fullLink)
+    });
+    this.selectedGallery = allImages;
     this.display = true;
+    console.log(this.selectedGallery);
+
   }
 
   // getClients() {
@@ -238,75 +171,58 @@ export class AccidentsComponent implements OnInit {
   //   });
   // }
 
+
   getClients() {
-
-    let role = this.auth.snapshot.userIdentity?.role;
-    let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
-    if (role == Roles.SecuritCompany || isMainBranch) {
-      this.client.getClientsBySecurityCompany(1, 20000).subscribe((res) => {
-        this.data = res.data;
-      });
-    } else {
-      this.client.getClientsByBranchId(1, 20000).subscribe((res) => {
-        this.data = res.data;
-      });
-    }
-
-
+    let AppUserId = this.auth.snapshot.userInfo?.appUser.id
+    this.reports.GlobalApiFilterGetAllSecurityCompanyClientForUserSecurity(AppUserId).subscribe((res) => {
+      this.data = res;
+    })
   }
 
   getDataFilter(filter: string) {
     this.filter = true;
-    this.clientFilter = false;
-    this.data = null;
-    if (filter == 'client') {
+    if (filter == 'branch') {
+      this.clientFilter = false;
+      this.branchFilter = true
+    } else if (filter == 'client') {
       this.clientFilter = true;
+      this.branchFilter = false
+    } else {
+      this.dateFilter = true;
+      this.clientFilter = false;
+      this.branchFilter = false
     }
   }
-  displayFilter(event: any) {
-    this.id = event.value;
-    this.delete = false;
-    this.getReports();
-  }
 
-  getByClient() {
-    this.report = this.allData
-    let myData: Incident[] = [];
-    this.report.filter((ele: any) => {
-      if (
-        ele.siteSupervisorShift.clientShiftSchedule.securityCompanyClientId ==
-        this.id
-      ) {
-        myData.push(ele);
-      }
-    });
-    this.report = myData;
-    this.report.forEach((element) => {
-      element.guard = element?.companySecurityGuard.securityGuard.firstName +
-        " " +
-        element?.companySecurityGuard?.securityGuard?.middleName +
-        " " +
-        element?.companySecurityGuard?.securityGuard?.lastName;
-
-      element.superVisor = element.siteSupervisorShift?.companySecurityGuard
-        ?.securityGuard?.firstName +
-        " " +
-        element.siteSupervisorShift?.companySecurityGuard
-          ?.securityGuard?.middleName +
-        " " +
-        element.siteSupervisorShift?.companySecurityGuard
-          ?.securityGuard?.lastName
-    })
-    this.clientData = myData
-    this.search()
-  }
   deleteFilter() {
     this.filter = false;
     this.clientFilter = false;
+    this.branchFilter = false;
     this.data = null;
+    this.clientSites = [];
+    this.branches = []
+    this.branchId = []
+    this.locationId = []
+    this.securityCompanyClientId = []
+    this.pageNumber = 1
+    this.pageSize = 5
     this.delete = true;
-    this.getReports();
+    this.getAllReports();
   }
+  getBranches() {
+    this.reports.GlobalApiFilter_GetAllSecurityBranch(this.companyId).subscribe((res) => {
+      this.branches = res;
+    });
+  }
+  getByBranchId({ value }: any) {
+    this.branchId = [value.id]
+    this.pageNumber = 1
+    this.pageSize = 5
+    this.getAllReports();
+  }
+
+
+
   options = {
     fieldSeparator: ',',
     quoteStrings: '"',
@@ -330,105 +246,124 @@ export class AccidentsComponent implements OnInit {
     ],
   };
   getData() {
-    this.dowenload = []
-    for (let i = 0; i < this.report.length; i++) {
-      let incidentType = '';
-      let reason = '';
-      let isComplete = '';
-      let totalWorkTime = '';
-      let totalMustWorkTime = '';
-      let toTalBreakTime = '';
-      let totalExtraTime = '';
-      if (this.report[i].incidentType) {
-        incidentType = this.report[i].incidentType?.nameAr;
-      } else {
-        incidentType = 'لا يوجد';
-      }
-      if (this.report[i].reason) {
-        reason = this.report[i].reason
-      } else {
-        reason = 'لا يوجد سبب';
-      }
-      if (this.report[i].isComplete) {
-        isComplete = 'نعم';
-      } else {
-        isComplete = 'لا';
-      }
-      if (this.report[i].toTalBreakTime) {
-        toTalBreakTime = this.report[i].toTalBreakTime;
-      } else {
-        toTalBreakTime = 'ليس في استراحة';
-      }
-      if (this.report[i].totalWorkTime) {
-        totalWorkTime = this.report[i].totalWorkTime;
-      } else {
-        totalWorkTime = 'لا يوجد';
-      }
-      if (this.report[i].totalExtraTime) {
-        totalExtraTime = this.report[i].totalExtraTime;
-      } else {
-        totalExtraTime = 'لم يتم العمل لوقت إضافي';
-      }
-      if (this.report[i].totalMustWorkTime) {
-        totalMustWorkTime = this.report[i].totalMustWorkTime;
-      } else {
-        totalMustWorkTime = 'لا يوجد';
-      }
-      let field = {
-        incidentType: this.report[i].incidentType?.nameAr
-          ? this.report[i].incidentType?.nameAr
-          : 'لا يوجد',
-        reason: this.report[i].reason ? this.report[i].reason : 'لا يوجد',
-        phoneNumber:
-          this.report[i].companySecurityGuard.securityGuard?.appUser?.userName,
-        createdDateTime: this.report[i].created,
-        description: this.report[i].description
-          ? this.report[i].description
-          : 'لا يوجد',
-        siteLocation: this.report[i].siteLocation
-          ? this.report[i].siteLocation?.name
-          : 'لا يوجد',
-        actionToken: this.report[i].actionToken
-          ? this.report[i].actionToken
-          : 'لا يوجد',
-        securityGuard: this.report[i]?.companySecurityGuard?.securityGuard
-          ?.firstName
-          ? this.report[i]?.companySecurityGuard?.securityGuard?.firstName +
-          ' ' +
-          this.report[i]?.companySecurityGuard?.securityGuard?.lastName
-          : 'لا يوجد',
-        siteSupervisorShift: this.report[i].siteSupervisorShift
-          ?.companySecurityGuard?.securityGuard?.firstName
-          ? this.report[i].siteSupervisorShift?.companySecurityGuard
-            ?.securityGuard?.firstName +
-          ' ' +
-          this.report[i].siteSupervisorShift?.companySecurityGuard
-            ?.securityGuard?.lastName
-          : 'لا يوجد',
-        siteShift: (this.report[i].siteSupervisorShift?.clientShiftSchedule?.companyShift
-          .shiftType) ?
-          this.report[i].siteSupervisorShift?.clientShiftSchedule?.companyShift
-            .shiftType?.name : 'لا يوجد',
-        GuardCode: this.report[i].companySecurityGuard.securityGuard.id,
-        Name:
-          this.report[i].companySecurityGuard.securityGuard.firstName +
-          ' ' +
-          this.report[i].companySecurityGuard.securityGuard.lastName,
-        StartTime: this.report[i].startTime,
-        MustStart: this.report[i].mustStartDateTime,
-        MustEndIn: this.report[i].mustEndDateTime,
-        breakComplete: reason,
-        isComplete: isComplete,
-        TotalWorkTime: totalWorkTime,
-        TotalBreakTime: toTalBreakTime,
-        TotalExtraTime: totalExtraTime,
-        TotalMustWorkTime: totalMustWorkTime,
-        TotalMustBreakTime: this.report[i].toTalMustBreakTime,
-      };
-      this.dowenload.push(field);
+    this.dowenload = [];
+    let AppUserId = this.auth.snapshot.userInfo?.appUser.id
+    let model = {
+      "securityCompanyId": this.companyId,
+      "appUserId": AppUserId,
+      "securityCompanyClientList": this.securityCompanyClientId,
+      "securityCompanyBranchList": this.branchId,
+      "clientSitesList": this.locationId,
+      "startDate": this.start,
+      "endDate": this.end,
+      "page": 1,
+      "pageSize": this.total,
+      "searchKeyWord": this.searchKey
     }
-    this.downloadData(this.dowenload)
+    this.reports.IncidentsReportGetAllForSecurityCompanyFilter(model).subscribe((res: any) => {
+      if (res) {
+        this.allData = res.data
+        for (let i = 0; i < this.allData.length; i++) {
+          let incidentType = '';
+          let reason = '';
+          let isComplete = '';
+          let totalWorkTime = '';
+          let totalMustWorkTime = '';
+          let toTalBreakTime = '';
+          let totalExtraTime = '';
+          if (this.allData[i].incidentType) {
+            incidentType = this.allData[i].incidentType?.nameAr;
+          } else {
+            incidentType = 'لا يوجد';
+          }
+          if (this.allData[i].reason) {
+            reason = this.allData[i].reason
+          } else {
+            reason = 'لا يوجد سبب';
+          }
+          // if (this.allData[i].isComplete) {
+          //   isComplete = 'نعم';
+          // } else {
+          //   isComplete = 'لا';
+          // }
+          // if (this.allData[i].toTalBreakTime) {
+          //   toTalBreakTime = this.allData[i].toTalBreakTime;
+          // } else {
+          //   toTalBreakTime = 'ليس في استراحة';
+          // }
+          // if (this.allData[i].totalWorkTime) {
+          //   totalWorkTime = this.report[i].totalWorkTime;
+          // } else {
+          //   totalWorkTime = 'لا يوجد';
+          // }
+          // if (this.allData[i].totalExtraTime) {
+          //   totalExtraTime = this.allData[i].totalExtraTime;
+          // } else {
+          //   totalExtraTime = 'لم يتم العمل لوقت إضافي';
+          // }
+          // if (this.allData[i].totalMustWorkTime) {
+          //   totalMustWorkTime = this.allData[i].totalMustWorkTime;
+          // } else {
+          //   totalMustWorkTime = 'لا يوجد';
+          // }
+          let field = {
+            incidentType: this.allData[i].incidentType?.nameAr
+              ? this.allData[i].incidentType?.nameAr
+              : 'لا يوجد',
+            reason: this.allData[i].reason ? this.allData[i].reason : 'لا يوجد',
+            phoneNumber:
+              this.allData[i].companySecurityGuard.securityGuard?.appUser?.userName,
+            createdDateTime: this.allData[i].created,
+            description: this.allData[i].description
+              ? this.allData[i].description
+              : 'لا يوجد',
+            siteLocation: this.allData[i].siteLocation
+              ? this.allData[i].siteLocation?.name
+              : 'لا يوجد',
+            actionToken: this.allData[i].actionToken
+              ? this.allData[i].actionToken
+              : 'لا يوجد',
+            securityGuard: this.allData[i]?.companySecurityGuard?.securityGuard
+              ?.firstName
+              ? this.allData[i]?.companySecurityGuard?.securityGuard?.firstName +
+              ' ' +
+              this.allData[i]?.companySecurityGuard?.securityGuard?.lastName
+              : 'لا يوجد',
+            siteSupervisorShift: this.allData[i].siteSupervisorShift
+              ?.companySecurityGuard?.securityGuard?.firstName
+              ? this.allData[i].siteSupervisorShift?.companySecurityGuard
+                ?.securityGuard?.firstName +
+              ' ' +
+              this.allData[i].siteSupervisorShift?.companySecurityGuard
+                ?.securityGuard?.lastName
+              : 'لا يوجد',
+            siteShift: (this.allData[i].siteSupervisorShift?.clientShiftSchedule?.companyShift
+              .shiftType) ?
+              this.allData[i].siteSupervisorShift?.clientShiftSchedule?.companyShift
+                .shiftType?.name : 'لا يوجد',
+            GuardCode: this.allData[i].companySecurityGuard.securityGuard.id,
+            Name:
+              this.allData[i].companySecurityGuard.securityGuard.firstName +
+              ' ' +
+              this.allData[i].companySecurityGuard.securityGuard.lastName,
+            // StartTime: this.allData[i].startTime,
+            // MustStart: this.allData[i].mustStartDateTime,
+            // MustEndIn: this.allData[i].mustEndDateTime,
+            // breakComplete: reason,
+            // isComplete: isComplete,
+            // TotalWorkTime: totalWorkTime,
+            // TotalBreakTime: toTalBreakTime,
+            // TotalExtraTime: totalExtraTime,
+            // TotalMustWorkTime: totalMustWorkTime,
+            //TotalMustBreakTime: this.allData[i].toTalMustBreakTime,
+          };
+          this.dowenload.push(field);
+        }
+        this.downloadData(this.dowenload)
+      }
+    })
   }
+
   exportCSV() {
     this.getData();
     new ngxCsv(this.dowenload, 'My Report', this.options);
@@ -477,134 +412,88 @@ export class AccidentsComponent implements OnInit {
     // Save the file using FileSaver.js
     saveAs(blob, 'acidantReport.xlsx');
   }
+
+
+
   search() {
-    if (this.clientFilter) {
-      this.report = this.clientData
-    } else {
-      this.report = this.allData
-
-    }
-    let myData: any[] = [];
-    if (this.searchKey != '') {
-
-      this.report.filter((ele: any) => {
-        let name = ele?.companySecurityGuard?.securityGuard?.firstName +
-          ele?.companySecurityGuard?.securityGuard?.middleName +
-          ele?.companySecurityGuard?.securityGuard?.lastName
-        let phone = ele.companySecurityGuard.securityGuard?.appUser?.userName
-        let type
-        if (this.lang.currentLang == 'ar') {
-          type = ele.incidentType?.nameAr
-        }
-        else {
-          type = ele.incidentType?.nameEn
-        }
-        type?.replace(/\s/g, '')
-        if (
-          type?.includes(this.searchKey.replace(/\s/g, '')) || name.includes(this.searchKey.replace(/\s/g, '')) || phone.includes(this.searchKey.replace(/\s/g, ''))
-        ) {
-          myData.push(ele);
-        }
-      });
-      this.report = myData;
-    } else {
-      if (this.clientFilter) {
-
-        if (this.clientData) {
-          this.report = this.clientData
-        } else {
-          this.report = this.allData
-        }
-      } else {
-        this.report = this.allData
-
-      }
-
-    }
+    this.pageNumber = 1
+    this.pageSize = 5
+    this.getAllReports()
   }
+
+  getAllReports() {
+    let date: any;
+
+    let AppUserId = this.auth.snapshot.userInfo?.appUser.id
+    let model
+    if (this.filter == false) {
+      date = convertDateToString(new Date());
+      this.start = date;
+      this.end = date;
+      this.securityCompanyClientId = []
+      this.locationId = []
+      this.branchId = []
+    } else {
+      date = this.date.value;
+      this.start = convertDateToString(date[0]);
+      this.end = convertDateToString(date[1]);
+      if (this.clientFilter || this.branchFilter) {
+        this.getClients();
+      }
+    }
+
+    model = {
+      "securityCompanyId": this.companyId,
+      "appUserId": AppUserId,
+      "securityCompanyClientList": this.securityCompanyClientId,
+      "securityCompanyBranchList": this.branchId,
+      "clientSitesList": this.locationId,
+      "startDate": this.start,
+      "endDate": this.end,
+      "page": this.pageNumber,
+      "pageSize": this.pageSize,
+      "searchKeyWord": this.searchKey
+    }
+    this.reports.IncidentsReportGetAllForSecurityCompanyFilter(model).subscribe((res: any) => {
+      this.report = res.data
+      this.total = res.totalCount;
+    })
+  }
+
+  selectClient({ value }: any) {
+    console.log(value);
+    this.locationId = []
+    this.branchId = []
+    this.securityCompanyClientId = [value.id]
+    this.pageNumber = 1
+    this.pageSize = 5
+    if (this.clientFilter) {
+      this.getAllSites();
+    }
+    if (this.branchFilter) {
+      this.getBranches();
+    }
+    this.getAllReports();
+  }
+
+  getAttendanceBySiteId({ value }: any) {
+    this.locationId = [value.id]
+    this.pageNumber = 1
+    this.pageSize = 5
+    this.getAllReports();
+
+  }
+  getAllSites() {
+    let AppUserId = this.auth.snapshot.userInfo?.appUser.id
+    this.reports.GlobalApiFilterGetAllSiteLocationByUserAndSCForUserSecurity(this.securityCompanyClientId, AppUserId).subscribe((res) => {
+      this.clientSites = res
+    })
+  }
+
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
     this._hubConnection.stop();
   }
 
-  // checkClose(event: any) {
-  //   if (event.target.classList.contains('modal-overlay')) {
-  //     this.handleClick()
-  //   }
-  // }
-
-  // oneClick(event: any) {
-  //   if (event.target.classList.contains('modal-overlay')) {
-  //     this.handleClick()
-  //   }
-  // }
-
-  // handleClick() {
-  //   if (!this.singleClickTimer) {
-  //     // No single click event in progress
-  //     this.singleClickTimer = setTimeout(() => {
-  //       // This is a single click
-  //       this.toastr.info('dbl click to close', '', {
-  //         timeOut: 1000,
-  //         closeButton: false
-  //       });
-  //       clearTimeout(this.singleClickTimer);
-  //       this.singleClickTimer = null;
-  //     }, 400); // Adjust the time (in milliseconds) for your desired double-click threshold
-  //   } else {
-  //     // A single click was detected earlier, so this is a double click
-  //     clearTimeout(this.singleClickTimer);
-  //     this.singleClickTimer = null;
-  //     this.showModal = false;
-  //   }
-  // }
-
-  // generatePDF() {
-  //   console.log("Hi");
-  //   const pdfOptions = {
-  //     margin: 10,
-  //     filename: 'my-pdf-document.pdf',
-  //     image: { type: 'jpeg', quality: 0.98 },
-  //     html2canvas: { scale: 2 },
-  //     jsPDF: {
-  //       unit: 'mm',
-  //       format: 'a4', // You can specify the page size here (e.g., 'letter', 'a4', 'legal', etc.)
-  //       orientation: 'portrait', // 'portrait' for a vertical page or 'landscape' for a horizontal page
-  //     },
-  //   };
-  //   const element = document.getElementById('dynamic-model-content');
-  //   // html2pdf()
-  //   //   .from(element)
-  //   //   .save('dailyFacts-file.pdf');
-  // }
-
-  // openModal(incidentId: string) {
-
-  //   this.getIncidentById(incidentId)
-  // }
-
-  // download(dailyFactId: string) {
-  //   this.reports.getDailyFactById(dailyFactId).subscribe((res) => {
-  //     this.dailyFactDetails = res
-  //     this.showModal = true;
-  //     setTimeout(() => {
-  //       this.generatePDF()
-  //       this.showModal = false;
-  //     }, 0);
-  //   })
-  // }
-
-  // closeModal() {
-  //   this.showModal = false;
-  // }
-
-  // getIncidentById(dailyFactId: string) {
-  //   this.reports.getDailyFactById(dailyFactId).subscribe((res) => {
-  //     this.dailyFactDetails = res
-  //     console.log(res);
-
-  //     this.showModal = true;
-  //   })
-  // }
 }

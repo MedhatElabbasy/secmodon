@@ -7,16 +7,23 @@ import { AttendanceReport } from 'projects/security-company-dashboard/src/app/mo
   styleUrls: ['./dash-guard-card.component.scss'],
 })
 export class DashGuardCardComponent implements OnInit {
-  @Input('data') data!: AttendanceReport;
+  @Input('data') data!: any;
   @Input('time') time!: string;
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.data);
-    console.log(this.time)
-    this.data.breakLoggers.filter((ele)=>{
-      ele.isActiveBreak==true
-      this.time=ele.startTime
-    })
+    // console.log(this.data);
+    // console.log(this.time);
+    if(this.data.breakLoggers!=null){
+      console.log(this.data.breakLoggers);
+      this.time=this.data.breakLoggers.startTime;
+      console.log(this.time);
+    //   this.data.breakLogger.filter((ele)=>{
+    //   ele.isActiveBreak==true
+    //   this.time=ele.startTime
+    //   console.log(this.time);
+
+    // })
+  }
   }
 }

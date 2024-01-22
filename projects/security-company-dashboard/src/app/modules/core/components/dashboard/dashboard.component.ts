@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
   flag: boolean = true;
   sites: any;
   id!: number;
-  siteId!: string;
+  siteId!: any;
   siteFilter: boolean = false;
   totalHoure!: string;
   totalWorkHoure!: any;
@@ -55,12 +55,12 @@ export class DashboardComponent implements OnInit {
   style = mapTheme;
   statistic!: any;
   private _hubConnection!: HubConnection;
-  report!: AttendanceReport[];
+  report!: any[];
   date = convertDateToString(new Date());
   yesterday!: Date;
-  checkedIn: AttendanceReport[] = [];
-  checkedOut: AttendanceReport[] = [];
-  break: AttendanceReport[] = [];
+  checkedIn: any[] = [];
+  checkedOut: any[] = [];
+  break: any[] = [];
   markers: { lat: any; lng: any; name: string }[] = [];
   guardsids: any[] = [];
   dateToday = new Date();
@@ -80,24 +80,32 @@ export class DashboardComponent implements OnInit {
     '-' +
     this.newDate.getFullYear();
   hide!: boolean;
+  companyId!: any;
+  securityCompanyClientId!: any;
+  locationId!: any;
+  branches!:any;
+  branchId!:any;
+  branchFilter:boolean=false;
+  isMainBranch:boolean=false;
   constructor(
     private auth: AuthService,
     private reports: ReportsService,
-    private route: ActivatedRoute,
-    private guard: CompanyGuardsService,
-    private client: ClientsService,
-    private site: ClientSiteService,
     public lang: LangService,
     private PackagesService: PackagesService,
     private localeService: BsLocaleService
   ) {
+    this.companyId = this.auth.snapshot.userInfo?.id;
 
     this.connect();
-    // guard.getAllGuardsOnCompany().subscribe((x) => {
-    //   x.forEach((element) => {
-    //     this.guardsids.push(element.id);
-    //   });
-    // });
+    let role = this.auth.snapshot.userIdentity?.role;
+    let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
+    if (role == Roles.SecuritCompany || isMainBranch) {
+      this.isMainBranch = true;
+      console.log(isMainBranch);
+    } else {
+      this.isMainBranch = false;
+      console.log(isMainBranch);
+    }
   }
 
   ngOnInit(): void {
@@ -110,7 +118,7 @@ export class DashboardComponent implements OnInit {
     }
     this.onDateChange();
     this.getMarker();
-    this.getStatisticAllCLient(this.firstDate, this.lastDate);
+   // this.getStatisticAllCLient(this.firstDate, this.lastDate);
   }
 
   initDatePiker() {
@@ -131,249 +139,169 @@ export class DashboardComponent implements OnInit {
         }))
       )
       .subscribe((val) => {
-
         let role = this.auth.snapshot.userIdentity?.role;
         let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
         if (role == Roles.SecuritCompany || isMainBranch) {
-          this.reports
-            .getData(this.id, val.start, val.end, Loader.yes)
-            .subscribe((response) => {
-              this.reports.statisticData.next(response);
-            });
+          this.isMainBranch = true;
+          console.log(isMainBranch);
+
+          // this.reports
+          //   .getData(1083, val.start, val.end, Loader.yes)
+          //   .subscribe((response) => {
+          //     this.reports.statisticData.next(response);
+          //   });
         } else {
-          console.log("bbbbbbb");
-
-          this.reports
-            .getDataByBranch(this.id, val.start, val.end, Loader.yes)
-            .subscribe((response) => {
-              this.reports.statisticData.next(response);
-            });
+          this.isMainBranch = false;
+          console.log(isMainBranch);
+          // this.reports
+          //   .getDataByBranch(1083, val.start, val.end, Loader.yes)
+          //   .subscribe((response) => {
+          //     this.reports.statisticData.next(response);
+          //   });
         }
-        this.getStatistic(val.start, val.end, this.id);
+       // this.getStatistic(val.start, val.end, 1083);
       });
   }
-  getStatistic(date1: string, date2: string, clientId: number) {
+  // getStatistic(date1: string, date2: string, clientId: number) {
 
-    let role = this.auth.snapshot.userIdentity?.role;
-    let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
-    if (role == Roles.SecuritCompany || isMainBranch) {
-      this.reports
-        .getAttendanceStatisitcReportByClient(date1, date2, this.id, Loader.no)
-        .subscribe((res) => {
-          if (res) {
-            this.statistic = res;
-            this.totalWorkHoure = this.statistic.totalWorkHoure;
-            this.totalBrackHoure = this.statistic.totalBrackHoure;
-            this.totalExstraTime = this.statistic.totalExstraTime;
-            let h =
-              Number(this.totalWorkHoure.toString().split(':')[0]) +
-              Number(this.totalExstraTime.toString().split(':')[0]);
-            let m =
-              Number(this.totalWorkHoure.toString().split(':')[1]) +
-              Number(this.totalExstraTime.toString().split(':')[1]);
-            if (m > 59) {
-              h += Math.floor(m / 60);
-              m %= 60;
-            }
-            this.totalHoure = Math.round(h) + ':' + Math.round(m);
-            let total1 = `${this.totalWorkHoure.toString().split(':')[0]}:${this.totalWorkHoure.toString().split(':')[1]}`
-            this.totalWorkHoure = total1
+  //   let role = this.auth.snapshot.userIdentity?.role;
+  //   let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
+  //   if (role == Roles.SecuritCompany || isMainBranch) {
+  //     this.reports
+  //       .getAttendanceStatisitcReportByClient(date1, date2, 1083, Loader.no)
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           this.statistic = res;
+  //           this.totalWorkHoure = this.statistic.totalWorkHoure;
+  //           this.totalBrackHoure = this.statistic.totalBrackHoure;
+  //           this.totalExstraTime = this.statistic.totalExstraTime;
+  //           let h =
+  //             Number(this.totalWorkHoure.toString().split(':')[0]) +
+  //             Number(this.totalExstraTime.toString().split(':')[0]);
+  //           let m =
+  //             Number(this.totalWorkHoure.toString().split(':')[1]) +
+  //             Number(this.totalExstraTime.toString().split(':')[1]);
+  //           if (m > 59) {
+  //             h += Math.floor(m / 60);
+  //             m %= 60;
+  //           }
+  //           this.totalHoure = Math.round(h) + ':' + Math.round(m);
+  //           let total1 = `${this.totalWorkHoure.toString().split(':')[0]}:${this.totalWorkHoure.toString().split(':')[1]}`
+  //           this.totalWorkHoure = total1
 
-            let total2 = `${this.totalExstraTime.toString().split(':')[0]}:${this.totalExstraTime.toString().split(':')[1]}`
-            this.totalExstraTime = total2
-            let total3 = `${this.totalBrackHoure.toString().split(':')[0]}:${this.totalBrackHoure.toString().split(':')[1]}`
-            this.totalBrackHoure = total3
+  //           let total2 = `${this.totalExstraTime.toString().split(':')[0]}:${this.totalExstraTime.toString().split(':')[1]}`
+  //           this.totalExstraTime = total2
+  //           let total3 = `${this.totalBrackHoure.toString().split(':')[0]}:${this.totalBrackHoure.toString().split(':')[1]}`
+  //           this.totalBrackHoure = total3
 
-          }
-        });
-    }
-    else {
-      this.reports
-        .getAttendanceStatisitcReportByClientAndBranch(date1, date2, this.id, Loader.no)
-        .subscribe((res) => {
-          if (res) {
-            this.statistic = res;
-            this.totalWorkHoure = this.statistic.totalWorkHoure;
-            this.totalBrackHoure = this.statistic.totalBrackHoure;
-            this.totalExstraTime = this.statistic.totalExstraTime;
-            let h =
-              Number(this.totalWorkHoure.toString().split(':')[0]) +
-              Number(this.totalExstraTime.toString().split(':')[0]);
-            let m =
-              Number(this.totalWorkHoure.toString().split(':')[1]) +
-              Number(this.totalExstraTime.toString().split(':')[1]);
-            if (m > 59) {
-              h += Math.floor(m / 60);
-              m %= 60;
-            }
-            this.totalHoure = Math.round(h) + ':' + Math.round(m);
-            let total1 = `${this.totalWorkHoure.toString().split(':')[0]}:${this.totalWorkHoure.toString().split(':')[1]}`
-            this.totalWorkHoure = total1
+  //         }
+  //       });
+  //   }
+  //   else {
+  //     this.reports
+  //       .getAttendanceStatisitcReportByClientAndBranch(date1, date2, 1083, Loader.no)
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           this.statistic = res;
+  //           this.totalWorkHoure = this.statistic.totalWorkHoure;
+  //           this.totalBrackHoure = this.statistic.totalBrackHoure;
+  //           this.totalExstraTime = this.statistic.totalExstraTime;
+  //           let h =
+  //             Number(this.totalWorkHoure.toString().split(':')[0]) +
+  //             Number(this.totalExstraTime.toString().split(':')[0]);
+  //           let m =
+  //             Number(this.totalWorkHoure.toString().split(':')[1]) +
+  //             Number(this.totalExstraTime.toString().split(':')[1]);
+  //           if (m > 59) {
+  //             h += Math.floor(m / 60);
+  //             m %= 60;
+  //           }
+  //           this.totalHoure = Math.round(h) + ':' + Math.round(m);
+  //           let total1 = `${this.totalWorkHoure.toString().split(':')[0]}:${this.totalWorkHoure.toString().split(':')[1]}`
+  //           this.totalWorkHoure = total1
 
-            let total2 = `${this.totalExstraTime.toString().split(':')[0]}:${this.totalExstraTime.toString().split(':')[1]}`
-            this.totalExstraTime = total2
-            let total3 = `${this.totalBrackHoure.toString().split(':')[0]}:${this.totalBrackHoure.toString().split(':')[1]}`
-            this.totalBrackHoure = total3
+  //           let total2 = `${this.totalExstraTime.toString().split(':')[0]}:${this.totalExstraTime.toString().split(':')[1]}`
+  //           this.totalExstraTime = total2
+  //           let total3 = `${this.totalBrackHoure.toString().split(':')[0]}:${this.totalBrackHoure.toString().split(':')[1]}`
+  //           this.totalBrackHoure = total3
 
-          }
-        });
-    }
+  //         }
+  //       });
+  //   }
 
 
-  }
-  getStatisticAllCLient(date1: string, date2: string) {
+  // }
+  // getStatisticAllCLient(date1: string, date2: string) {
 
-    let role = this.auth.snapshot.userIdentity?.role;
-    let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
-    if (role == Roles.SecuritCompany || isMainBranch) {
-      this.reports
-        .getAttendanceStatisitcReport(date1, date2, Loader.no)
-        .subscribe((res) => {
-          if (res) {
-            this.statistic = res;
-            this.totalWorkHoure = this.statistic.totalWorkHoure;
-            this.totalBrackHoure = this.statistic.totalBrackHoure;
-            this.totalExstraTime = this.statistic.totalExstraTime;
-            let h =
-              Number(this.totalWorkHoure.toString().split(':')[0]) +
-              Number(this.totalExstraTime.toString().split(':')[0]);
-            let m =
-              Number(this.totalWorkHoure.toString().split(':')[1]) +
-              Number(this.totalExstraTime.toString().split(':')[1]);
-            if (m > 59) {
-              h += Math.floor(m / 60);
-              m %= 60;
-            }
-            this.totalHoure = Math.round(h) + ':' + Math.round(m);
-            let total1 = `${this.totalWorkHoure.toString().split(':')[0]}:${this.totalWorkHoure.toString().split(':')[1]}`
-            this.totalWorkHoure = total1
+  //   let role = this.auth.snapshot.userIdentity?.role;
+  //   let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
+  //   if (role == Roles.SecuritCompany || isMainBranch) {
+  //     this.reports
+  //       .getAttendanceStatisitcReport(date1, date2, Loader.no)
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           this.statistic = res;
+  //           this.totalWorkHoure = this.statistic.totalWorkHoure;
+  //           this.totalBrackHoure = this.statistic.totalBrackHoure;
+  //           this.totalExstraTime = this.statistic.totalExstraTime;
+  //           let h =
+  //             Number(this.totalWorkHoure.toString().split(':')[0]) +
+  //             Number(this.totalExstraTime.toString().split(':')[0]);
+  //           let m =
+  //             Number(this.totalWorkHoure.toString().split(':')[1]) +
+  //             Number(this.totalExstraTime.toString().split(':')[1]);
+  //           if (m > 59) {
+  //             h += Math.floor(m / 60);
+  //             m %= 60;
+  //           }
+  //           this.totalHoure = Math.round(h) + ':' + Math.round(m);
+  //           let total1 = `${this.totalWorkHoure.toString().split(':')[0]}:${this.totalWorkHoure.toString().split(':')[1]}`
+  //           this.totalWorkHoure = total1
 
-            let total2 = `${this.totalExstraTime.toString().split(':')[0]}:${this.totalExstraTime.toString().split(':')[1]}`
-            this.totalExstraTime = total2
-            let total3 = `${this.totalBrackHoure.toString().split(':')[0]}:${this.totalBrackHoure.toString().split(':')[1]}`
-            this.totalBrackHoure = total3
+  //           let total2 = `${this.totalExstraTime.toString().split(':')[0]}:${this.totalExstraTime.toString().split(':')[1]}`
+  //           this.totalExstraTime = total2
+  //           let total3 = `${this.totalBrackHoure.toString().split(':')[0]}:${this.totalBrackHoure.toString().split(':')[1]}`
+  //           this.totalBrackHoure = total3
 
-          }
-        });
-    } else {
-      this.reports
-        .getAttendanceStatisitcReportByBranch(date1, date2, Loader.no)
-        .subscribe((res) => {
-          if (res) {
-            this.statistic = res;
-            this.totalWorkHoure = this.statistic.totalWorkHoure;
-            this.totalBrackHoure = this.statistic.totalBrackHoure;
-            this.totalExstraTime = this.statistic.totalExstraTime;
-            let h =
-              Number(this.totalWorkHoure.toString().split(':')[0]) +
-              Number(this.totalExstraTime.toString().split(':')[0]);
-            let m =
-              Number(this.totalWorkHoure.toString().split(':')[1]) +
-              Number(this.totalExstraTime.toString().split(':')[1]);
-            if (m > 59) {
-              h += Math.floor(m / 60);
-              m %= 60;
-            }
-            this.totalHoure = Math.round(h) + ':' + Math.round(m);
-            let total1 = `${this.totalWorkHoure.toString().split(':')[0]}:${this.totalWorkHoure.toString().split(':')[1]}`
-            this.totalWorkHoure = total1
+  //         }
+  //       });
+  //   } else {
+  //     this.reports
+  //       .getAttendanceStatisitcReportByBranch(date1, date2, Loader.no)
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           this.statistic = res;
+  //           this.totalWorkHoure = this.statistic.totalWorkHoure;
+  //           this.totalBrackHoure = this.statistic.totalBrackHoure;
+  //           this.totalExstraTime = this.statistic.totalExstraTime;
+  //           let h =
+  //             Number(this.totalWorkHoure.toString().split(':')[0]) +
+  //             Number(this.totalExstraTime.toString().split(':')[0]);
+  //           let m =
+  //             Number(this.totalWorkHoure.toString().split(':')[1]) +
+  //             Number(this.totalExstraTime.toString().split(':')[1]);
+  //           if (m > 59) {
+  //             h += Math.floor(m / 60);
+  //             m %= 60;
+  //           }
+  //           this.totalHoure = Math.round(h) + ':' + Math.round(m);
+  //           let total1 = `${this.totalWorkHoure.toString().split(':')[0]}:${this.totalWorkHoure.toString().split(':')[1]}`
+  //           this.totalWorkHoure = total1
 
-            let total2 = `${this.totalExstraTime.toString().split(':')[0]}:${this.totalExstraTime.toString().split(':')[1]}`
-            this.totalExstraTime = total2
-            let total3 = `${this.totalBrackHoure.toString().split(':')[0]}:${this.totalBrackHoure.toString().split(':')[1]}`
-            this.totalBrackHoure = total3
+  //           let total2 = `${this.totalExstraTime.toString().split(':')[0]}:${this.totalExstraTime.toString().split(':')[1]}`
+  //           this.totalExstraTime = total2
+  //           let total3 = `${this.totalBrackHoure.toString().split(':')[0]}:${this.totalBrackHoure.toString().split(':')[1]}`
+  //           this.totalBrackHoure = total3
 
-          }
-        });
-    }
+  //         }
+  //       });
+  //   }
 
-  }
+  // }
   getMarker() {
-    if (this.flag) {
-      this.route.data.subscribe((res) => {
-        let data = res['report'];
-        this.report = data;
-        this.checkedOut = data.filter((e: AttendanceReport) => e.isComplete);
-        this.break = data.filter((e: AttendanceReport) => e.isOnBreak);
-        this.checkedIn = data.filter((e: AttendanceReport) => !e.isComplete);
-        this.checkedIn.forEach((x) => {
-          if (x?.locationTracking.length == 0) {
-            // console.log('true');
-            this.markers.push({
-              name:
-                x?.companySecurityGuard.securityGuard?.firstName +
-                ' ' +
-                x?.companySecurityGuard.securityGuard?.lastName,
-              lat: x?.lat,
-              lng: x?.long,
-            });
-          } else {
-            this.markers.push({
-              name:
-                x?.companySecurityGuard.securityGuard?.firstName +
-                ' ' +
-                x?.companySecurityGuard.securityGuard?.lastName,
-              lat: x?.locationTracking[x.locationTracking.length - 1]?.lat,
-              lng: x?.locationTracking[x.locationTracking.length - 1]?.long,
-            });
-          }
-        });
-      });
-    } else {
-      if (!this.siteId) {
-        this.reports
-          .getAttendanceReportByClient(this.date, this.date, this.id, Loader.no)
-          .subscribe((res) => {
-            this.report = res;
-            this.checkedOut = res.filter((e) => e.isComplete);
-            this.break = res.filter((e) => e.isOnBreak);
-            this.checkedIn = res.filter((e) => !e.isComplete);
-            this.checkedIn.forEach((x) => {
-              if (x?.locationTracking.length == 0) {
-                this.markers.push({
-                  name:
-                    x?.companySecurityGuard.securityGuard?.firstName +
-                    ' ' +
-                    x?.companySecurityGuard.securityGuard?.lastName,
-                  lat: x?.lat,
-                  lng: x?.long,
-                });
-              } else {
-                this.markers.push({
-                  name:
-                    x?.companySecurityGuard.securityGuard?.firstName +
-                    ' ' +
-                    x?.companySecurityGuard.securityGuard?.lastName,
-                  lat: x?.locationTracking[x.locationTracking.length - 1]?.lat,
-                  lng: x?.locationTracking[x.locationTracking.length - 1]?.long,
-                });
-              }
-            });
-          });
-      } else {
-        let reportBySite: any[] = [];
-        console.log(this.report);
-        
-        this.report.forEach((element) => {
-          if (element.siteLocation.clientSiteId == this.siteId) {
-            reportBySite.push(element);
-          }
-        });
-        this.checkedOut = reportBySite.filter((e) => e.isComplete);
-        this.break = reportBySite.filter((e) => e.isOnBreak);
-        this.checkedIn = reportBySite.filter((e) => !e.isComplete);
-        this.checkedIn.forEach((x) => {
-          this.markers.push({
-            name:
-              x?.companySecurityGuard.securityGuard?.firstName +
-              ' ' +
-              x?.companySecurityGuard.securityGuard?.lastName,
-            lat: x.locationTracking[x.locationTracking.length - 1]?.lat,
-            lng: x.locationTracking[x.locationTracking.length - 1]?.long,
-          });
-        });
-      }
-    }
+
+    this.getAllReports()
+
   }
   private connect(): void {
     this._hubConnection = new HubConnectionBuilder()
@@ -387,16 +315,7 @@ export class DashboardComponent implements OnInit {
           .invoke('AddToGroup', `${this.auth.snapshot.userInfo?.id}-attendance`)
           .then(() => {
             this._hubConnection.on('ReceiveMessage', () => {
-              if (this.flag) {
-                this.getAttendance(this.date, this.date, Loader.no);
-              } else {
-                this.getAttendanceByClient(
-                  this.date,
-                  this.date,
-                  Loader.no,
-                  this.id
-                );
-              }
+              this.getAllReports()
             });
           });
       })
@@ -405,114 +324,142 @@ export class DashboardComponent implements OnInit {
       );
   }
 
-  getAttendance(startDate: string, endDate: string, loader: Loader) {
-    let role = this.auth.snapshot.userIdentity?.role;
-    console.log(role);
-    
-    let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
-    if (role == Roles.SecuritCompany || isMainBranch) {
-      this.reports
-        .getAttendanceReport(startDate, endDate, Loader.no)
-        .subscribe((res) => {
-          this.report = res;
-          this.checkedOut = res.filter((e) => e.isComplete);
-          this.break = res.filter((e) => e.isOnBreak);
-          this.checkedIn = res.filter((e) => !e.isComplete);
-        });
-    }
-    else {
-      this.reports
-        .getAttendanceReportByBranch(startDate, endDate, Loader.no)
-        .subscribe((res) => {
-          this.report = res;
-          this.checkedOut = res.filter((e) => e.isComplete);
-          this.break = res.filter((e) => e.isOnBreak);
-          this.checkedIn = res.filter((e) => !e.isComplete);
-        });
-    }
-  }
-
-  getAttendanceByClient(
-    startDate: string,
-    endDate: string,
-    loader: Loader,
-    clientId: number
-  ) {
-    this.reports
-      .getAttendanceReportByClient(startDate, endDate, clientId, Loader.no)
-      .subscribe((res) => {
-        this.report = res;
-        this.checkedOut = res.filter((e) => e.isComplete);
-        this.break = res.filter((e) => e.isOnBreak);
-        this.checkedIn = res.filter((e) => !e.isComplete);
-      });
-  }
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
     this._hubConnection.stop();
   }
   getDataFilter(type: string) {
-    if (type == 'client') {
+    if(type == 'branch'){
+      this.branchFilter=true;
+      this.branches=null;
+      this.branchId=[];
       this.siteFilter = false;
-      this.siteId = '';
-      this.sites = null;
+      this.markers = [];
+      this.sites=null;
       this.getClients();
-    } else {
-      this.data = [];
-      this.siteFilter = true;
-      this.getClients();
-    }
+        }else
+        if (type == 'client') {
+          this.siteFilter = false;
+          this.siteId = [];
+          this.sites = null;
+          this.getClients();
+        } else {
+          this.data = [];
+          this.siteFilter = true;
+          this.getClients();
+        }
   }
   getClients() {
+    let AppUserId = this.auth.snapshot.userInfo?.appUser.id
+    this.reports.GlobalApiFilterGetAllSecurityCompanyClientForUserSecurity(AppUserId).subscribe((res) => {
+      this.data = res;
+      console.log(this.data);
 
-    let role = this.auth.snapshot.userIdentity?.role;
-    let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
-    if (role == Roles.SecuritCompany || isMainBranch) {
-      this.client.getClientsBySecurityCompany(1, 20000).subscribe((res) => {
-        this.data = res.data;
-      });
-    } else {
-      this.client.getClientsByBranchId(1, 20000).subscribe((res) => {
-        this.data = res.data;
-      });
-    }
-
-
+    })
   }
   display(event: any) {
-    this.id = event.value;
-    this.reports.clientId.next(this.id);
+    this.securityCompanyClientId = [event.value];
+    this.reports.clientId.next(1083);
     this.flag = false;
+    this.branchId = [];
+    this.branches=null;
+    this.siteId=[];
     this.markers = [];
-    this.getMarker();
-    this.getStatistic(this.firstDate, this.lastDate, this.id);
-    if (this.siteFilter) {
-      let StringId = '';
-      this.data.forEach((element: any) => {
-        if (element.clientCompany.id == this.id) {
-          StringId = element.id;
-        }
-        return;
-      });
-      this.site.getAllByClientId(StringId).subscribe((res) => {
-        this.sites = res;
-      });
+   // this.getMarker();
+    //.getStatistic(this.firstDate, this.lastDate, 1083);
+    if(this.siteFilter==true){
+      console.log('sitefilter');
+      this.getMarker();
+      let AppUserId = this.auth.snapshot.userInfo?.appUser.id
+      this.reports.GlobalApiFilterGetAllSiteLocationByUserAndSCForUserSecurity(this.securityCompanyClientId, AppUserId).subscribe((res) => {
+        this.sites = res
+      })
+    }else if(this.branchFilter==true){
+      console.log('branchfilter');
+      this.getMarker();
+      this.getBranches();
+    }else{
+      this.getMarker();
     }
   }
   display2(event: any) {
-    this.siteId = event.value;
+    this.siteId = [event.value];
+    this.markers = [];
+    this.getMarker();
+
+  }
+
+  getByBranchId({ value }: any) {
+    this.branchId = [value.id]
     this.markers = [];
     this.getMarker();
   }
+
   deleteFilter() {
     this.flag = true;
     this.sites = null;
     this.data = null;
+    this.branches = null;
+    this.branchId=[];
     this.id = 0;
+    this.securityCompanyClientId=[]
     this.reports.clientId.next(0);
     this.siteFilter = false;
-    this.siteId = '';
+    this.siteId = [];
     this.getMarker();
   }
+
+  getBranches() {
+    this.reports.GlobalApiFilter_GetAllSecurityBranch(this.companyId).subscribe((res) => {
+      this.branches = res;
+    });
+  }
+
+
+  getAllReports() {
+    this.report=[];
+    this.markers=[];
+    this.checkedIn=[];
+    this.checkedOut=[];
+    this.markers=[];
+    let AppUserId = this.auth.snapshot.userInfo?.appUser.id
+    let model
+    model = {
+      "securityCompanyId": this.companyId,
+      "appUserId": AppUserId,
+      "securityCompanyClientList":this.securityCompanyClientId,
+      "securityCompanyBranchList": this.branchId,
+      "clientSitesList":this.siteId,
+      "startDate": this.date,
+      "endDate": this.date,
+      "page": 1,
+      "pageSize": 1000000,
+      "searchKeyWord": ""
+    }
+    // if (this.securityCompanyClientId) {
+    //   model.securityCompanyClientList = [this.securityCompanyClientId] as never[]
+    // }
+    // if (this.siteId) {
+    //   model.clientSitesList = [this.siteId] as never[]
+    // }
+    this.reports.GuardGuardsReportGetAllForSecurityCompanyFilter(model).subscribe((res: any) => {
+      this.report = res.data
+      this.checkedOut = this.report?.filter((e: any) => e.isComplete);
+      this.break = this.report?.filter((e:any) => e.isOnBreak);
+      this.checkedIn = this.report?.filter((e: any) => !e.isComplete);
+      this.checkedIn.forEach((x) => {
+        if (x.locationTracking) {
+          this.markers.push({
+            name: x.name,
+            lat: x.locationTracking.lat,
+            lng: x.locationTracking.long,
+          });
+        }
+
+
+      });
+    })
+  }
 }
+//change 1083 by client id

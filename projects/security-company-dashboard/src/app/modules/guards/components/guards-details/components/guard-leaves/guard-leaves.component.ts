@@ -38,7 +38,7 @@ export class GuardLeavesComponent implements OnInit {
     this.pageSize = +number.target.value;
   }
 
-  approve(id: string) { 
+  approve(id: string) {
     this.companyService.acceptRequest(id).subscribe(()=> this.getRequests())
    }
 

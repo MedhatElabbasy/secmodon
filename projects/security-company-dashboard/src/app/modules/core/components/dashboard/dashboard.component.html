@@ -2,14 +2,19 @@
   <div class="d-lg-flex justify-content-end">
     <div class="d-flex justify-content-end gap-3">
       <div class="form-floating" *ngIf="data">
-        <p-dropdown class="py-2" id="data" [filter]="true" filterBy="name" styleClass="w-100"
-          [optionLabel]="'clientCompany.name'" optionValue="clientCompany.id" [options]="data"
-          [placeholder]="'validation.select_client' | translate" (onChange)="display($event)"></p-dropdown>
+        <p-dropdown class="py-2" id="data" [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'"
+          optionValue="id" [options]="data" [placeholder]="'validation.select_client' | translate"
+          (onChange)="display($event)"></p-dropdown>
       </div>
       <div class="form-floating" *ngIf="sites">
-        <p-dropdown [filter]="true" filterBy="siteName" styleClass="w-100" [optionLabel]="'siteName'" optionValue="id"
+        <p-dropdown [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'" optionValue="id"
           [options]="sites" [placeholder]="'validation.select_site' | translate"
           (onChange)="display2($event)"></p-dropdown>
+      </div>
+      <div class="form-floating " *ngIf="branches">
+        <p-dropdown class="py-2" id="branches" [filter]="true" filterBy="name" styleClass="w-100"
+          [optionLabel]="'name'" [options]="branches"
+          [placeholder]="'validation.select_branch'|translate" (onChange)="getByBranchId($event)"></p-dropdown>
       </div>
       <div class="dropdown menue2">
         <button class="btn myPadding rounded-m rounded-8 btn-primary d-flex gap-2 align-items-center dropdown-toggle"
@@ -24,6 +29,9 @@
           <li class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('site')">
             {{ "site" | translate }}
           </li>
+          <li *ngIf="isMainBranch" class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('branch')">
+            {{"security_dashboard.dash.branches"
+                    |translate}}</li>
         </ul>
       </div>
       <div>
@@ -37,7 +45,7 @@
 </div>
 
 <div class="container py-4">
-  <div class="my-3">
+  <!-- <div class="my-3">
     <div class="container card border-0 rounded-10">
       <div class="card-body">
         <div class="container d-flex justify-content-between">
@@ -58,8 +66,8 @@
         <app-my-chart></app-my-chart>
       </div>
     </div>
-  </div>
-  <div class="container">
+  </div> -->
+  <!-- <div class="container">
     <div class="row">
       <div class="container-fluid  card border-0 rounded-10" *ngIf="statistic">
         <div class="card-body">
@@ -87,14 +95,15 @@
       </div>
 
     </div>
-  </div>
+  </div> -->
 </div>
-<div class="container py-4" *ngIf="hide">
+<!----*ngIf="hide" depends on the package the user choose-->
+<div class="container py-4">
   <div class="card h-100 border-0 rounded-10">
     <div class="card-body">
       <h5 class="fw-600 mt-2 mb-4" translate="reports.location_tracking"></h5>
       <div style="height: 450px" class>
-        <google-map [options]="{ styles: style }" [center]="mainLocation" [zoom]="2">
+        <google-map [options]="{ styles: style }" [center]="mainLocation" [zoom]="5">
           <map-marker-clusterer
             imagePath="https://raw.githubusercontent.com/googlearchive/js-marker-clusterer/gh-pages/images/m">
             <map-marker *ngFor="let marker of markers" [position]="{ lat: +marker.lat, lng: +marker.lng }" [label]="{
@@ -152,7 +161,7 @@
         <div class="tab-pane" id="checkout" role="tabpanel" aria-labelledby="checkout-tab">
           <div class="py-3">
             <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 g-4">
-              <app-dash-guard-card *ngFor="let item of checkedOut" [data]="item" [time]="item.endTime">
+              <app-dash-guard-card *ngFor="let item of checkedOut" [data]="item" [time]="item.leaveTime">
               </app-dash-guard-card>
             </div>
             <div *ngIf="!checkedOut.length" class="mt-4 p-3 rounded-10 bg-info-o text-align-center fw-500"

@@ -64,8 +64,9 @@
                 <ion-icon name="search"></ion-icon>
               </span>
               <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
-                aria-describedby="search" [(ngModel)]="searchKey" (keyup)="search()" />
+                aria-describedby="search" [(ngModel)]="searchKey" (blur)="search()" />
             </div>
+
 
             <div class="bd-dark col d-flex justify-content-end align-items-center">
               <h6 class="fw-bold ms-3"><span class="fw-bolder">إجمالي وقت العمل الفعلي: </span> {{totalWorkTime}}</h6>
@@ -86,33 +87,38 @@
                 <th scope="col" class="text-nowrap" translate="phone"></th>
                 <th scope="col" class="text-nowrap" translate="reports.date"></th>
                 <th scope="col" class="text-nowrap" translate="reports.attendanceFrom"></th>
+                <th scope="col" class="text-nowrap" translate="reports.siteLocationName"></th>
+
                 <th scope="col" class="text-nowrap" translate="reports.start_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.must_start"></th>
                 <th scope="col" class="text-nowrap" translate="reports.end_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.must_ent"></th>
-                <th scope="col" class="text-nowrap" translate="reports.is_on_break"></th>
+                <!-- <th scope="col" class="text-nowrap" translate="reports.is_on_break"></th> -->
+
                 <th scope="col" class="text-nowrap" translate="reports.is_complete"></th>
                 <th scope="col" class="text-nowrap" translate="reports.total_work_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.total_break_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.total_extra_time"></th>
+
                 <th scope="col" class="text-nowrap" translate="reports.total_must_work_time"></th>
                 <th scope="col" class="text-nowrap" translate="reports.total_must_break_time"></th>
+                <th scope="col" class="text-nowrap" translate="reports.attendance_note"></th>
               </tr>
             </thead>
             <tbody>
-              <ng-container >
+              <ng-container>
                 <tr class="c-pointer" *ngFor="
                     let attendance of report
                       | paginate
                         : {
-                            itemsPerPage: pageSize,
-                            currentPage: pageNumber,
-
-                            id: 'attendance'
+                          itemsPerPage: pageSize,
+                          currentPage: pageNumber,
+                          totalItems:total,
+                          id: 'attendance'
                           }
                   ">
                   <td class="text-nowrap">
-                    {{ attendance.companySecurityGuard.securityGuard.id }}
+                    {{ attendance.guardCode }}
                   </td>
                   <td class="text-nowrap">
                     {{
@@ -120,16 +126,21 @@
                     }}
                   </td>
                   <td class="text-nowrap">
-                    {{attendance.companySecurityGuard.securityGuard.appUser.userName }}
+                    {{attendance.phoneNumber }}
                   </td>
                   <td class="text-nowrap">
                     {{
-                    attendance.mustStartDateTime.split(' ')[0]
+                    attendance.mustStart.split(' ')[0]
                     }}
                   </td>
                   <td class="text-nowrap">
                     {{
                     attendance.attendanceFrom
+                    }}
+                  </td>
+                  <td class="text-nowrap">
+                    {{
+                    attendance.siteLocationName
                     }}
                   </td>
                   <td class="text-nowrap">
@@ -140,28 +151,28 @@
                   </td>
                   <td class="text-nowrap">
                     {{
-                    attendance.mustStartDateTime.split(" ")[1]
+                    attendance.mustStart.split(" ")[1]
                     | time: (lang.isAr | async)
                     }}
                   </td>
                   <td class="text-nowrap">
                     {{
-                    attendance.endTime
-                    ? (attendance.endTime.split(" ")[1]
+                    attendance.leaveTime
+                    ? (attendance.leaveTime.split(" ")[1]
                     | time: (lang.isAr | async))
                     : ("not_specified" | translate)
                     }}
                   </td>
                   <td class="text-nowrap">
                     {{
-                    attendance.mustEndDateTime.split(" ")[1]
+                    attendance.mustEndIn.split(" ")[1]
                     | time: (lang.isAr | async)
                     }}
                   </td>
-                  <td class="text-nowrap">
+                  <!-- <td class="text-nowrap">
                     <span translate="reports.yes" *ngIf="attendance.isOnBreak"></span>
                     <span *ngIf="!attendance || !attendance.isOnBreak" translate="reports.no"></span>
-                  </td>
+                  </td> -->
                   <td class="text-nowrap">
                     <span translate="reports.yes" *ngIf="attendance.isComplete"></span>
                     <span *ngIf="!attendance || !attendance.isComplete" translate="reports.no"></span>
@@ -176,8 +187,8 @@
                   </td>
                   <td class="text-nowrap">
                     {{
-                    attendance.toTalBreakTime
-                    ? (attendance.toTalBreakTime
+                    attendance.totalBreakTime
+                    ? (attendance.totalBreakTime
                     | timeDetails: (lang.isAr | async))
                     : ("not_specified" | translate)
                     }}
@@ -199,10 +210,14 @@
                   </td>
                   <td class="text-nowrap">
                     {{
-                    attendance.toTalMustBreakTime
+                    attendance.totalMustBreakTime
                     | timeDetails: (lang.isAr | async)
                     }}
                   </td>
+                  <td class="text-nowrap">
+                    {{  (attendance.attendanceNotes && attendance.attendanceNotes!=="null") ?  attendance.attendanceNotes : ("no-data" | translate)}}
+                    </td>
+
                 </tr>
               </ng-container>
 

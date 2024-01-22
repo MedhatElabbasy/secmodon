@@ -1,7 +1,7 @@
 <div class="container h-100 d-flex flex-column py-4">
   <div class="d-flex justify-content-between">
     <h4 class="m-0 fw-600 my-3" translate="reports.accident"></h4>
-    <div class="d-flex justify-content-end gap-3 mb-3">
+    <div class="d-flex flex-wrap-reverse justify-content-end gap-3 mb-3">
       <div class="form-floating" *ngIf="filter">
         <input type="email" class="form-control bg-info-o" id="input1" placeholder="date" bsDaterangepicker
           [maxDate]="maxDate" [formControl]="date" [bsConfig]="{
@@ -13,9 +13,20 @@
         <label for="input1" translate="date_range"></label>
       </div>
       <div class="form-floating " *ngIf="data">
-        <p-dropdown class="py-2" id="data" [filter]="true" filterBy="name" styleClass="w-100"
-          [optionLabel]="'clientCompany.name'" optionValue="id" [options]="data"
-          [placeholder]="'validation.select_client'|translate" (onChange)="displayFilter($event)"></p-dropdown>
+        <p-dropdown class="py-2" id="data" [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'"
+          [options]="data" [placeholder]="'validation.select_client'|translate"
+          (onChange)="selectClient($event)"></p-dropdown>
+      </div>
+      <div class="form-floating " *ngIf="clientSites.length">
+        <p-dropdown class="py-2" id="clientSites" [filter]="true" filterBy="name" styleClass="w-100"
+          [optionLabel]="'name'" [options]="clientSites" [placeholder]="'validation.select_site'|translate"
+          (onChange)="getAttendanceBySiteId($event)"></p-dropdown>
+      </div>
+      <div class="form-floating " *ngIf="branches.length">
+
+        <p-dropdown class="py-2" id="branches" [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'"
+          [options]="branches" [placeholder]="'validation.select_branch'|translate"
+          (onChange)="getByBranchId($event)"></p-dropdown>
       </div>
       <div class="dropdown menue2">
         <button class="btn myPadding rounded-m rounded-8 btn-primary  d-flex gap-2 align-items-center  dropdown-toggle "
@@ -28,6 +39,9 @@
             |translate}}</li>
           <li class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('client')">{{"client"
             |translate}}</li>
+          <li *ngIf="isMainBranch" class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('branch')">
+            {{"security_dashboard.dash.branches"
+            |translate}}</li>
         </ul>
       </div>
       <div>
@@ -36,6 +50,7 @@
           {{ "filtrationDelete" | translate }}
         </button>
       </div>
+
     </div>
   </div>
 
@@ -49,7 +64,7 @@
                 <ion-icon name="search"></ion-icon>
               </span>
               <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
-                aria-describedby="search" [(ngModel)]="searchKey" (keyup)="search()" />
+                aria-describedby="search" [(ngModel)]="searchKey" (blur)="search()" />
             </div>
             <div class="bd-dark col">
               <button class="btn btn-success text-white  mx-2 mb-3 float-end" (click)="getData()"
@@ -86,7 +101,7 @@
                         : {
                             itemsPerPage: pageSize,
                             currentPage: pageNumber,
-
+                            totalItems:total,
                             id: 'accident'
                           }
                   ">
@@ -112,21 +127,28 @@
                     accident.companySecurityGuard.securityGuard?.appUser?.userName
                     }}
                   </td>
-                  <td>{{ accident.created.split(' ')[0] }}</td>
+                  <td>{{ accident.created.split(" ")[0] }}</td>
                   <td>{{ accident.description }}</td>
                   <td>{{ accident.siteLocation?.name }}</td>
                   <td>{{ accident.actionToken }}</td>
                   <td>
                     <span *ngIf="accident?.companySecurityGuard.securityGuard">
                       {{
-                      accident.guard
+                      accident?.companySecurityGuard?.securityGuard?.firstName
+                      +' '+accident?.companySecurityGuard?.securityGuard?.middleName +
+                      ' ' +
+                      accident?.companySecurityGuard?.securityGuard?.lastName
                       }}
                     </span>
                   </td>
                   <td>
                     <span *ngIf="accident.siteSupervisorShift?.companySecurityGuard">
                       {{
-                      accident.superVisor
+                      accident.siteSupervisorShift?.companySecurityGuard
+                      ?.securityGuard?.firstName +' '+accident.siteSupervisorShift?.companySecurityGuard
+                      ?.securityGuard?.middleName +
+                      ' ' + accident.siteSupervisorShift?.companySecurityGuard
+                      ?.securityGuard?.lastName
                       }}
                     </span>
                     <span *ngIf="!accident.siteSupervisorShift?.companySecurityGuard" translate="no-data"></span>
@@ -142,9 +164,9 @@
                   </td>
                   <td>
                     <div class="d-flex justify-content-end">
-                      <button *ngIf="accident.gallery.length" translate="show" type="button"
+                      <button *ngIf="accident.incidentAttachments.length" translate="show" type="button"
                         class="btn btn-warning px-4 text-white rounded-10"
-                        (click)="openGallery(accident.gallery)"></button>
+                        (click)="openGallery(accident.incidentAttachments)"></button>
                     </div>
                   </td>
                 </tr>
@@ -195,4 +217,3 @@
     </div>
   </ng-template>
 </p-galleria>
-
