@@ -45,9 +45,9 @@ const routes: Routes = [
   {
     path: ReportsRoutes.accidents,
     component: AccidentsComponent,
-    resolve: {
-      report: AccidentsResolver,
-    },
+    // resolve: {
+    //   report: AccidentsResolver,
+    // },
   },
   {
     path: ReportsRoutes.attendance,
@@ -61,16 +61,16 @@ const routes: Routes = [
       {
         path: ReportsRoutes.guardAttendance,
         component: GuardComponent,
-        resolve: {
-          report: AttendanceResolver,
-        },
+        // resolve: {
+        //   report: AttendanceResolver,
+        // },
       },
       {
         path: ReportsRoutes.superVisorAttendance,
         component: SuperVisorComponent,
-        resolve: {
-          report: SupreVisorResolver,
-        },
+        // resolve: {
+        //   report: SupreVisorResolver,
+        // },
       },
 
     ],
@@ -78,9 +78,9 @@ const routes: Routes = [
   {
     path: ReportsRoutes.visitors,
     component: VisitorsComponent,
-    resolve: {
-      report: VisitorsReportsResolver,
-    },
+    // resolve: {
+    //   report: VisitorsReportsResolver,
+    // },
   }, {
     path: ReportsRoutes.ReceivingDeliveringVehicles,
     component: ReceivingDeliveringVehiclesComponent,
@@ -144,9 +144,9 @@ const routes: Routes = [
     children: [
       {
         path: '', component: AllIncidentsComponent,
-        resolve: {
-          report: AllIncidentsResolver,
-        },
+        // resolve: {
+        //   report: AllIncidentsResolver,
+        // },
       },
       {
         path: ':id', component: IncidentDetailsComponent, children: [
@@ -169,9 +169,9 @@ const routes: Routes = [
     children: [
       {
         path: '', component: AllFactsComponent,
-        resolve: {
-          report: AllFactsResolver,
-        },
+        // resolve: {
+        //   report: AllFactsResolver,
+        // },
       },
       {
         path: ':id', component: FactsDetailsComponent, children: [

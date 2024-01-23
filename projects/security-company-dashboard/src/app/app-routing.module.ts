@@ -37,9 +37,9 @@ const routes: Routes = [
         path: Routing.statics,
         component: DashboardComponent,
         canActivate: [PackagesGuard, UpdateDataGuard],
-        resolve: {
-          report: DashResolver,
-        },
+        // resolve: {
+        //   report: DashResolver,
+        // },
       },
       {
         path: Routing.jobs.module,
