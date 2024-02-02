@@ -112,4 +112,9 @@ export class ClientSiteService {
     );
   }
 
+  GetAllSiteLocationsByClientIdSecurityCompanyBranch(clientId:string,branchId:string){
+    return this.http.get(this.url+`api/ClientSite/GetAllByClientIdSecurityCompanyBranch?id=${clientId}&SecurityCompanyBranch=${branchId}`)
+    //return this.http.get(this.url+`api/ClientSite/GetAllByClientIdSecurityCompanyBranchNamesAndId?id=${clientId}&SecurityCompanyBranch=${branchId}`)
+  }
+
 }

@@ -1,10 +1,25 @@
 th {
 
-    text-align: center;
-  }
-  
-  td {
-    min-width: 200px;
-    text-align: center;
-  }
-  
+  text-align: center;
+}
+
+td {
+  min-width: 200px;
+  text-align: center;
+}
+
+.dotStop {
+  height: 25px;
+  width: 25px;
+  background-color:red;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dotStart {
+  height: 25px;
+  width: 25px;
+  background-color:green;
+  border-radius: 50%;
+  display: inline-block;
+}

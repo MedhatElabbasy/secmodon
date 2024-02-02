@@ -42,6 +42,7 @@
               <th scope="col" translate="job_type"></th>
               <th scope="col" translate="email"></th>
               <th scope="col" translate="national_id"></th>
+              <th scope="col" translate="guard_status"></th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -96,6 +97,10 @@
                 </td>
                 <td>
                   {{ guard.securityGuard.nationalID }}
+                </td>
+                <td>
+                 <div *ngIf="guard.guardActiveStatus==2" class="dotStop"></div>
+                 <div *ngIf="guard.guardActiveStatus==1" class="dotStart"></div>
                 </td>
                 <td>
                   <div

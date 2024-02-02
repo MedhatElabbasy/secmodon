@@ -12,9 +12,9 @@
           (onChange)="display2($event)"></p-dropdown>
       </div>
       <div class="form-floating " *ngIf="branches">
-        <p-dropdown class="py-2" id="branches" [filter]="true" filterBy="name" styleClass="w-100"
-          [optionLabel]="'name'" [options]="branches"
-          [placeholder]="'validation.select_branch'|translate" (onChange)="getByBranchId($event)"></p-dropdown>
+        <p-dropdown class="py-2" id="branches" [filter]="true" filterBy="name" styleClass="w-100" [optionLabel]="'name'"
+          [options]="branches" [placeholder]="'validation.select_branch'|translate"
+          (onChange)="getByBranchId($event)"></p-dropdown>
       </div>
       <div class="dropdown menue2">
         <button class="btn myPadding rounded-m rounded-8 btn-primary d-flex gap-2 align-items-center dropdown-toggle"
@@ -29,9 +29,10 @@
           <li class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('site')">
             {{ "site" | translate }}
           </li>
-          <li *ngIf="isMainBranch" class="dropdown-item cursor-pointer text-align-center" (click)="getDataFilter('branch')">
+          <li *ngIf="isMainBranch" class="dropdown-item cursor-pointer text-align-center"
+            (click)="getDataFilter('branch')">
             {{"security_dashboard.dash.branches"
-                    |translate}}</li>
+            |translate}}</li>
         </ul>
       </div>
       <div>
@@ -106,12 +107,14 @@
         <google-map [options]="{ styles: style }" [center]="mainLocation" [zoom]="5">
           <map-marker-clusterer
             imagePath="https://raw.githubusercontent.com/googlearchive/js-marker-clusterer/gh-pages/images/m">
-            <map-marker *ngFor="let marker of markers" [position]="{ lat: +marker.lat, lng: +marker.lng }" [label]="{
-                fontSize: '20px',
-                text: marker.name,
-                className: 'marker'
-              }">
+            <map-marker *ngFor="let marker of markers" [position]="{ lat: +marker.lat, lng: +marker.lng }"
+              #markerElem="mapMarker" [label]="{
+            text: marker.name,
+            className: 'marker'
+          }"
+              (mapClick)="openInfo(markerElem,marker.siteLocationName,marker.guardCode,marker.guardImage,marker.name , marker.phoneNumber , marker.nationalId , marker.securityCompanyName , marker.clientName,marker.branchName , marker.siteLocationName , marker.supervisorName , marker.siteNumber,marker.shiftName, marker.startTime)">
             </map-marker>
+            <map-info-window [innerHTML]="infoContent"></map-info-window>
           </map-marker-clusterer>
         </google-map>
       </div>
@@ -150,9 +153,24 @@
       <div class="tab-content">
         <div class="tab-pane active" id="checkIn" role="tabpanel" aria-labelledby="checkIn-tab">
           <div class="py-3">
-            <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 g-4">
-              <app-dash-guard-card *ngFor="let item of checkedIn" [data]="item" [time]="item.startTime">
-              </app-dash-guard-card>
+            <div class="">
+              <div class="row my-3">
+                <div class="col-6">
+                  <div class="input-group">
+                    <span class="input-group-text border-0 bg-transparent" id="search">
+                      <ion-icon name="search"></ion-icon>
+                    </span>
+                    <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
+                      aria-describedby="search" [(ngModel)]="searchKey" (blur)="search('checkIn')" />
+                  </div>
+                </div>
+              </div>
+              <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 g-4">
+                <app-dash-guard-card *ngFor="let item of checkedIn" (click)="details(item)" class="cursor-pointer"
+                  [data]="item" [totalWorkTime]="item.totalWorkTime" [startTime]="item.startTime"
+                  [endTime]="item.leaveTime" [breakTime]="item.toTalBreakTime">
+                </app-dash-guard-card>
+              </div>
             </div>
             <div *ngIf="!checkedIn.length" class="mt-4 p-3 rounded-10 bg-info-o text-align-center fw-500"
               translate="no_data_to_show"></div>
@@ -160,9 +178,24 @@
         </div>
         <div class="tab-pane" id="checkout" role="tabpanel" aria-labelledby="checkout-tab">
           <div class="py-3">
-            <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 g-4">
-              <app-dash-guard-card *ngFor="let item of checkedOut" [data]="item" [time]="item.leaveTime">
-              </app-dash-guard-card>
+            <div class="">
+              <div class="row my-3">
+                <div class="col-6">
+                  <div class="input-group">
+                    <span class="input-group-text border-0 bg-transparent" id="search">
+                      <ion-icon name="search"></ion-icon>
+                    </span>
+                    <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
+                      aria-describedby="search" [(ngModel)]="searchKey" (blur)="search('checkOut')" />
+                  </div>
+                </div>
+              </div>
+              <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 g-4">
+                <app-dash-guard-card *ngFor="let item of checkedOut" (click)="details(item)" class="cursor-pointer"
+                  [data]="item" [totalWorkTime]="item.totalWorkTime" [startTime]="item.startTime"
+                  [endTime]="item.leaveTime" [breakTime]="item.toTalBreakTime">
+                </app-dash-guard-card>
+              </div>
             </div>
             <div *ngIf="!checkedOut.length" class="mt-4 p-3 rounded-10 bg-info-o text-align-center fw-500"
               translate="no_data_to_show"></div>
@@ -170,9 +203,24 @@
         </div>
         <div class="tab-pane" id="break" role="tabpanel" aria-labelledby="break-tab">
           <div class="py-3">
-            <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 g-4">
-              <app-dash-guard-card *ngFor="let item of break" [data]="item" [time]="item.toTalBreakTime">
-              </app-dash-guard-card>
+            <div class="">
+              <div class="row my-3">
+                <div class="col-6">
+                  <div class="input-group">
+                    <span class="input-group-text border-0 bg-transparent" id="search">
+                      <ion-icon name="search"></ion-icon>
+                    </span>
+                    <input type="text" class="form-control" [placeholder]="'search' | translate" aria-label="search"
+                      aria-describedby="search" [(ngModel)]="searchKey" (blur)="search('checkBreak')" />
+                  </div>
+                </div>
+              </div>
+              <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 g-4">
+                <app-dash-guard-card *ngFor="let item of break" (click)="details(item)" class="cursor-pointer"
+                  [data]="item" [startTime]="item.startTime" [endTime]="item.leaveTime"
+                  [breakTime]="item.toTalBreakTime">
+                </app-dash-guard-card>
+              </div>
             </div>
             <div *ngIf="!break.length" class="mt-4 p-3 rounded-10 bg-info-o text-align-center fw-500"
               translate="no_data_to_show"></div>
@@ -182,3 +230,85 @@
     </div>
   </div>
 </div>
+
+
+<public-api-modal [id]="guardDetailsId" classList="modal-dialog-centered">
+  <div class="card border-0 mb-3">
+    <div class="card-body">
+
+      <div class="row">
+        <div class="col-8">
+          <div class="row">
+            <div class="col-12">
+              <h6 class="text-muted">أسم المراقب</h6>
+              <h6 class="">{{guardDetails?.name}}</h6>
+            </div>
+            <div class="col-12">
+              <h6 class="text-muted">رقم التواصل</h6>
+              <h6 class="">{{guardDetails?.phoneNumber}}</h6>
+            </div>
+            <div class="col-6">
+              <h6 class="text-muted">رقم الهوية الوطنية</h6>
+              <h6 class="">{{guardDetails?.nationalId}}</h6>
+            </div>
+            <div class="col-6">
+              <h6 class="text-muted">الكود</h6>
+              <h6 class="">{{guardDetails?.guardCode}}</h6>
+            </div>
+          </div>
+        </div>
+        <div class="col-4"><img [src]="guardDetails?.guardImage" class="Imgfluid rounded CardImg" /></div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-4">
+          <h6 class="text-muted">أسم الشركة الأمنية</h6>
+          <h6 class="">{{guardDetails?.securityCompanyName}}</h6>
+        </div>
+        <div class="col-4">
+          <h6 class="text-muted">الفرع</h6>
+          <h6 class="">{{guardDetails?.branchName}}</h6>
+        </div>
+        <div class="col-4">
+          <h6 class="text-muted">العميل</h6>
+          <h6 class="">{{guardDetails?.clientName}}</h6>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-4">
+          <h6 class="text-muted">أسم الموقع</h6>{{guardDetails?.siteLocationName}}
+        </div>
+        <div class="col-4">
+          <h6 class="text-muted">رقم الموقع</h6>{{guardDetails?.siteNumber? guardDetails?.siteNumber : "لايوجد"}}
+        </div>
+        <div class="col-4">
+          <h6 class="text-muted">المشرف</h6>
+          <h6 class="">{{guardDetails?.supervisorName}}</h6>
+        </div>
+        <div class="col-4">
+          <h6 class="text-muted">المناوبة</h6>
+          <h6 class="">{{guardDetails?.shiftName}}</h6>
+        </div>
+        <div class="col-4">
+          <h6 class="text-muted">الجدول</h6>
+          <h6 class="">{{guardDetails?.scheduleName}}</h6>
+        </div>
+        <div class="col-4">
+          <h6 class="text-muted">وقت الدخول</h6>
+          <h6 class="">{{guardDetails?.startTime}}</h6>
+        </div>
+        <div class="col-4">
+          <h6 class="text-muted">وقت الاستراحه</h6>
+          <h6 class="">{{guardDetails?.totalBreakTime? guardDetails?.totalBreakTime : "لايوجد"}}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="d-flex justify-content-end gap-2 mt-3">
+    <button translate="cancel" (click)="close()" data-bs-dismiss="modal" type="button"
+      class="btn rounded-8 px-4 py-2 btn-primary text-white"></button>
+  </div>
+</public-api-modal>

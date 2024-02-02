@@ -1,25 +1,16 @@
 <div class="container h-100 d-flex flex-column py-4">
   <div class="d-flex justify-content-between gap-2 flex-wrap">
-    <div
-      [routerLink]="backLink"
-      class="d-flex align-items-center gap-2 fs-5 gap-3 fw-bold c-pointer">
-      <ion-icon
-        name="arrow-back-circle-outline"
-        class="rtl-icon"
-        size="large"></ion-icon>
+    <div [routerLink]="backLink" class="d-flex align-items-center gap-2 fs-5 gap-3 fw-bold c-pointer">
+      <ion-icon name="arrow-back-circle-outline" class="rtl-icon" size="large"></ion-icon>
       <span translate="security_dashboard.user_details"></span>
     </div>
 
     <div *ngIf="false" class="d-flex gap-3 align-items-center">
-      <button
-        type="button"
-        class="btn bg-danger-o text-black gap-2 rounded-8 d-flex align-items-center">
+      <button type="button" class="btn bg-danger-o text-black gap-2 rounded-8 d-flex align-items-center">
         <i class="fa-solid fa-trash text-danger"></i>
         <span class="d-none d-sm-block" translate="delete"></span>
       </button>
-      <button
-        type="button"
-        class="btn bg-info-o text-black gap-2 rounded-8 d-flex align-items-center text-black">
+      <button type="button" class="btn bg-info-o text-black gap-2 rounded-8 d-flex align-items-center text-black">
         <i class="fa-solid fa-pen text-info"></i>
         <span class="d-none d-sm-block" translate="edit"></span>
       </button>
@@ -31,12 +22,8 @@
     <div class="card-body">
       <div class="d-flex">
         <div class="flex-shrink-0">
-          <img
-            [src]="guard.securityGuard.photo?.fullLink"
-            onerror="this.src = 'assets/images/icons/earth.png'"
-            width="60"
-            height="60"
-            class="rounded-10" />
+          <img [src]="guard.securityGuard.photo?.fullLink" onerror="this.src = 'assets/images/icons/earth.png'"
+            width="60" height="60" class="rounded-10" />
         </div>
         <div class="flex-grow-1 mis-3">
           <h5 class="mt-0">
@@ -47,25 +34,22 @@
           </h5>
           <p class="m-0">{{ guard.securityGuard.email }}</p>
         </div>
-        <button (click)="resetID(guard.securityGuard.id)"
-          translate="global.reset_appID"
-          type="button"
+        <button (click)="resetID(guard.securityGuard.id)" translate="global.reset_appID" type="button"
           class="btn btn-primary d-block mis-auto float-start rounded-8"></button>
+        <button *ngIf="guard.guardActiveStatus == 1" (click)="openModalStopGuard(guard)" translate="global.stopGuard"
+          type="button" class="btn btn-primary d-block float-start rounded-8 mx-2"></button>
+        <button *ngIf="guard.guardActiveStatus == 2" (click)="openModalStartGuard(guard)" translate="global.startGuard"
+          type="button" class="btn btn-primary d-block float-start rounded-8 mx-2"></button>
       </div>
     </div>
   </div>
 
   <!-- ------------------------------- profile ------------------------------- -->
   <div class="card mt-3 rounded-10 border-0 flex-fill">
-    <ul
-      class="nav sub-nav shadow-none rounded-0 flex-shrink-0 nav-tabs flex-nowrap overflow-auto text-nowrap">
+    <ul class="nav sub-nav shadow-none rounded-0 flex-shrink-0 nav-tabs flex-nowrap overflow-auto text-nowrap">
       <ng-container *ngFor="let link of links">
         <li *appRole="link.roles" class="nav-item">
-          <a
-            [routerLink]="[link.link]"
-            routerLinkActive="router-link-active"
-            class="nav-link"
-            routerLinkActive="active"
+          <a [routerLink]="[link.link]" routerLinkActive="router-link-active" class="nav-link" routerLinkActive="active"
             [translate]="link.name"></a>
         </li>
       </ng-container>
@@ -86,7 +70,33 @@
     {{ "global.reset_ID" | translate }}
   </h6>
 
-  <button type="button" data-bs-dismiss="modal" (click)="closeModel()"
+  <button type="button" data-bs-dismiss="modal" (click)="closeModel(modalId)"
+    class="btn d-block mis-auto btn-primary px-4 py-2">
+    {{ "global.continue" | translate }}
+  </button>
+</public-api-modal>
+
+<!--------------------------------------------------------------->
+<public-api-modal classList="modal-dialog-centered" [id]="stopGuardId">
+  <img src="assets/images/svg/delete.svg" alt="" class="mb-3" srcset="" />
+  <h6 class="fw-700" translate="stop_this_guard"></h6>
+  <p class="mt-2 text-info" translate="are_you-sure_to_stop_this_guard"></p>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" data-bs-dismiss="modal" class="btn rounded-8 px-4 py-2 btn-light" translate="cancel"></button>
+    <button translate="stop_guard" (click)="stopGuard()" type="button" data-bs-dismiss="modal"
+      class="btn rounded-8 px-4 py-2 btn-danger"></button>
+  </div>
+</public-api-modal>
+
+<!------------------------------------------------------------>
+<public-api-modal [id]="startGuardId" classList="modal-dialog-centered">
+  <img width="50" src="assets/images/icons/checked.png" alt class="mb-3" />
+  <h6 class="mt-3 fw-700">
+    {{ "start_guard" | translate }}
+  </h6>
+
+  <button type="button" data-bs-dismiss="modal" (click)="closeStartModel(startGuardId)"
     class="btn d-block mis-auto btn-primary px-4 py-2">
     {{ "global.continue" | translate }}
   </button>

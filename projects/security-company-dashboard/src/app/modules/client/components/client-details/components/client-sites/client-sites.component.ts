@@ -17,9 +17,12 @@ import {
   CanvasService,
   LangService,
   ModalService,
+  Roles,
 } from 'projects/tools/src/public-api';
 import { ClientSite } from '../../../../models/client-site';
 import { ClientSiteService } from '../../../../services/client-site.service';
+import { AuthService } from 'projects/security-company-dashboard/src/app/modules/auth/services/auth.service';
+
 
 @Component({
   selector: 'app-client-sites',
@@ -43,22 +46,26 @@ export class ClientSitesComponent implements OnInit {
   siteInfoForm!: FormGroup;
   securityCompanyClientId!: string;
   sites!: any[];
+  allData!:any[];
   siteEditForm!: FormGroup;
   editSiteCanvas = 'edit-site-canvas';
   selectedSite!: any;
   id!: string;
   searchKey = '';
-  allData!:any[];
+  searchtype:boolean=false;
   constructor(
     private fb: FormBuilder,
     private canvas: CanvasService,
     private route: ActivatedRoute,
+    private auth: AuthService,
     public lang: LangService,
     private siteServices: ClientSiteService,
     private modal: ModalService
   ) {
     this.securityCompanyClientId = this.route.parent?.snapshot.params['id'];
     this.generateForm();
+   // this.getClientSites();
+    console.log(this.auth.snapshot.userInfo)
   }
 
   public get SiteLocations(): FormArray {
@@ -78,6 +85,7 @@ export class ClientSitesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.searchtype=false;
     this.siteServices.allBranches().subscribe((res) => {
       this.allBranches = res;
     });
@@ -97,6 +105,7 @@ export class ClientSitesComponent implements OnInit {
     this.siteInfoForm = this.fb.group({
       securityCompanyClientId: [this.securityCompanyClientId],
       siteName: [null, [Validators.required]],
+      siteNumber:[null, [Validators.required]],
       siteAddress: [null, [Validators.required]],
       siteLat: [null, [Validators.required]],
       siteLong: [null, [Validators.required]],
@@ -135,6 +144,7 @@ export class ClientSitesComponent implements OnInit {
       securityCompanyBranchId: [null, [Validators.required]],
       securityCompanyClientId: [this.securityCompanyClientId],
       siteName: [null, [Validators.required]],
+      siteNumber:[null, [Validators.required]],
       siteAddress: [null, [Validators.required]],
       siteLat: [null, [Validators.required]],
       siteLong: [null, [Validators.required]],
@@ -225,12 +235,37 @@ export class ClientSitesComponent implements OnInit {
   }
 
   getClientSites() {
-    this.siteServices
+    this.searchtype=false;
+    // this.siteServices
+    //   .getAllByClientId(this.securityCompanyClientId)
+    //   .subscribe((res) => {
+    //     this.sites = [...res];
+    //     this.allData = [...res];
+    //   });
+    // this.siteServices.getAllBySecurityCompanyClientId(this.securityCompanyClientId).subscribe((res)=>{
+    //   this.sites = [...res];
+    // this.allData = [...res];
+    // })
+    let role = this.auth.snapshot.userIdentity?.role;
+    let isMainBranch =
+      this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch;
+    if (role == Roles.SecuritCompany || isMainBranch) {
+      this.siteServices
       .getAllByClientId(this.securityCompanyClientId)
       .subscribe((res) => {
         this.sites = [...res];
         this.allData = [...res];
       });
+    }
+    else{
+      console.log(this.auth.snapshot.userInfo?.securityCompanyBranch.id)
+      let branchID : string | any= this.auth.snapshot.userInfo?.securityCompanyBranch.id
+      this.siteServices.GetAllSiteLocationsByClientIdSecurityCompanyBranch(this.securityCompanyClientId , branchID).subscribe((res)=>{
+        this.sites = [res];
+        this.allData = [res];
+      })
+
+    }
   }
 
   onEdit(event: any) {
@@ -268,6 +303,7 @@ export class ClientSitesComponent implements OnInit {
 
   search() {
     // console.log(this.allData);
+    this.searchtype=true;
     this.sites = this.allData
     let myData: any[] = [];
     if (this.searchKey != '') {
@@ -282,6 +318,7 @@ export class ClientSitesComponent implements OnInit {
       });
       this.sites = myData;
     } else {
+      this.searchtype=false;
       this.sites = this.allData;
     }
   }

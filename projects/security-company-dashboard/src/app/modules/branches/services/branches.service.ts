@@ -56,4 +56,15 @@ export class BranchesService {
       this.url + `api/SecurityCompanyBranch/GetById?id=${id}`
     );
   }
+  getAllNamesforClientCompanies(id:number){
+    return this.http.get(this.url +`api/SecurityCompanyClients/GetAllNames?companyID=${id}`)
+  }
+
+  addClientToUser(model:any){
+    return this.http.post(this.url+`api/SecurityCompanyUser/AddClientToUser`,model)
+  }
+
+  DeleteClientUser(id:string){
+    return this.http.post(this.url+`api/SecurityCompanyUser/DeleteClientUser?Id=${id}`,null)
+  }
 }

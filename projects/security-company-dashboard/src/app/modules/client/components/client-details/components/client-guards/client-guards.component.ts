@@ -27,7 +27,6 @@ export class ClientGuardsComponent implements OnInit {
 
   //   localStorage.setItem('siteId', id);
   // }
-
   search() {
     // console.log(this.allData);
     this.sites = this.allData

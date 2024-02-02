@@ -172,6 +172,11 @@
                                 delete">
                                 <i class="fa-solid fa-trash"></i>
                               </button>
+                              <button (click)="addClientByUserId(user.id)" type="button"
+                              class="btn rounded-8 bg-primary-o text-primary
+                              edit">
+                              <i class="fa-solid fa-pen"></i>
+                            </button>
                             </div>
                           </div>
                         </td>
@@ -363,11 +368,33 @@
         [innerHtml]="'validation.national_id_not_valid' | translate"></div>
     </div>
 
+    <!-----------------------------Company Clinets-------------------------------------->
+    <table class="table table-striped table-borderless" *ngIf="addMode==false">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" ></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="
+        let client of securityCompanyUserClient">
+        <td>{{client.securityCompanyClient.clientCompany.name}}</td>
+        <td>
+          <button type="button" (click)="onDeleteClient(client)"
+          class="btn rounded-8 bg-danger-o text-danger
+          delete" translate="delete">
+        </button>
+        </td>
+      </tr>
+      </tbody>
+      </table>
+
     <div class="d-flex gap-2 justify-content-end">
       <button data-bs-dismiss="offcanvas" translate="cancel" type="reset"
         class="btn px-4 rounded-10"></button>
       <button type="submit" class="btn btn-primary px-4 rounded-10"
-        [translate]="selectedUser?'edit':'add'"></button>
+        [translate]="selectedUser?'edit':'next'"></button>
     </div>
   </form>
 </public-api-canvas>
@@ -396,5 +423,37 @@
   <div class="d-flex justify-content-end gap-2">
     <button type="button" data-bs-dismiss="modal" class="btn rounded-8 px-4 py-2
       btn-light" translate="cancel"></button>
+  </div>
+</public-api-modal>
+
+<public-api-canvas [id]="addClients">
+  <form class="py-5" (ngSubmit)="submitSelection()">
+    <div *ngFor="let company of clientCompanies">
+      <label>
+        <input type="checkbox"  [(ngModel)]="company.isSelected" [name]="'company_' + company.id" />
+        {{ company.clientCompanyName }}
+      </label>
+    </div>
+    <div class="d-flex gap-2 justify-content-end align-items-end">
+      <button data-bs-dismiss="offcanvas" translate="cancel" type="reset"
+        class="btn px-4 rounded-10"></button>
+      <button type="submit" class="btn btn-primary px-4 rounded-10"
+      translate="add"></button>
+    </div>
+  </form>
+</public-api-canvas>
+
+<public-api-modal classList="modal-dialog-centered" [id]="deleteModalId">
+  <img src="assets/images/svg/delete.svg" alt="" class="mb-3" srcset="" />
+  <h4 class="fw-700" translate="branches.delete_client"></h4>
+  <p class="mt-2 text-info" translate="cancel_this_operation"></p>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" data-bs-dismiss="modal" class="btn rounded-8 px-4 py-2
+      btn-light" translate="cancel"
+      (click)="selectedUser= null"></button>
+    <button translate="yes_delete" type="button" data-bs-dismiss="modal"
+      class="btn rounded-8 px-4 py-2 btn-danger"
+      (click)="deleteClient()"></button>
   </div>
 </public-api-modal>

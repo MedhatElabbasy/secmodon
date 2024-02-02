@@ -22,9 +22,9 @@ export class GuardsDetailsComponent implements OnInit {
   backLink = `/${Routing.dashboard}/${Routing.guards.module}`;
   token: any = ""
   userInfo: any
-
-
-
+ stopGuardId="stopguard"
+ guardID!:any;
+ startGuardId="startguard"
   constructor(
     private route: ActivatedRoute,
     private crypto: CryptoService,
@@ -95,7 +95,35 @@ export class GuardsDetailsComponent implements OnInit {
     })
   }
 
-  closeModel() {
-    this.modalService.close(this.modalId);
+  closeModel(modalId:string) {
+    this.modalService.close(modalId);
+  }
+
+  closeStartModel(id:string){
+    this.modalService.close(id);
+    this._Router.navigate(['/dashboard/guards/guards-list'])
+  }
+
+  openModalStopGuard(guard:any){
+   this.guardID=guard.id;
+   console.log(guard);
+   console.log("stop");
+   this.modalService.open(this.stopGuardId);
+  }
+
+  openModalStartGuard(guard:any){
+  console.log("start");
+  this.guardID=guard.id;
+  this._GuardsService.UpdateGuardStatus(this.guardID,1).subscribe((res)=>{
+    console.log(res);
+    this.modalService.open(this.startGuardId);
+  })
+  }
+
+  stopGuard(){
+    this._GuardsService.UpdateGuardStatus(this.guardID,2).subscribe((res)=>{
+      console.log(res);
+      this._Router.navigate(['/dashboard/guards/guards-list'])
+    });
   }
 }

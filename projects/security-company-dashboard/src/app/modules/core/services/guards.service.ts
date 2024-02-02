@@ -68,4 +68,9 @@ export class GuardsService {
   getGuardData(guardId: string): Observable<any> {
     return this.http.get(environment.api + 'api/CompanySecurityGuard/GetById?id=' + guardId)
   }
+
+
+  UpdateGuardStatus(id: string, guardStatus: number) {
+    return this.http.post(this.url + `api/CompanySecurityGuard/UpdateGuardStatus?id=${id}&guardStatus=${guardStatus}`, null)
+  }
 }

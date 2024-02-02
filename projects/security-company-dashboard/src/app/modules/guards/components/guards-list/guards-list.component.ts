@@ -20,7 +20,7 @@ import { CompanyGuardsService } from '../../services/company-guards.service';
 })
 export class GuardsListComponent implements OnInit {
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 5;
   total!: number;
   sizes = [...PAGINATION_SIZES];
   guards: CompanySecurityGuard[] = [];
