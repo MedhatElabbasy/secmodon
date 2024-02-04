@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReportsService } from '../../../../../services/reports.service';
 import { viLocale } from 'ngx-bootstrap/chronos';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './response.component.html',
   styleUrls: ['./response.component.scss'],
 })
-export class ResponseComponent implements OnInit {
+export class ResponseComponent implements OnInit, OnDestroy {
   checkboxForm: FormGroup;
   options = ['مناسب', 'غير مناسب'];
   activeLink: string =
@@ -27,13 +27,19 @@ export class ResponseComponent implements OnInit {
       response: [null, Validators.required],
     });
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.form3.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/response')
+  }
+  ngOnDestroy() {
+    this.form3.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/transfer-reason')
+  }
   onSubmit(): void {
     if (this.checkboxForm.valid) {
       const formData = this.checkboxForm.value;
       this.form3.setFormData(formData);
       console.log(formData);
       this.router.navigate([this.activeLink]);
+      this.form3.screenRoute.next(this.activeLink)
     }
   }
 }

@@ -15,6 +15,7 @@ import { ClientSite } from '../../client/models/client-site';
 export class ReportsService {
   private readonly url = environment.api;
   clientId = new BehaviorSubject<number>(0);
+  screenRoute = new BehaviorSubject<string>('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info');
   statisticData = new BehaviorSubject<any>(null);
   incidentDetails: BehaviorSubject<any> = new BehaviorSubject({});
   dailyFactsDetails: BehaviorSubject<any> = new BehaviorSubject({});

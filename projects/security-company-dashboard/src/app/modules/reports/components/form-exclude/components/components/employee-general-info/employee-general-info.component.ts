@@ -16,11 +16,11 @@ import { LangService, convertDateToString, language } from 'projects/tools/src/p
 export class EmployeeGeneralInfoComponent implements OnInit {
   createDate = new FormControl(new Date());
   maxDate = new Date();
-  jobTypeName!:any;
-  guardId!:any;
-  securitycompanyName!:any;
+  jobTypeName!: any;
+  guardId!: any;
+  securitycompanyName!: any;
   checkboxForm: FormGroup;
-  selectedGuard!:any;
+  selectedGuard!: any;
   options = [
     'مراقب أمن',
     'مشرف عام',
@@ -30,13 +30,14 @@ export class EmployeeGeneralInfoComponent implements OnInit {
   ];
   activeLink: string =
     '/dashboard/reports/form-exclude/exclude-new-request/transfer-reason';
-    Guards!:any;
+  Guards!: any;
   constructor(
     private fb: FormBuilder,
     private form1: ReportsService,
     private router: Router,
     private auth: AuthService,
     public lang: LangService,
+    public _reports: ReportsService,
     private localeService: BsLocaleService
   ) {
     this.getguardInfo();
@@ -44,7 +45,7 @@ export class EmployeeGeneralInfoComponent implements OnInit {
     this.checkboxForm = this.fb.group({
       securityGuardId: [null, Validators.required],
       securityCompanyId: [null, Validators.required],
-      createDate:[null,Validators.required]
+      createDate: [null, Validators.required]
       //securitycompanyName: [null, Validators.required],
       //jobTypeName: ['', Validators.required],
     });
@@ -55,6 +56,7 @@ export class EmployeeGeneralInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
     this.createDate.setValue(null);
   }
 
@@ -68,26 +70,26 @@ export class EmployeeGeneralInfoComponent implements OnInit {
     });
   }
 
-  getguardInfo(){
-  this.form1.GetAllCompanySecurityGuardWithJop().subscribe((res)=>{
-this.Guards=res;
-console.log(res);
+  getguardInfo() {
+    this.form1.GetAllCompanySecurityGuardWithJop().subscribe((res) => {
+      this.Guards = res;
+      console.log(res);
 
-  })
+    })
   }
 
-  getguardDetails(event: any){
+  getguardDetails(event: any) {
     const selectedIndex: number = event.target.value;
     const selectedGuard: any = this.Guards[selectedIndex];
-    this.jobTypeName=selectedGuard.jobTypeDTO.name;
-    this.guardId=selectedGuard.id
-    this.securitycompanyName=selectedGuard.securityCompanyName;
-   console.log(selectedGuard);
-   let securityCompanyId = this.auth.snapshot.userInfo?.id;
-  this.checkboxForm.controls['securityGuardId'].setValue(selectedGuard.id);
-  // this.checkboxForm.controls['securityOfficial'].setValue(selectedGuard.securityCompanyName);
- // this.checkboxForm.controls['jobTypeName'].setValue(selectedGuard.jobTypeDTO.name);
-  this.checkboxForm.controls['securityCompanyId'].setValue(securityCompanyId);
+    this.jobTypeName = selectedGuard.jobTypeDTO.name;
+    this.guardId = selectedGuard.id
+    this.securitycompanyName = selectedGuard.securityCompanyName;
+    console.log(selectedGuard);
+    let securityCompanyId = this.auth.snapshot.userInfo?.id;
+    this.checkboxForm.controls['securityGuardId'].setValue(selectedGuard.id);
+    // this.checkboxForm.controls['securityOfficial'].setValue(selectedGuard.securityCompanyName);
+    // this.checkboxForm.controls['jobTypeName'].setValue(selectedGuard.jobTypeDTO.name);
+    this.checkboxForm.controls['securityCompanyId'].setValue(securityCompanyId);
   }
 
   onSubmit(): void {
@@ -99,6 +101,7 @@ console.log(res);
       this.form1.setFormData(formData);
       console.log(formData);
       this.router.navigate([this.activeLink]);
+      this._reports.screenRoute.next(this.activeLink)
     }
   }
 }

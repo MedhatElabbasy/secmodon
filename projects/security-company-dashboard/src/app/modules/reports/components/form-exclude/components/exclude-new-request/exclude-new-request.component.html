@@ -4,45 +4,18 @@
       <h4 class="m-0 fw-600 my-3" translate="reports.create_request"></h4>
     </div>
     <div class="card border-0 flex-fill rounded-10 my-5">
+
       <div class="card-body">
         <div class="h-100 d-flex flex-column">
           <nav class="nav nav-pills">
-            <a
-              [class.active]="
-                isActiveRoute(
-                  '/dashboard/reports/form-exclude/exclude-new-request/employee-general-info'
-                )
-              "
-              class="nav-link"
-              >{{ "reports.general_info" | translate }}</a
-            >
-            <a
-              [class.active]="
-                isActiveRoute(
-                  '/dashboard/reports/form-exclude/exclude-new-request/transfer-reason'
-                )
-              "
-              class="nav-link"
-              >{{ "reports.transfer_reason" | translate }}</a
-            >
-            <a
-              [class.active]="
-                isActiveRoute(
-                  '/dashboard/reports/form-exclude/exclude-new-request/response'
-                )
-              "
-              class="nav-link"
-              >{{ "reports.response" | translate }}</a
-            >
-            <a
-              [class.active]="
-                isActiveRoute(
-                  '/dashboard/reports/form-exclude/exclude-new-request/accreditation'
-                )
-              "
-              class="nav-link"
-              >{{ "reports.accreditation" | translate }}</a
-            >
+            <a [ngClass]="(activeLink=='/dashboard/reports/form-exclude/exclude-new-request/employee-general-info' )
+              ?'active':''" class="nav-link">{{ "reports.general_info" | translate }}</a>
+            <a [ngClass]="(activeLink=='/dashboard/reports/form-exclude/exclude-new-request/transfer-reason' )
+              ?'active':''" class="nav-link">{{ "reports.transfer_reason" | translate }}</a>
+            <a [ngClass]="(activeLink=='/dashboard/reports/form-exclude/exclude-new-request/response' )
+            ?'active':''" class="nav-link">{{ "reports.response" | translate }}</a>
+            <a [ngClass]="(activeLink=='/dashboard/reports/form-exclude/exclude-new-request/accreditation' )
+              ?'active':''" class="nav-link">{{ "reports.accreditation" | translate }}</a>
           </nav>
           <hr />
           <router-outlet></router-outlet>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,18 +17,19 @@ import { LogLevel } from '@microsoft/signalr';
   templateUrl: './transfer-reason.component.html',
   styleUrls: ['./transfer-reason.component.scss'],
 })
-export class TransferReasonComponent implements OnInit {
+export class TransferReasonComponent implements OnInit ,OnDestroy{
   checkboxForm: FormGroup;
-  options = [{name:'غياب',id:1},{name:'حالة مخلة بالأنظمة',id:2} ,{name:'عدم تنفيذ التعليمات',id:3} ,{name:'أخرى',id:4} ];
+  options = [{ name: 'غياب', id: 1 }, { name: 'حالة مخلة بالأنظمة', id: 2 }, { name: 'عدم تنفيذ التعليمات', id: 3 }, { name: 'أخرى', id: 4 }];
   activeLink: string =
     '/dashboard/reports/form-exclude/exclude-new-request/response';
 
-  profileImage!: string | null ;
+  profileImage!: string | null;
 
   constructor(
     private fb: FormBuilder,
     private form2: ReportsService,
     private router: Router,
+    public _reports: ReportsService,
     private domSanitizer: DomSanitizer,
     private attachment: AttachmentService
   ) {
@@ -39,11 +40,17 @@ export class TransferReasonComponent implements OnInit {
       contractorProjectManager: [null, Validators.required],
       contractorProjectManagerSignature: [null, Validators.required],
       reasonForTransfer: [null, Validators.required],
-       attachmentId: [null, Validators.required],
+      attachmentId: [null, Validators.required],
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/transfer-reason')
+  }
+  ngOnDestroy() {
+    this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
+
+  }
   get photosControls(): any {
     return this.checkboxForm.controls;
   }
@@ -82,6 +89,7 @@ export class TransferReasonComponent implements OnInit {
       this.form2.setFormData(formData);
       console.log(formData);
       this.router.navigate([this.activeLink]);
+      this._reports.screenRoute.next(this.activeLink)
     }
   }
 }

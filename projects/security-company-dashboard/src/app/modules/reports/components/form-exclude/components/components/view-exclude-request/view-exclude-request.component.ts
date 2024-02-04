@@ -10,7 +10,7 @@ import { Routing } from 'projects/security-company-dashboard/src/app/modules/cor
 })
 export class ViewExcludeRequestComponent implements OnInit {
   transferDetails!:any;
-  constructor(private route: ActivatedRoute,private _reports:ReportsService , private _route:Router) { 
+  constructor(private route: ActivatedRoute,private _reports:ReportsService , private _route:Router) {
     this.transferDetailsByID();
   }
 
@@ -22,12 +22,12 @@ export class ViewExcludeRequestComponent implements OnInit {
  transferDetailsByID(){
   this.route.params.subscribe((res) => {
     console.log(res);
-    
+
     let id = res['id'];
   this._reports.getTransferDetailsByID(id).subscribe((res)=>{
     this.transferDetails=res
     console.log(res);
-    
+
   })
   });
  }
