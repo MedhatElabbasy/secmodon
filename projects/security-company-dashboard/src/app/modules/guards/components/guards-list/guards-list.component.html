@@ -99,8 +99,12 @@
                   {{ guard.securityGuard.nationalID }}
                 </td>
                 <td>
-                 <div *ngIf="guard.guardActiveStatus==2" class="dotStop"></div>
-                 <div *ngIf="guard.guardActiveStatus==1" class="dotStart"></div>
+                 <div *ngIf="guard.guardActiveStatus==2" class="dotStop">
+                {{guard.guardActiveStatus}}
+                </div>
+                 <div *ngIf="guard.guardActiveStatus==1" class="dotStart">
+                  {{guard.guardActiveStatus}}
+                </div>
                 </td>
                 <td>
                   <div

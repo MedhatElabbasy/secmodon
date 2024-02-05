@@ -12,6 +12,7 @@ import { ShiftsService } from '../../services/shifts.service';
 })
 export class TimetrackComponent implements OnInit {
   minutes:number[]=[]
+  lateminutes:number[]=[]
   earlyBreak!: any
   latLogOut!: any
   brack!: any
@@ -22,6 +23,7 @@ export class TimetrackComponent implements OnInit {
   lateLoginchecked!: boolean
   breakchecked!: boolean
   attendchecked!: boolean
+  //negativeMinutes: number[] = [-5,-10,-15,-20,-25,-30,-35,-40,-45,-50,-55,-60];
   // attendboolean!:boolean
   // earlyBreakboolean!:boolean
   // latLogOutboolean!:boolean
@@ -32,6 +34,20 @@ export class TimetrackComponent implements OnInit {
       this.minutes.push(data)
 
     }
+
+    for (let index = 1; index <= 36; index++) {
+      let data = index * 5
+      this.lateminutes.push(data)
+
+    }
+
+  //   for (let index = 1; index <= 12; index++) {
+  //     // Calculate the data with negative values
+  //     let data = index * -5;
+  
+  //     // Push the data to the array
+  //    this.negativeMinutes.push(data);
+  // }
     this.getInitData()
   }
 
@@ -130,7 +146,6 @@ export class TimetrackComponent implements OnInit {
   }
 
   saveChanges() {
-
     const latLogOutValue = this.attendanceForm.controls['latLogOut'].value;
     const negativeLatLogOutValue = -1 * latLogOutValue;
     const earlyLogValue= this.attendanceForm.controls['earlyBreak'].value;
