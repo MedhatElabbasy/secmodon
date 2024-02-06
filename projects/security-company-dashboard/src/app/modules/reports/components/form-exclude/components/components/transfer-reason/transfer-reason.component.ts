@@ -45,10 +45,10 @@ export class TransferReasonComponent implements OnInit ,OnDestroy{
   }
 
   ngOnInit(): void {
-    this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/transfer-reason')
+    // this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/transfer-reason')
   }
   ngOnDestroy() {
-    this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
+    // this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
 
   }
   get photosControls(): any {
@@ -89,7 +89,7 @@ export class TransferReasonComponent implements OnInit ,OnDestroy{
       this.form2.setFormData(formData);
       console.log(formData);
       this.router.navigate([this.activeLink]);
-      this._reports.screenRoute.next(this.activeLink)
+      // this._reports.screenRoute.next(this.activeLink)
     }
   }
 }

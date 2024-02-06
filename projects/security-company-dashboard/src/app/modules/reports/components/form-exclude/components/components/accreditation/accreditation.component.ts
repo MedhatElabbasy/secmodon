@@ -30,10 +30,10 @@ export class AccreditationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.form4.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/accreditation')
+    // this.form4.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/accreditation')
   }
   ngOnDestroy() {
-    this.form4.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/response')
+    // this.form4.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/response')
   }
 
   onSubmit(): void {

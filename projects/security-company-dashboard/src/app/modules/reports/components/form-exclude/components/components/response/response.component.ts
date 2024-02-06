@@ -28,10 +28,10 @@ export class ResponseComponent implements OnInit, OnDestroy {
     });
   }
   ngOnInit(): void {
-    this.form3.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/response')
+    // this.form3.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/response')
   }
   ngOnDestroy() {
-    this.form3.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/transfer-reason')
+    // this.form3.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/transfer-reason')
   }
   onSubmit(): void {
     if (this.checkboxForm.valid) {
@@ -39,7 +39,7 @@ export class ResponseComponent implements OnInit, OnDestroy {
       this.form3.setFormData(formData);
       console.log(formData);
       this.router.navigate([this.activeLink]);
-      this.form3.screenRoute.next(this.activeLink)
+      // this.form3.screenRoute.next(this.activeLink)
     }
   }
 }

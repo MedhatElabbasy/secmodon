@@ -56,7 +56,7 @@ export class EmployeeGeneralInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
+    // this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
     this.createDate.setValue(null);
   }
 
@@ -101,7 +101,7 @@ export class EmployeeGeneralInfoComponent implements OnInit {
       this.form1.setFormData(formData);
       console.log(formData);
       this.router.navigate([this.activeLink]);
-      this._reports.screenRoute.next(this.activeLink)
+      // this._reports.screenRoute.next(this.activeLink)
     }
   }
 }
