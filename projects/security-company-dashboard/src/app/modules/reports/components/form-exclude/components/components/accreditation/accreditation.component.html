@@ -1,8 +1,8 @@
 <form [formGroup]="checkboxForm">
   <div class="row py-3">
-    <div class="col-md-4">
+    <div class="col-md-4 my-2">
       <h6 class="excludeTitle">{{ "reports.accreditation" | translate }}</h6>
-      
+
       <label class="checkInput" *ngFor="let option of options">
         <input
           class="mx-2"
@@ -11,11 +11,14 @@
           formControlName="accreditationOK"
         />
         {{ option }}
-      
       </label>
-    
+      <div
+        class="error-message"
+        *ngIf="controls['accreditationOK'].errors?.required && submitted"
+        [innerHtml]="'validation.field_required' | translate"
+      ></div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 my-2">
       <h6 class="excludeTitle">{{ "reports.branch_manager" | translate }}</h6>
 
       <input
@@ -24,8 +27,13 @@
         value="محمد خالد أبو فياض"
         formControlName="branchManager"
       />
+      <div
+        class="error-message"
+        *ngIf="controls['branchManager'].errors?.required && submitted"
+        [innerHtml]="'validation.field_required' | translate"
+      ></div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 my-2">
       <h6 class="excludeTitle">{{ "reports.signature" | translate }}</h6>
 
       <input
@@ -34,10 +42,15 @@
         value="-------------"
         formControlName="branchManagerSignature"
       />
+      <div
+        class="error-message"
+        *ngIf="controls['branchManagerSignature'].errors?.required && submitted"
+        [innerHtml]="'validation.field_required' | translate"
+      ></div>
     </div>
   </div>
 
-  <div class="reasons mt-4 p-2">
+  <div class="reasons my-2 p-2">
     <h6 class="excludeTitle">{{ "reports.reason" | translate }}</h6>
 
     <input
@@ -46,21 +59,28 @@
       value="هذا النص هو مثال لنص يمكن ان يستبدل فيما بعد"
       formControlName="dependenceDisapprovalReason"
     />
+    <div
+      class="error-message"
+      *ngIf="
+        controls['dependenceDisapprovalReason'].errors?.required && submitted
+      "
+      [innerHtml]="'validation.field_required' | translate"
+    ></div>
   </div>
 
   <div class="row d-flex justify-content-end my-3">
     <div class="col-md-4">
       <button
-      class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1"
-      type="button"
-      (click)="onSubmit()"
-      [disabled]="!checkboxForm.valid"
-    >
-      {{ "reports.create" | translate }}
-    </button>
+        class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1"
+        type="button"
+        (click)="onSubmit()"
+      >
+        {{ "reports.create" | translate }}
+      </button>
       <button
         class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1"
-        type="button" (click)="SubmitAndView()"
+        type="button"
+        (click)="SubmitAndView()"
       >
         {{ "reports.create_ask" | translate }}
       </button>
@@ -70,11 +90,14 @@
 
 <public-api-modal [id]="finish" classList="modal-dialog-centered">
   <img width="50" src="assets/images/icons/checked.png" alt="" class="mb-3" />
-  <h5 class="fw-600">{{'reports.finish_form_exclude'|translate}}</h5>
+  <h5 class="fw-600">{{ "reports.finish_form_exclude" | translate }}</h5>
 
   <div class="d-flex justify-content-end gap-2">
-      <button translate="continue" (click)="continue()"
-          type="button"
-          class="btn rounded-8 px-4 py-2 btn-primary text-white"></button>
+    <button
+      translate="continue"
+      (click)="continue()"
+      type="button"
+      class="btn rounded-8 px-4 py-2 btn-primary text-white"
+    ></button>
   </div>
 </public-api-modal>

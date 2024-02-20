@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class ResponseComponent implements OnInit, OnDestroy {
   checkboxForm: FormGroup;
+  submitted = false;
   options = ['مناسب', 'غير مناسب'];
   activeLink: string =
     '/dashboard/reports/form-exclude/exclude-new-request/accreditation';
@@ -27,6 +28,10 @@ export class ResponseComponent implements OnInit, OnDestroy {
       response: [null, Validators.required],
     });
   }
+
+  get controls(): any {
+    return this.checkboxForm.controls;
+  }
   ngOnInit(): void {
     // this.form3.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/response')
   }
@@ -34,10 +39,10 @@ export class ResponseComponent implements OnInit, OnDestroy {
     // this.form3.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/transfer-reason')
   }
   onSubmit(): void {
+    this.submitted = true;
     if (this.checkboxForm.valid) {
       const formData = this.checkboxForm.value;
       this.form3.setFormData(formData);
-      console.log(formData);
       this.router.navigate([this.activeLink]);
       // this.form3.screenRoute.next(this.activeLink)
     }

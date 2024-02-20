@@ -1,6 +1,6 @@
 <form [formGroup]="checkboxForm">
   <div class="row py-3">
-    <div class="col-md-4">
+    <div class="col-md-4 my-2">
       <h6 class="excludeTitle">{{ "reports.transfer_reason" | translate }}</h6>
       <label class="checkInput" *ngFor="let option of options">
         <input
@@ -11,8 +11,13 @@
         />
         {{ option }}
       </label>
+      <div
+      class="error-message"
+      *ngIf="controls['inappropriateReason'].errors?.required && submitted"
+      [innerHtml]="'validation.field_required' | translate"
+    ></div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 my-2">
       <h6 class="excludeTitle">{{ "reports.name" | translate }}</h6>
 
       <input
@@ -21,8 +26,13 @@
         value="محمد خالد أبو فياض"
         formControlName="responserName"
       />
+      <div
+      class="error-message"
+      *ngIf="controls['responserName'].errors?.required && submitted"
+      [innerHtml]="'validation.field_required' | translate"
+    ></div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 my-2">
       <h6 class="excludeTitle">{{ "reports.signature" | translate }}</h6>
 
       <input
@@ -31,10 +41,15 @@
         value="-------------"
         formControlName="responseSignature"
       />
+      <div
+      class="error-message"
+      *ngIf="controls['responseSignature'].errors?.required && submitted"
+      [innerHtml]="'validation.field_required' | translate"
+    ></div>
     </div>
   </div>
 
-  <div class="reasons mt-4 p-2">
+  <div class="reasons  p-2 my-2">
     <h6 class="excludeTitle">{{ "reports.reason" | translate }}</h6>
     <input
       type="text"
@@ -42,12 +57,17 @@
       value="هذا النص هو مثال لنص يمكن ان يستبدل فيما بعد"
       formControlName="response"
     />
+    <div
+    class="error-message"
+    *ngIf="controls['response'].errors?.required && submitted"
+    [innerHtml]="'validation.field_required' | translate"
+  ></div>
   </div>
   <button
     class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1 mt-3"
     type="button"
     (click)="onSubmit()"
-    [disabled]="!checkboxForm.valid"
+
   >
     التالي
   </button>

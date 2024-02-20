@@ -4,42 +4,71 @@
       <div class="col-md-3">
         <h6 class="excludeTitle">{{ "reports.employee_name" | translate }}</h6>
         <!-- <label for="securityGuardDropdown">Select Security Guard:</label> -->
-        <select id="securityGuardDropdown" style="height:35px;" class="form-select py-0 w-fit" (change)="getguardDetails($event)">
-          <option value="" disabled selected>{{"reports.employee_name"|translate}}</option>
-          <option *ngFor="let guard of Guards; let i = index" [value]="i">{{ guard.fullName }}</option>
+        <select
+          id="securityGuardDropdown"
+          style="height: 35px"
+          class="form-select py-0 w-fit"
+          (change)="getguardDetails($event)"
+        >
+          <option value="" disabled selected>
+            {{ "reports.employee_name" | translate }}
+          </option>
+          <option *ngFor="let guard of Guards; let i = index" [value]="i">
+            {{ guard.fullName }}
+          </option>
         </select>
+        <div
+          class="error-message"
+          *ngIf="controls['securityGuardId'].errors?.required && submitted"
+          [innerHtml]="'validation.field_required' | translate"
+        ></div>
       </div>
       <div class="col-md-3 mx-lg-5">
         <h6 class="excludeTitle">{{ "reports.job_number" | translate }}</h6>
-        <div type="text" class="form-control" style="height:35px;" >{{guardId}}</div>
+        <div type="text" class="form-control" style="height: 35px">
+          {{ guardId }}
+        </div>
       </div>
       <div class="col-md-3">
         <h6 class="excludeTitle">{{ "reports.institution" | translate }}</h6>
-        <div type="text" class="form-control" style="height:50px;"  >{{securitycompanyName}}</div>
+        <div type="text" class="form-control" style="height: 50px">
+          {{ securitycompanyName }}
+        </div>
       </div>
 
-    <div class="col-6 mt-3">
-      <h6 class="excludeTitle">{{ "reports.employee_role" | translate }}</h6>
-      <div type="text" class="form-control" style="height:35px;"  >{{jobTypeName}}</div>
-    </div>
-    <div class="form-floating col-6 mt-3">
-      <input type="email" class="form-control bg-info-o" id="input1"
-          placeholder="date" bsDatepicker  [formControl]="createDate"
+      <div class="col-6 mt-3">
+        <h6 class="excludeTitle">{{ "reports.employee_role" | translate }}</h6>
+        <div type="text" class="form-control" style="height: 35px">
+          {{ jobTypeName }}
+        </div>
+      </div>
+      <div class="form-floating col-6 mt-3">
+        <input
+          type="email"
+          class="form-control bg-info-o"
+          id="input1"
+          placeholder="date"
+          bsDatepicker
+          [formControl]="createDate"
           [bsConfig]="{
-          containerClass: 'theme-red',
-          isAnimated: true,
-          showWeekNumbers: false,
-          adaptivePosition: true
-        }" />
-      <label for="input1" translate="date_range"></label>
-  </div>
-
-</div>
+            containerClass: 'theme-red',
+            isAnimated: true,
+            showWeekNumbers: false,
+            adaptivePosition: true
+          }"
+        />
+        <label for="input1" translate="date_range"></label>
+        <div
+          class="error-message"
+          *ngIf="createDate.value == null && submitted"
+          [innerHtml]="'validation.field_required' | translate"
+        ></div>
+      </div>
+    </div>
     <button
       class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1 mt-3"
       type="button"
       (click)="onSubmit()"
-      [disabled]="checkboxForm.valid"
     >
       التالي
     </button>

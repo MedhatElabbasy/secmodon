@@ -17,9 +17,16 @@ import { LogLevel } from '@microsoft/signalr';
   templateUrl: './transfer-reason.component.html',
   styleUrls: ['./transfer-reason.component.scss'],
 })
-export class TransferReasonComponent implements OnInit ,OnDestroy{
+export class TransferReasonComponent implements OnInit, OnDestroy {
   checkboxForm: FormGroup;
-  options = [{ name: 'غياب', id: 1 }, { name: 'حالة مخلة بالأنظمة', id: 2 }, { name: 'عدم تنفيذ التعليمات', id: 3 }, { name: 'أخرى', id: 4 }];
+  submitted = false;
+
+  options = [
+    { name: 'غياب', id: 1 },
+    { name: 'حالة مخلة بالأنظمة', id: 2 },
+    { name: 'عدم تنفيذ التعليمات', id: 3 },
+    { name: 'أخرى', id: 4 },
+  ];
   activeLink: string =
     '/dashboard/reports/form-exclude/exclude-new-request/response';
 
@@ -43,13 +50,14 @@ export class TransferReasonComponent implements OnInit ,OnDestroy{
       attachmentId: [null, Validators.required],
     });
   }
-
+  get controls(): any {
+    return this.checkboxForm.controls;
+  }
   ngOnInit(): void {
     // this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/transfer-reason')
   }
   ngOnDestroy() {
     // this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
-
   }
   get photosControls(): any {
     return this.checkboxForm.controls;
@@ -84,6 +92,7 @@ export class TransferReasonComponent implements OnInit ,OnDestroy{
     return this.domSanitizer.bypassSecurityTrustUrl(url);
   }
   onSubmit(): void {
+    this.submitted = true;
     if (this.checkboxForm.valid) {
       const formData = this.checkboxForm.value;
       this.form2.setFormData(formData);
