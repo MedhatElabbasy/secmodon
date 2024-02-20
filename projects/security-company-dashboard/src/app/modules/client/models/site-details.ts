@@ -81,6 +81,7 @@ export interface CompanySecurityGuard {
   guardStatusId: null;
   guardStatus: null;
   username?: string;
+  guardActiveStatus:number;
 }
 
 interface SecurityGuard {

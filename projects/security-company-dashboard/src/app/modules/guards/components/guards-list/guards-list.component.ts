@@ -44,6 +44,8 @@ export class GuardsListComponent implements OnInit {
         this.guards.push(res);
         this.companyGuards.newGuard.next(null);
       });
+      console.log(this.guards);
+     
     }
   }
   onPageSizeChange(number: any) {

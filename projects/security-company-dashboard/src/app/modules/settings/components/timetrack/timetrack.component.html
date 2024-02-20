@@ -72,7 +72,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div *ngIf="earlyBreak==0 && earlyLoginchecked==false" class="rounded bg-primary-o text-primary p-2 mt-2">0</div>
-                            <p-dropdown *ngIf="earlyBreak!=0 || earlyLoginchecked==true" styleClass=" w-100 p-0 mt-2" [options]="minutes"
+                            <p-dropdown *ngIf="earlyBreak!=0 || earlyLoginchecked==true" styleClass=" w-100 p-0 mt-2" [options]="lateminutes"
                             placeholder="0"
                             formControlName="earlyBreak"></p-dropdown>
                                 </div>
@@ -101,7 +101,7 @@
                             <div class="row">
                                 <div class="col-6">
                             <div  *ngIf="latLogOut==0 && lateLoginchecked==false" class="rounded bg-primary-o text-primary p-2 mt-2">0</div>
-                            <p-dropdown *ngIf="latLogOut!=0 || lateLoginchecked==true" styleClass=" w-100 p-0 mt-2" [options]="minutes"
+                            <p-dropdown *ngIf="latLogOut!=0 || lateLoginchecked==true" styleClass=" w-100 p-0 mt-2" [options]="lateminutes"
                             placeholder="0"
                             formControlName="latLogOut"></p-dropdown>
                         </div>

@@ -284,15 +284,15 @@
         </div>
         <div class="col-4">
           <h6 class="text-muted">المشرف</h6>
-          <h6 class="">{{guardDetails?.supervisorName}}</h6>
+          <h6 class="">{{guardDetails?.siteNumber? guardDetails?.siteNumber : "لايوجد"}}</h6>
         </div>
         <div class="col-4">
           <h6 class="text-muted">المناوبة</h6>
-          <h6 class="">{{guardDetails?.shiftName}}</h6>
+          <h6 class="">{{guardDetails?.supervisorName? guardDetails?.supervisorName : "لايوجد"}}</h6>
         </div>
         <div class="col-4">
           <h6 class="text-muted">الجدول</h6>
-          <h6 class="">{{guardDetails?.scheduleName}}</h6>
+          <h6 class="">{{guardDetails?.scheduleName? guardDetails?.scheduleName : "لايوجد"}}</h6>
         </div>
         <div class="col-4">
           <h6 class="text-muted">وقت الدخول</h6>
