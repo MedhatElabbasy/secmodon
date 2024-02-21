@@ -1,11 +1,10 @@
 <div class="my-2">
     <div class="container h-100 d-flex flex-column py-4">
-        <!-- <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between">
             <h4 class="m-0 fw-600 my-3" translate="reports.create_request"></h4>
-        </div> -->
+        </div>
         <div class="card border-0 flex-fill rounded-10 my-5">
-            <div class="card-body p-5" id="dynamic-model-content">
-                <h4 class="m-0 fw-600 my-4 text-align-center" translate="reports.Request_form_to_exclude"></h4>
+            <div class="card-body">
                 <div class="h-100 d-flex flex-column">
                     <div>
                         <h3 class="viewRequestTitle">{{ "reports.employee_info" | translate }}</h3>
@@ -86,34 +85,17 @@
                                 <p>{{transferDetails.branchManagerSignature}}</p>
                             </div>
                         </div>
-                        <div class=" mt-4 p-2">
+                        <div class="reasons mt-4 p-2">
                             <h6 class="excludeTitle">{{ "reports.reason" | translate }}</h6>
                             <p>{{transferDetails.dependenceDisapprovalReason}}</p>
                         </div>
                     </div>
                 </div>
+                <div class="d-flex justify-content-end my-3">
+                    <button class="btn rounded-10 bg-info-o" (click)="next()"
+                    translate="cancel"></button>
+                </div>
             </div>
-            <div class=" my-2 d-flex justify-content-end">
-            <div class="">
-                <button class="btn rounded-10 bg-info-o px-5 py-2" (click)="next()"
-                translate="cancel"></button>
-            </div>
-            <button (click)="generatePDF()" class="btn btn-primary mx-3 download text-white"><span class="ms-4">تحميل</span>
-                <span><svg id="_0000" data-name="0000" xmlns="http://www.w3.org/2000/svg" width="26.287" height="26.287"
-                        viewBox="0 0 26.287 26.287">
-                        <g id="Group_3870" data-name="Group 3870" transform="translate(0 0)">
-                            <g id="Group_3869" data-name="Group 3869" transform="translate(0 0)">
-                                <g id="Group_3868" data-name="Group 3868">
-                                    <path id="Path_4135" data-name="Path 4135"
-                                        d="M20.445,26.287H5.842A5.842,5.842,0,0,1,0,20.445v-1.46a1.46,1.46,0,1,1,2.921,0v1.46a2.921,2.921,0,0,0,2.921,2.921h14.6a2.921,2.921,0,0,0,2.921-2.921v-1.46a1.46,1.46,0,1,1,2.921,0v1.46a5.842,5.842,0,0,1-5.842,5.842Zm-7.3-5.842a1.456,1.456,0,0,1-1.02-.415h0l0,0h0l0,0h0l0,0,0,0L6.269,14.176a1.46,1.46,0,0,1,2.065-2.065l3.349,3.349v-14a1.46,1.46,0,1,1,2.921,0v14l3.348-3.348a1.46,1.46,0,1,1,2.065,2.065l-5.842,5.842,0,0,0,0h0l0,0h0l0,0h0l-.049.046a1.451,1.451,0,0,1-.4.255h0a1.454,1.454,0,0,1-.566.114Z"
-                                        transform="translate(0 0)" fill="#fff" />
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
-                </span>
-            </button>
-        </div>
         </div>
     </div>
 </div>

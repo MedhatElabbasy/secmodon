@@ -13,13 +13,16 @@ import { Routing } from 'projects/security-company-dashboard/src/app/modules/cor
 })
 export class AccreditationComponent implements OnInit, OnDestroy {
   checkboxForm: FormGroup;
+  submitted = false;
   options = ['موافقة', 'عدم موافقة'];
   combinedFormData!: any;
-  finish = 'doneExclude'
+  finish = 'doneExclude';
   constructor(
     private fb: FormBuilder,
     private form4: ReportsService,
-    private FormsData: ReportsService, public _model: ModalService, private _route: Router
+    private FormsData: ReportsService,
+    public _model: ModalService,
+    private _route: Router
   ) {
     this.checkboxForm = this.fb.group({
       accreditationOK: ['', Validators.required],
@@ -29,14 +32,18 @@ export class AccreditationComponent implements OnInit, OnDestroy {
     });
   }
 
+  get controls(): any {
+    return this.checkboxForm.controls;
+  }
   ngOnInit(): void {
-    this.form4.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/accreditation')
+    // this.form4.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/accreditation')
   }
   ngOnDestroy() {
-    this.form4.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/response')
+    // this.form4.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/response')
   }
 
   onSubmit(): void {
+    this.submitted = true;
     if (this.checkboxForm.valid) {
       const formData = this.checkboxForm.value;
       this.form4.formData$.subscribe((formData) => {
@@ -48,39 +55,44 @@ export class AccreditationComponent implements OnInit, OnDestroy {
       });
       console.log(this.combinedFormData);
       let model = {
-        "createDate": this.combinedFormData[0].createDate,
-        "securityGuardId": this.combinedFormData[0].securityGuardId,
-        "reasonStatusType": this.combinedFormData[1].reasonStatusType,
-        "reasonForTransfer": this.combinedFormData[1].reasonForTransfer,
-        "transferDetailsAttachment": [
+        createDate: this.combinedFormData[0].createDate,
+        securityGuardId: this.combinedFormData[0].securityGuardId,
+        reasonStatusType: this.combinedFormData[1].reasonStatusType,
+        reasonForTransfer: this.combinedFormData[1].reasonForTransfer,
+        transferDetailsAttachment: [
           {
-            "photoId": this.combinedFormData[1].attachmentId
-          }
+            photoId: this.combinedFormData[1].attachmentId,
+          },
         ],
-        "securityOfficial": this.combinedFormData[1].securityOfficial,
-        "contractorProjectManager": this.combinedFormData[1].contractorProjectManager,
-        "securityOfficialSignature": this.combinedFormData[1].securityOfficialSignature,
-        "contractorProjectManagerSignature": this.combinedFormData[1].contractorProjectManagerSignature,
-        "response": this.combinedFormData[2].response,
-        "inappropriateReason": this.combinedFormData[2].inappropriateReason,
-        "responserName": this.combinedFormData[2].responserName,
-        "responseSignature": this.combinedFormData[2].responseSignature,
-        "accreditationOK": this.checkboxForm.controls['accreditationOK'].value,
-        "dependenceDisapprovalReason": this.checkboxForm.controls['dependenceDisapprovalReason'].value,
-        "branchManager": this.checkboxForm.controls['branchManager'].value,
-        "branchManagerSignature": this.checkboxForm.controls['branchManagerSignature'].value,
-        "securityCompanyId": this.combinedFormData[0].securityCompanyId,
-      }
+        securityOfficial: this.combinedFormData[1].securityOfficial,
+        contractorProjectManager:
+          this.combinedFormData[1].contractorProjectManager,
+        securityOfficialSignature:
+          this.combinedFormData[1].securityOfficialSignature,
+        contractorProjectManagerSignature:
+          this.combinedFormData[1].contractorProjectManagerSignature,
+        response: this.combinedFormData[2].response,
+        inappropriateReason: this.combinedFormData[2].inappropriateReason,
+        responserName: this.combinedFormData[2].responserName,
+        responseSignature: this.combinedFormData[2].responseSignature,
+        accreditationOK: this.checkboxForm.controls['accreditationOK'].value,
+        dependenceDisapprovalReason:
+          this.checkboxForm.controls['dependenceDisapprovalReason'].value,
+        branchManager: this.checkboxForm.controls['branchManager'].value,
+        branchManagerSignature:
+          this.checkboxForm.controls['branchManagerSignature'].value,
+        securityCompanyId: this.combinedFormData[0].securityCompanyId,
+      };
 
       this.form4.submitAllForms(model).subscribe((res) => {
         console.log(res);
         this._model.open(this.finish);
-      })
+      });
     }
   }
 
   SubmitAndView() {
-
+    this.submitted = true;
     if (this.checkboxForm.valid) {
       const formData = this.checkboxForm.value;
       this.form4.formData$.subscribe((formData) => {
@@ -92,39 +104,48 @@ export class AccreditationComponent implements OnInit, OnDestroy {
       });
       console.log(this.combinedFormData);
       let model = {
-        "createDate": this.combinedFormData[0].createDate,
-        "securityGuardId": this.combinedFormData[0].securityGuardId,
-        "reasonStatusType": this.combinedFormData[1].reasonStatusType,
-        "reasonForTransfer": this.combinedFormData[1].reasonForTransfer,
-        "transferDetailsAttachment": [
+        createDate: this.combinedFormData[0].createDate,
+        securityGuardId: this.combinedFormData[0].securityGuardId,
+        reasonStatusType: this.combinedFormData[1].reasonStatusType,
+        reasonForTransfer: this.combinedFormData[1].reasonForTransfer,
+        transferDetailsAttachment: [
           {
-            "photoId": this.combinedFormData[1].attachmentId
-          }
+            photoId: this.combinedFormData[1].attachmentId,
+          },
         ],
-        "securityOfficial": this.combinedFormData[1].securityOfficial,
-        "contractorProjectManager": this.combinedFormData[1].contractorProjectManager,
-        "securityOfficialSignature": this.combinedFormData[1].securityOfficialSignature,
-        "contractorProjectManagerSignature": this.combinedFormData[1].contractorProjectManagerSignature,
-        "response": this.combinedFormData[2].response,
-        "inappropriateReason": this.combinedFormData[2].inappropriateReason,
-        "responserName": this.combinedFormData[2].responserName,
-        "responseSignature": this.combinedFormData[2].responseSignature,
-        "accreditationOK": this.checkboxForm.controls['accreditationOK'].value,
-        "dependenceDisapprovalReason": this.checkboxForm.controls['dependenceDisapprovalReason'].value,
-        "branchManager": this.checkboxForm.controls['branchManager'].value,
-        "branchManagerSignature": this.checkboxForm.controls['branchManagerSignature'].value,
-        "securityCompanyId": this.combinedFormData[0].securityCompanyId,
-      }
+        securityOfficial: this.combinedFormData[1].securityOfficial,
+        contractorProjectManager:
+          this.combinedFormData[1].contractorProjectManager,
+        securityOfficialSignature:
+          this.combinedFormData[1].securityOfficialSignature,
+        contractorProjectManagerSignature:
+          this.combinedFormData[1].contractorProjectManagerSignature,
+        response: this.combinedFormData[2].response,
+        inappropriateReason: this.combinedFormData[2].inappropriateReason,
+        responserName: this.combinedFormData[2].responserName,
+        responseSignature: this.combinedFormData[2].responseSignature,
+        accreditationOK: this.checkboxForm.controls['accreditationOK'].value,
+        dependenceDisapprovalReason:
+          this.checkboxForm.controls['dependenceDisapprovalReason'].value,
+        branchManager: this.checkboxForm.controls['branchManager'].value,
+        branchManagerSignature:
+          this.checkboxForm.controls['branchManagerSignature'].value,
+        securityCompanyId: this.combinedFormData[0].securityCompanyId,
+      };
 
       this.form4.submitAllForms(model).subscribe((res: any) => {
         console.log(res);
-        this._route.navigate([`/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.formExclude}/${Routing.reports.children.viewExcludeRequest}/${res.id}`])
-      })
+        this._route.navigate([
+          `/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.formExclude}/${Routing.reports.children.viewExcludeRequest}/${res.id}`,
+        ]);
+      });
     }
   }
 
   continue() {
     this._model.close(this.finish);
-    this._route.navigate([`/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.formExclude}`])
+    this._route.navigate([
+      `/${Routing.dashboard}/${Routing.reports.module}/${Routing.reports.children.formExclude}`,
+    ]);
   }
 }

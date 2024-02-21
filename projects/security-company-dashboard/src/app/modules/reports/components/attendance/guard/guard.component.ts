@@ -305,6 +305,7 @@ export class GuardComponent implements OnInit {
               this.allData[i].phoneNumber,
             date: this.allData[i].date.split(' ')[0],
             siteLocationName: this.allData[i].siteLocationName,
+            branchName:this.allData[i].branchName,
             attendanceFrom: this.allData[i].attendanceFrom,
             StartTime: this.allData[i].startTime,
             MustStart: this.allData[i].mustStart,

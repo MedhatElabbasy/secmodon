@@ -25,6 +25,8 @@ export class AllFactsResolver implements Resolve<any[]> {
     let startDate = convertDateToString(new Date());
     let role = this.auth.snapshot.userIdentity?.role;
     let isMainBranch = this.auth.snapshot.userInfo?.securityCompanyBranch.isMainBranch
+    
+    
     // if (role == Roles.SecuritCompany || isMainBranch) {
     return this.reports.getAllDailyFactByCompany(
       1,

@@ -127,21 +127,21 @@
       <div class="d-flex justify-content-between">
         <ul class="nav nav-tabs rounded-0 shadow-none" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="checkIn-tab" data-bs-toggle="tab" data-bs-target="#checkIn"
+            <button class="nav-link active checkIn" id="checkIn-tab" data-bs-toggle="tab" data-bs-target="#checkIn"
               type="button" role="tab" aria-controls="checkIn" aria-selected="true">
               {{ "reports.checked_in" | translate }}
               <span class="badge bg-success">{{ checkedIn.length }}</span>
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="checkout-tab" data-bs-toggle="tab" data-bs-target="#checkout" type="button"
+            <button class="nav-link checkOut" id="checkout-tab" data-bs-toggle="tab" data-bs-target="#checkout" type="button"
               role="tab" aria-controls="checkout" aria-selected="false">
               {{ "reports.checked_out" | translate }}
               <span class="badge bg-success">{{ checkedOut.length }}</span>
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="break-tab" data-bs-toggle="tab" data-bs-target="#break" type="button"
+            <button class="nav-link break" id="break-tab" data-bs-toggle="tab" data-bs-target="#break" type="button"
               role="tab" aria-controls="break" aria-selected="false">
               {{ "reports.on_break" | translate }}
               <span class="badge bg-success">{{ break.length }}</span>
@@ -284,11 +284,13 @@
         </div>
         <div class="col-4">
           <h6 class="text-muted">المشرف</h6>
-          <h6 class="">{{guardDetails?.siteNumber? guardDetails?.siteNumber : "لايوجد"}}</h6>
+          <h6 class="">{{guardDetails?.supervisorName? guardDetails?.supervisorName : "لايوجد"}}</h6>
         </div>
         <div class="col-4">
           <h6 class="text-muted">المناوبة</h6>
-          <h6 class="">{{guardDetails?.supervisorName? guardDetails?.supervisorName : "لايوجد"}}</h6>
+          <h6 class="">{{guardDetails?.shiftName? guardDetails?.shiftName : "لايوجد"}}</h6>
+          <span class="px-1 mute">{{guardDetails?.mustStart?.split(" ")[1] | time }}</span>
+          <span class="mx-1 px-1 mute">{{guardDetails?.mustEndIn?.split(" ")[1] | time}}</span>
         </div>
         <div class="col-4">
           <h6 class="text-muted">الجدول</h6>
@@ -297,6 +299,10 @@
         <div class="col-4">
           <h6 class="text-muted">وقت الدخول</h6>
           <h6 class="">{{guardDetails?.startTime}}</h6>
+        </div>
+        <div *ngIf="guardDetails?.leaveTime" class="col-4">
+          <h6 class="text-muted">وقت الخروج</h6>
+          <h6 class="">{{guardDetails?.leaveTime}}</h6>
         </div>
         <div class="col-4">
           <h6 class="text-muted">وقت الاستراحه</h6>

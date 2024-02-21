@@ -1,0 +1,67 @@
+<form [formGroup]="checkboxForm">
+  <div class="row py-3">
+    <div class="col-md-4">
+      <h6 class="excludeTitle">{{ "reports.transfer_reason" | translate }}</h6>
+      <label class="checkInput" *ngFor="let option of options">
+        <input class="mx-2" type="radio" [value]="option.id" formControlName="reasonStatusType" />
+        {{ option.name }}
+      </label>
+    </div>
+    <div class="row col-md-8">
+      <div class="col-md-6">
+        <h6 class="excludeTitle">
+          {{ "reports.security_resposiable" | translate }}
+        </h6>
+
+        <input type="text" class="form-control" formControlName="securityOfficial" value="محمد خالد أبو فياض" />
+      </div>
+      <div class="col-md-5">
+        <h6 class="excludeTitle">{{ "reports.signature" | translate }}</h6>
+
+        <input type="text" class="form-control" formControlName="securityOfficialSignature"
+          value="-------------------- " />
+      </div>
+      <div class="col-md-6">
+        <h6 class="excludeTitle">
+          {{ "reports.contractor_project_manager" | translate }}
+        </h6>
+
+        <input type="text" class="form-control" formControlName="contractorProjectManager"
+          value=" عبدالرؤوف علي المعيوف" />
+      </div>
+      <div class="col-md-5">
+        <h6 class="excludeTitle">{{ "reports.signature" | translate }}</h6>
+
+        <input type="text" class="form-control" formControlName="contractorProjectManagerSignature"
+          value=" --------------------" />
+      </div>
+    </div>
+  </div>
+
+  <div class="reasons mt-4 p-2">
+    <h6 class="excludeTitle">{{ "reports.type_some_reasons" | translate }}</h6>
+
+    <input type="text" class="form-control" formControlName="reasonForTransfer"
+      value="هذا النص هو مثال لنص يمكن ان يستبدل فيما بعد " />
+  </div>
+
+  <div class="reasons mt-4 p-2">
+    <h6 class="excludeTitle">{{ "reports.Attachments" | translate }}</h6>
+    <div class="file bg-info-o rounded-8 text-info" [style.backgroundImage]="'url('+ profileImage +')'"
+    (change)="onImageUpload($event)" (click)="contractimage.click()">
+    <input type="file" #contractimage hidden accept="image/x-png,image/gif,image/jpeg" />
+
+    <div class="container cursor-pointer" *ngIf="!profileImage">
+        <!-- <img src="assets/images/image-.png" class="" style="width:120px; height:100px;" /> -->
+        <div class="fs-14 mt-3 ">
+            {{ "reports.click_to_upload_transfer_attachment" | translate }}
+        </div>
+    </div>
+</div>
+  </div>
+
+  <button class="btn myPadding rounded-m rounded-8 btn btn-primary mx-1 mt-3" type="button" (click)="onSubmit()"
+    [disabled]="!checkboxForm.valid">
+    التالي
+  </button>
+</form>

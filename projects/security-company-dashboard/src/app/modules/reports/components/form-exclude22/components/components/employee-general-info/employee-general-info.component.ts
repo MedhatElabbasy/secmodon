@@ -1,21 +1,12 @@
 import { ReportsService } from './../../../../../services/reports.service';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { arLocale, defineLocale, enGbLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { SelectItem } from 'primeng/api';
 import { AuthService } from 'projects/security-company-dashboard/src/app/modules/auth/services/auth.service';
-import {
-  LangService,
-  convertDateToString,
-  language,
-} from 'projects/tools/src/public-api';
+import { LangService, convertDateToString, language } from 'projects/tools/src/public-api';
 
 @Component({
   selector: 'app-employee-general-info',
@@ -23,8 +14,7 @@ import {
   styleUrls: ['./employee-general-info.component.scss'],
 })
 export class EmployeeGeneralInfoComponent implements OnInit {
-  createDate = new FormControl(null);
-  submitted: boolean = false;
+  createDate = new FormControl(new Date());
   maxDate = new Date();
   jobTypeName!: any;
   guardId!: any;
@@ -55,7 +45,7 @@ export class EmployeeGeneralInfoComponent implements OnInit {
     this.checkboxForm = this.fb.group({
       securityGuardId: [null, Validators.required],
       securityCompanyId: [null, Validators.required],
-      createDate: [null, Validators.required],
+      createDate: [null, Validators.required]
       //securitycompanyName: [null, Validators.required],
       //jobTypeName: ['', Validators.required],
     });
@@ -66,7 +56,7 @@ export class EmployeeGeneralInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
+    this._reports.screenRoute.next('/dashboard/reports/form-exclude/exclude-new-request/employee-general-info')
     this.createDate.setValue(null);
   }
 
@@ -84,14 +74,15 @@ export class EmployeeGeneralInfoComponent implements OnInit {
     this.form1.GetAllCompanySecurityGuardWithJop().subscribe((res) => {
       this.Guards = res;
       console.log(res);
-    });
+
+    })
   }
 
   getguardDetails(event: any) {
     const selectedIndex: number = event.target.value;
     const selectedGuard: any = this.Guards[selectedIndex];
     this.jobTypeName = selectedGuard.jobTypeDTO.name;
-    this.guardId = selectedGuard.id;
+    this.guardId = selectedGuard.id
     this.securitycompanyName = selectedGuard.securityCompanyName;
     console.log(selectedGuard);
     let securityCompanyId = this.auth.snapshot.userInfo?.id;
@@ -102,19 +93,15 @@ export class EmployeeGeneralInfoComponent implements OnInit {
   }
 
   onSubmit(): void {
-
-
-    let date = convertDateToString(this.createDate.value);
-    this.checkboxForm.controls['createDate'].setValue(date);
-    this.submitted = true;
-
     console.log(this.checkboxForm);
+    let date = convertDateToString(this.createDate.value);
+    this.checkboxForm.controls['createDate'].setValue(date)
     if (this.checkboxForm.valid) {
       const formData = this.checkboxForm.value;
       this.form1.setFormData(formData);
+      console.log(formData);
       this.router.navigate([this.activeLink]);
-      // this._reports.screenRoute.next(this.activeLink)
+      this._reports.screenRoute.next(this.activeLink)
     }
-    return;
   }
 }

@@ -491,15 +491,16 @@ export class DashboardComponent implements OnInit {
   }
   openInfo(marker: any,content:string,guardCode:number ,guardImage:string,name:string , phoneNumber:number 
     , nationalId:number , securityCompanyName:string , branchName:string , clientName:string , 
-    siteLocationName:string ,supervisorName:string , siteNumber:number , shiftName:string ,startTime:string ) {
+    siteLocationName:string ,supervisorName:string , siteNumber:any , shiftName:string ,startTime:string ) {
     console.log(guardImage);
     const siteLocationContent =
     siteLocationName !== null ? `<h6 class="">${siteLocationName}</h6>` : '<h6>لا يوجد</h6>';
     const supervisorNameContent =
     supervisorName !== null ? `<h6 class="">${supervisorName}</h6>` : '<h6>لا يوجد</h6>';
-    const shiftNameContent =
-    shiftName !== null ? `<h6 class="">${shiftName}</h6>` : '<h6>لا يوجد</h6>';
-   const siteNumberContent =  siteNumber !== null ?  `<h6 class="">${siteNumber}</h6>` : '<h6>لا يوجد</h6>';
+    const shiftNameContent = shiftName !== null ? `<h6 class="">${shiftName}</h6>` : '<h6>لا يوجد</h6>';
+    const siteNumberContent =  siteNumber !== "" ? `<h6 class="">${siteNumber}</h6>` : '<h6>لا يوجد</h6>';
+    console.log("sitenumber"+ siteNumber);
+    
     this.infoContent = `<div class="row"><div class="col-8"><div class="row">
     <div class="col-12"><h6 class="text-muted">أسم المراقب</h6><h6 class="">`+name+`</h6></div>
     <div class="col-12"><h6 class="text-muted">رقم التواصل</h6><h6 class="">`+phoneNumber+`</h6></div>
@@ -508,8 +509,8 @@ export class DashboardComponent implements OnInit {
     </div></div>
     <div class="col-4"><img src="`+guardImage+`" class="Imgfluid rounded infoCardImg"/></</div></div><hr>
     <div class="row"><div class="col-4"><h6 class="text-muted">أسم الشركة الأمنية</h6><h6 class="">`+securityCompanyName+`</h6></div>
-    <div class="col-4"><h6 class="text-muted">الفرع</h6><h6 class="">`+branchName+`</h6></div>
-    <div class="col-4"><h6 class="text-muted">العميل</h6><h6 class="">`+clientName+`</h6></div></div><hr>
+    <div class="col-4"><h6 class="text-muted">الفرع</h6><h6 class="">`+clientName+`</h6></div>
+    <div class="col-4"><h6 class="text-muted">العميل</h6><h6 class="">`+branchName+`</h6></div></div><hr>
     <div class="row"><div class="col-4"><h6 class="text-muted">أسم الموقع</h6>`+siteLocationContent+`</div>
     <div class="col-4"><h6 class="text-muted">رقم الموقع</h6>`+siteNumberContent+`</div>
     <div class="col-4"><h6 class="text-muted">المشرف</h6><h6 class="">`+supervisorNameContent+`</h6></div>

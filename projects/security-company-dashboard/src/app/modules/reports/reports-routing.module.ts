@@ -144,9 +144,9 @@ const routes: Routes = [
     children: [
       {
         path: '', component: AllIncidentsComponent,
-        // resolve: {
-        //   report: AllIncidentsResolver,
-        // },
+        resolve: {
+          report: AllIncidentsResolver,
+        },
       },
       {
         path: ':id', component: IncidentDetailsComponent, children: [
@@ -169,9 +169,9 @@ const routes: Routes = [
     children: [
       {
         path: '', component: AllFactsComponent,
-        // resolve: {
-        //   report: AllFactsResolver,
-        // },
+        resolve: {
+          report: AllFactsResolver,
+        },
       },
       {
         path: ':id', component: FactsDetailsComponent, children: [
