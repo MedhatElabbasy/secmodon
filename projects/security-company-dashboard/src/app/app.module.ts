@@ -1,5 +1,5 @@
 import { ToastrModule } from 'ngx-toastr';
-import { HttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +13,7 @@ import {
 } from './modules/core/core.module';
 import { IonicModule } from '@ionic/angular';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { AddHeaderInterceptor } from './modules/core/interceptors/add-header.interceptor';
 @NgModule({
   declarations: [AppComponent],
 
@@ -41,7 +42,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     }),
     IonicModule.forRoot(),
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AddHeaderInterceptor, multi: true }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
